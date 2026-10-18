@@ -1,0 +1,67 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:vm="using:Churchie.App.ViewModels"
+             x:Class="Churchie.App.Views.ThemeEditorView"
+             x:DataType="vm:ThemeEditorViewModel">
+
+  <!-- Edits one look (Songs or Scripture). Changes show on screen immediately. -->
+  <ScrollViewer>
+    <StackPanel Spacing="8" Margin="0,0,12,0">
+      <TextBlock Classes="header" Text="{Binding Title}" />
+
+      <Grid ColumnDefinitions="110,*,60">
+        <TextBlock Classes="hint" Text="Text size" VerticalAlignment="Center" />
+        <Slider Grid.Column="1" Minimum="24" Maximum="200" Value="{Binding FontSize, Mode=TwoWay}" />
+        <TextBlock Grid.Column="2" Classes="hint" Text="{Binding FontSizeText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*">
+        <TextBlock Classes="hint" Text="Font" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Text="{Binding FontFamily}" Watermark="Default (Inter) — or type e.g. Arial, Montserrat" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*,8,32">
+        <TextBlock Classes="hint" Text="Text colour" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Text="{Binding TextColor}" Watermark="#FFFFFF" />
+        <Border Grid.Column="3" Width="28" Height="28" CornerRadius="4" BorderBrush="#555" BorderThickness="1" Background="{Binding TextBrush}" />
+      </Grid>
+
+      <WrapPanel>
+        <CheckBox Content="Bold" IsChecked="{Binding Bold}" Margin="0,0,16,0" />
+        <CheckBox Content="Shadow" IsChecked="{Binding Shadow}" Margin="0,0,16,0" />
+        <CheckBox Content="UPPERCASE" IsChecked="{Binding Uppercase}" />
+      </WrapPanel>
+
+      <Grid ColumnDefinitions="110,*,8,*">
+        <TextBlock Classes="hint" Text="Alignment" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding Alignments}" SelectedItem="{Binding Alignment, Mode=TwoWay}" />
+        <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" ItemsSource="{Binding VerticalAlignments}" SelectedItem="{Binding VerticalAlignment, Mode=TwoWay}" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*,8,32">
+        <TextBlock Classes="hint" Text="Background" VerticalAlignment="Center" />
+        <TextBox Grid.Column="1" Text="{Binding BackgroundColor}" Watermark="#000000" />
+        <Border Grid.Column="3" Width="28" Height="28" CornerRadius="4" BorderBrush="#555" BorderThickness="1" Background="{Binding BackgroundBrush}" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*,Auto,Auto">
+        <TextBlock Classes="hint" Text="Picture" VerticalAlignment="Center" />
+        <TextBlock Grid.Column="1" Text="{Binding BackgroundImageName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
+        <Button Grid.Column="2" Content="Choose…" Command="{Binding ChooseImageCommand}" Margin="6,0,0,0" />
+        <Button Grid.Column="3" Content="Clear" Command="{Binding ClearImageCommand}" Margin="6,0,0,0" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*,60">
+        <TextBlock Classes="hint" Text="Darken picture" VerticalAlignment="Center" />
+        <Slider Grid.Column="1" Minimum="0" Maximum="0.9" Value="{Binding BackgroundDim, Mode=TwoWay}" />
+        <TextBlock Grid.Column="2" Classes="hint" Text="{Binding BackgroundDimText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+      </Grid>
+
+      <Grid ColumnDefinitions="110,*,60">
+        <TextBlock Classes="hint" Text="Footer size" VerticalAlignment="Center" />
+        <Slider Grid.Column="1" Minimum="16" Maximum="90" Value="{Binding FooterFontSize, Mode=TwoWay}" />
+        <TextBlock Grid.Column="2" Classes="hint" Text="{Binding FooterFontSizeText}" VerticalAlignment="Center" HorizontalAlignment="Right" />
+      </Grid>
+    </StackPanel>
+  </ScrollViewer>
+</UserControl>

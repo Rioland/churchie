@@ -1,0 +1,118 @@
+name: Build
+
+# Every push to main builds and tests the app, then makes downloadable
+# versions for Windows, macOS and Linux (see the "Artifacts" box on the run page).
+# Pushing a tag like v0.1.0 also publishes them as a GitHub Release.
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+env:
+  DOTNET_NOLOGO: true
+  DOTNET_CLI_TELEMETRY_OPTOUT: true
+
+jobs:
+  test:
+    name: Build and test
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Restore
+        run: dotnet restore Churchie.sln
+
+      - name: Build
+        run: dotnet build Churchie.sln -c Release --no-restore
+
+      - name: Test
+        run: dotnet test Churchie.sln -c Release --no-build --logger "console;verbosity=normal"
+
+  package:
+    name: Package ${{ matrix.name }}
+    needs: test
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - { name: Windows,               rid: win-x64,   os: windows-latest }
+          - { name: Linux,                 rid: linux-x64, os: ubuntu-latest }
+          - { name: macOS (Apple Silicon), rid: osx-arm64, os: macos-latest }
+          - { name: macOS (Intel),         rid: osx-x64,   os: macos-latest }
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-dotnet@v6
+        with:
+          dotnet-version: '10.0.x'
+
+      - name: Work out the version
+        shell: bash
+        run: |
+          if [[ "$GITHUB_REF" == refs/tags/v* ]]; then
+            echo "VERSION=${GITHUB_REF_NAME#v}" >> "$GITHUB_ENV"
+          else
+            echo "VERSION=0.1.${GITHUB_RUN_NUMBER}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Publish
+        shell: bash
+        run: >
+          dotnet publish src/Churchie.App/Churchie.App.csproj
+          -c Release -r ${{ matrix.rid }} --self-contained true
+          -p:PublishSingleFile=true
+          -p:IncludeNativeLibrariesForSelfExtract=true
+          -p:DebugType=None
+          -p:Version=${VERSION}
+          -o publish/${{ matrix.rid }}
+
+      - name: Zip (Windows)
+        if: matrix.rid == 'win-x64'
+        shell: pwsh
+        run: |
+          New-Item -ItemType Directory -Force dist | Out-Null
+          Compress-Archive -Path publish/win-x64/* -DestinationPath dist/Churchie-win-x64.zip
+
+      - name: Zip (Linux)
+        if: matrix.rid == 'linux-x64'
+        run: |
+          mkdir -p dist
+          chmod +x publish/linux-x64/Churchie
+          tar -czf dist/Churchie-linux-x64.tar.gz -C publish linux-x64
+
+      - name: Make Churchie.app (macOS)
+        if: startsWith(matrix.rid, 'osx')
+        run: bash build/make-macos-app.sh publish/${{ matrix.rid }} ${{ matrix.rid }} ${VERSION}
+
+      - uses: actions/upload-artifact@v7
+        with:
+          name: Churchie-${{ matrix.rid }}
+          path: dist/*
+          if-no-files-found: error
+
+  release:
+    name: Publish release
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: package
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/download-artifact@v8
+        with:
+          path: dist
+          merge-multiple: true
+
+      - uses: softprops/action-gh-release@v3
+        with:
+          files: dist/*
+          generate_release_notes: true

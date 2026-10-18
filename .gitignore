@@ -1,0 +1,21 @@
+# Build output
+bin/
+obj/
+publish/
+dist/
+artifacts/
+TestResults/
+
+# IDEs
+.vs/
+.idea/
+*.user
+*.suo
+*.swp
+.DS_Store
+
+# Keep VS Code project settings, ignore personal ones
+.vscode/*
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json

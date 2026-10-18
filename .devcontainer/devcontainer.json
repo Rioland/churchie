@@ -1,0 +1,47 @@
+{
+  // GitHub Codespaces / Dev Containers setup.
+  // Open the repo on github.com → Code → Codespaces → "Create codespace on main".
+  // You get VS Code in the browser with .NET 10 installed, plus a small Linux
+  // desktop (port 6080) where you can actually see and click the running app.
+  "name": "Churchie (.NET 10 + desktop)",
+  "image": "mcr.microsoft.com/devcontainers/base:ubuntu",
+
+  "features": {
+    "ghcr.io/devcontainers/features/dotnet:2": {
+      "version": "10.0"
+    },
+    "ghcr.io/devcontainers/features/desktop-lite:1": {
+      "password": "churchie",
+      "webPort": "6080",
+      "vncPort": "5901"
+    }
+  },
+
+  "forwardPorts": [6080],
+  "portsAttributes": {
+    "6080": {
+      "label": "App desktop (password: churchie)",
+      "onAutoForward": "notify"
+    },
+    "5901": {
+      "label": "VNC",
+      "onAutoForward": "ignore"
+    }
+  },
+
+  "remoteEnv": {
+    "DISPLAY": ":1"
+  },
+
+  // Libraries Avalonia needs on Linux, then download the NuGet packages.
+  "postCreateCommand": "sudo apt-get update && sudo apt-get install -y --no-install-recommends libice6 libsm6 libfontconfig1 fonts-dejavu-core && dotnet restore Churchie.sln",
+
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "ms-dotnettools.csdevkit",
+        "AvaloniaTeam.vscode-avalonia"
+      ]
+    }
+  }
+}

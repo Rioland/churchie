@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    Churchie.Core holds everything that is NOT user interface:
+    songs, scripture, schedules, themes and turning them into slides.
+    It has no NuGet dependencies, so it builds anywhere .NET runs.
+  -->
+  <PropertyGroup>
+    <RootNamespace>Churchie.Core</RootNamespace>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <InternalsVisibleTo Include="Churchie.Core.Tests" />
+  </ItemGroup>
+
+</Project>

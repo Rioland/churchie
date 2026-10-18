@@ -1,0 +1,34 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <!--
+    The desktop app. Avalonia draws the same UI on Windows, macOS and Linux.
+    The exe is called "Churchie" (AssemblyName), so resource paths are avares://Churchie/...
+  -->
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Churchie.App</RootNamespace>
+    <AssemblyName>Churchie</AssemblyName>
+    <ApplicationIcon>Assets\churchie.ico</ApplicationIcon>
+    <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
+    <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <AvaloniaResource Include="Assets\**" />
+    <!-- The King James Bible ships inside the app (public domain). -->
+    <EmbeddedResource Include="Bibles\kjv.json.gz" LogicalName="Churchie.Bibles.kjv.json.gz" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Avalonia" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Desktop" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Themes.Fluent" Version="11.3.22" />
+    <PackageReference Include="Avalonia.Fonts.Inter" Version="11.3.22" />
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Churchie.Core\Churchie.Core.csproj" />
+  </ItemGroup>
+
+</Project>

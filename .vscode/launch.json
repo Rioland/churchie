@@ -1,0 +1,15 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Churchie",
+      "type": "coreclr",
+      "request": "launch",
+      "preLaunchTask": "build",
+      "program": "${workspaceFolder}/src/Churchie.App/bin/Debug/net10.0/Churchie.dll",
+      "cwd": "${workspaceFolder}",
+      "console": "internalConsole",
+      "env": { "DISPLAY": ":1" }
+    }
+  ]
+}

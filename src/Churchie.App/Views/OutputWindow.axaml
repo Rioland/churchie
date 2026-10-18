@@ -1,0 +1,15 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Churchie.App.ViewModels"
+        xmlns:c="using:Churchie.App.Controls"
+        x:Class="Churchie.App.Views.OutputWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="Churchie — Projector"
+        Icon="/Assets/churchie.ico"
+        Background="Black"
+        Cursor="None">
+
+  <!-- The projector window: one big slide, nothing else. -->
+  <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
+
+</Window>

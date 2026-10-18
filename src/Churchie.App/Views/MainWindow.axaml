@@ -1,0 +1,319 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Churchie.App.ViewModels"
+        xmlns:views="using:Churchie.App.Views"
+        xmlns:c="using:Churchie.App.Controls"
+        xmlns:m="using:Churchie.Core.Models"
+        xmlns:sys="using:System"
+        x:Class="Churchie.App.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Title="{Binding WindowTitle}"
+        Icon="/Assets/churchie.ico"
+        Width="1440" Height="900" MinWidth="1024" MinHeight="680"
+        WindowStartupLocation="CenterScreen">
+
+  <DockPanel>
+
+    <!-- ===================== Menu ===================== -->
+    <Menu DockPanel.Dock="Top" Background="#10121A">
+      <MenuItem Header="_File">
+        <MenuItem Header="_New schedule" InputGesture="Ctrl+N" Command="{Binding NewScheduleCommand}" />
+        <MenuItem Header="_Open schedule…" InputGesture="Ctrl+O" Command="{Binding OpenScheduleCommand}" />
+        <MenuItem Header="_Save schedule" InputGesture="Ctrl+S" Command="{Binding SaveScheduleCommand}" />
+        <MenuItem Header="Save schedule _as…" Command="{Binding SaveScheduleAsCommand}" />
+        <Separator />
+        <MenuItem Header="_Import songs…" Command="{Binding ImportSongsCommand}" />
+        <MenuItem Header="Open _data folder" Command="{Binding OpenDataFolderCommand}" />
+      </MenuItem>
+      <MenuItem Header="_Live">
+        <MenuItem Header="Go live with preview" InputGesture="Ctrl+Enter" Command="{Binding GoLiveCommand}" />
+        <MenuItem Header="Next slide" InputGesture="PageDown" Command="{Binding NextSlideCommand}" />
+        <MenuItem Header="Previous slide" InputGesture="PageUp" Command="{Binding PreviousSlideCommand}" />
+        <Separator />
+        <MenuItem Header="Clear everything live" Command="{Binding ClearLiveCommand}" />
+      </MenuItem>
+      <MenuItem Header="_Help">
+        <MenuItem Header="Keyboard shortcuts" Command="{Binding ShowShortcutsCommand}" />
+        <MenuItem Header="About Churchie" Command="{Binding ShowAboutCommand}" />
+      </MenuItem>
+    </Menu>
+
+    <!-- ===================== Status bar ===================== -->
+    <Border DockPanel.Dock="Bottom" Background="#10121A" Padding="12,5">
+      <TextBlock Text="{Binding StatusMessage}" Classes="hint" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+    </Border>
+
+    <Grid RowDefinitions="*,6,310" Margin="8">
+
+      <!-- ===================== Top: Schedule | Preview | Live ===================== -->
+      <Grid Grid.Row="0" ColumnDefinitions="270,6,*,6,*">
+
+        <!-- Schedule -->
+        <Border Grid.Column="0" Classes="panel">
+          <DockPanel>
+            <TextBlock DockPanel.Dock="Top" Classes="header" Text="SCHEDULE" Margin="0,0,0,6" />
+            <TextBox DockPanel.Dock="Top" Text="{Binding ScheduleName}" Watermark="Service name" Margin="0,0,0,8" />
+
+            <WrapPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
+              <Button Content="Up" Command="{Binding MoveUpCommand}" Margin="0,0,4,4" />
+              <Button Content="Down" Command="{Binding MoveDownCommand}" Margin="0,0,4,4" />
+              <Button Content="Edit" Command="{Binding EditScheduleEntryCommand}" Margin="0,0,4,4" />
+              <Button Content="Remove" Command="{Binding RemoveFromScheduleCommand}" Margin="0,0,4,4" />
+              <Button Content="+ Text slide" Command="{Binding AddTextItemCommand}" Margin="0,0,4,4" />
+            </WrapPanel>
+
+            <Grid>
+              <ListBox ItemsSource="{Binding ScheduleEntries}"
+                       SelectedItem="{Binding SelectedScheduleEntry}"
+                       DoubleTapped="OnScheduleDoubleTapped"
+                       Background="Transparent">
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:ScheduleEntryViewModel">
+                    <DockPanel>
+                      <Border DockPanel.Dock="Left" Classes="badge" Background="{Binding KindBrush}">
+                        <TextBlock Text="{Binding KindLabel}" FontSize="9" FontWeight="Bold" Foreground="White" />
+                      </Border>
+                      <TextBlock Text="{Binding Title}" TextTrimming="CharacterEllipsis" VerticalAlignment="Center" />
+                    </DockPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+              <TextBlock Classes="hint" Margin="8" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
+                         IsVisible="{Binding !ScheduleEntries.Count}"
+                         Text="Your service order is empty.&#10;Add songs, scripture and pictures from the tabs below." />
+            </Grid>
+          </DockPanel>
+        </Border>
+
+        <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
+
+        <!-- Preview -->
+        <Border Grid.Column="2" Classes="panel">
+          <DockPanel>
+            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+              <Button DockPanel.Dock="Right" Classes="live" Content="Go Live  ▶" Command="{Binding GoLiveCommand}" />
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <TextBlock Classes="header" Text="PREVIEW" />
+                <TextBlock Classes="subtitle" Text="{Binding PreviewTitle}" MaxWidth="420" />
+              </StackPanel>
+            </DockPanel>
+            <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="Double-click a slide to send it live." />
+            <ListBox Classes="slides"
+                     ItemsSource="{Binding PreviewSlides}"
+                     SelectedItem="{Binding SelectedPreviewSlide}"
+                     DoubleTapped="OnPreviewSlideDoubleTapped"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:SlideItemViewModel">
+                  <StackPanel Width="192" Spacing="4">
+                    <Border Height="108" CornerRadius="4" ClipToBounds="True" Background="Black">
+                      <c:SlideView Slide="{Binding Slide}" Appearance="{Binding Appearance}" />
+                    </Border>
+                    <TextBlock Text="{Binding Caption}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Border>
+
+        <GridSplitter Grid.Column="3" Background="Transparent" ResizeDirection="Columns" />
+
+        <!-- Live -->
+        <Border Grid.Column="4" Classes="panel" x:Name="LivePanel" Focusable="True">
+          <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+              <Border Background="#E5484D" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
+                <TextBlock Text="LIVE" FontSize="11" FontWeight="Bold" Foreground="White" />
+              </Border>
+              <TextBlock Classes="subtitle" Text="{Binding LiveTitle}" MaxWidth="420" />
+            </StackPanel>
+
+            <!-- Exactly what the congregation sees -->
+            <Border DockPanel.Dock="Top" Classes="screen" Height="250">
+              <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
+            </Border>
+
+            <WrapPanel DockPanel.Dock="Top" Margin="0,8,0,8">
+              <Button Content="◀  Prev" Command="{Binding PreviousSlideCommand}" Margin="0,0,4,4" />
+              <Button Content="Next  ▶" Command="{Binding NextSlideCommand}" Margin="0,0,12,4" />
+              <ToggleButton Classes="danger" Content="Black (B)" IsChecked="{Binding IsBlack}" Margin="0,0,4,4" />
+              <ToggleButton Classes="danger" Content="Clear (C)" IsChecked="{Binding IsCleared}" Margin="0,0,4,4" />
+              <ToggleButton Classes="danger" Content="Logo (L)" IsChecked="{Binding IsLogo}" Margin="0,0,12,4" />
+              <ToggleButton Content="Projector output" IsChecked="{Binding IsOutputOpen}" Margin="0,0,4,4" />
+            </WrapPanel>
+
+            <ListBox Classes="slides"
+                     ItemsSource="{Binding LiveSlides}"
+                     SelectedItem="{Binding SelectedLiveSlide}"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+              <ListBox.ItemsPanel>
+                <ItemsPanelTemplate>
+                  <WrapPanel />
+                </ItemsPanelTemplate>
+              </ListBox.ItemsPanel>
+              <ListBox.ItemTemplate>
+                <DataTemplate x:DataType="vm:SlideItemViewModel">
+                  <StackPanel Width="144" Spacing="3">
+                    <Border Height="81" CornerRadius="4" ClipToBounds="True" Background="Black">
+                      <c:SlideView Slide="{Binding Slide}" Appearance="{Binding Appearance}" />
+                    </Border>
+                    <TextBlock Text="{Binding Caption}" FontSize="10" TextTrimming="CharacterEllipsis" />
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Border>
+      </Grid>
+
+      <GridSplitter Grid.Row="1" Background="Transparent" ResizeDirection="Rows" />
+
+      <!-- ===================== Bottom: resource tabs ===================== -->
+      <Border Grid.Row="2" Classes="panel" Padding="6">
+        <TabControl Padding="4,6,4,0">
+
+          <!-- Songs -->
+          <TabItem Header="Songs">
+            <Grid ColumnDefinitions="340,12,*">
+              <DockPanel Grid.Column="0">
+                <TextBox DockPanel.Dock="Top" Text="{Binding SongSearch}" Watermark="Search titles, words or authors…" Margin="0,0,0,6" />
+                <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="{Binding SongCountText}" />
+                <ListBox ItemsSource="{Binding FilteredSongs}"
+                         SelectedItem="{Binding SelectedSong}"
+                         DoubleTapped="OnSongDoubleTapped">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="m:Song">
+                      <StackPanel>
+                        <TextBlock Text="{Binding Title}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Text="{Binding Author}" FontSize="11" Foreground="#8B93B5" TextTrimming="CharacterEllipsis" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </DockPanel>
+
+              <DockPanel Grid.Column="2">
+                <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                  <Button Classes="accent" Content="Add to schedule" Command="{Binding AddSongToScheduleCommand}" Margin="0,0,6,4" />
+                  <Button Content="New song" Command="{Binding NewSongCommand}" Margin="0,0,6,4" />
+                  <Button Content="Edit" Command="{Binding EditSongCommand}" Margin="0,0,6,4" />
+                  <Button Content="Delete" Command="{Binding DeleteSongCommand}" Margin="0,0,6,4" />
+                  <Button Content="Import…" Command="{Binding ImportSongsCommand}" Margin="0,0,6,4" />
+                </WrapPanel>
+                <TextBlock DockPanel.Dock="Top" Classes="hint" Text="{Binding SelectedSongDetails}" Margin="0,0,0,6" />
+                <ScrollViewer>
+                  <TextBlock Text="{Binding SelectedSongLyrics}" TextWrapping="Wrap" FontSize="13" LineHeight="20" />
+                </ScrollViewer>
+              </DockPanel>
+            </Grid>
+          </TabItem>
+
+          <!-- Scripture -->
+          <TabItem Header="Scripture">
+            <Grid ColumnDefinitions="220,8,90,12,*">
+              <DockPanel Grid.Column="0">
+                <ComboBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="0,0,0,6"
+                          ItemsSource="{Binding Bibles}" SelectedItem="{Binding SelectedBible}" />
+                <ListBox ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook}" />
+              </DockPanel>
+
+              <ListBox Grid.Column="2" ItemsSource="{Binding Chapters}" SelectedIndex="{Binding SelectedChapterIndex, Mode=TwoWay}" />
+
+              <DockPanel Grid.Column="4">
+                <Grid DockPanel.Dock="Top" ColumnDefinitions="*,Auto,Auto,Auto" Margin="0,0,0,6">
+                  <TextBox Grid.Column="0" x:Name="ReferenceBox" Text="{Binding ReferenceText}" Watermark="e.g. John 3:16-18, Ps 23, 1 Cor 13:4-7" />
+                  <Button Grid.Column="1" Content="Find" Command="{Binding FindScriptureCommand}" Margin="6,0,0,0" />
+                  <Button Grid.Column="2" Content="Add to schedule" Command="{Binding AddScriptureToScheduleCommand}" Margin="6,0,0,0" />
+                  <Button Grid.Column="3" Classes="live" Content="Go Live" Command="{Binding ScriptureGoLiveCommand}" Margin="6,0,0,0" />
+                </Grid>
+                <TextBlock DockPanel.Dock="Top" Classes="hint" Text="{Binding ScriptureStatus}" Margin="0,0,0,6" />
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
+                  <TextBlock Classes="hint" VerticalAlignment="Center" Text="More translations: put Zefania XML Bibles in the Bibles folder." />
+                  <Button Content="Open Bibles folder" Command="{Binding OpenBiblesFolderCommand}" />
+                  <Button Content="Reload" Command="{Binding ReloadBiblesCommand}" />
+                </StackPanel>
+                <ListBox ItemsSource="{Binding ScriptureVerses}">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="sys:String">
+                      <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </DockPanel>
+            </Grid>
+          </TabItem>
+
+          <!-- Media -->
+          <TabItem Header="Media">
+            <DockPanel>
+              <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+                <Button Classes="accent" Content="Add pictures…" Command="{Binding AddMediaCommand}" Margin="0,0,6,4" />
+                <Button Content="Remove" Command="{Binding RemoveMediaCommand}" Margin="0,0,16,4" />
+                <Button Content="Use as song background" Command="{Binding UseAsSongBackgroundCommand}" Margin="0,0,6,4" />
+                <Button Content="Use as scripture background" Command="{Binding UseAsScriptureBackgroundCommand}" Margin="0,0,6,4" />
+                <Button Content="Use as logo" Command="{Binding UseAsLogoCommand}" Margin="0,0,16,4" />
+                <Button Content="Add to schedule" Command="{Binding AddMediaToScheduleCommand}" Margin="0,0,6,4" />
+                <Button Classes="live" Content="Show live" Command="{Binding ShowMediaLiveCommand}" Margin="0,0,6,4" />
+              </WrapPanel>
+              <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="{Binding LogoText}" />
+              <ListBox Classes="slides"
+                       ItemsSource="{Binding MediaItems}"
+                       SelectedItem="{Binding SelectedMedia}"
+                       ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+                <ListBox.ItemsPanel>
+                  <ItemsPanelTemplate>
+                    <WrapPanel />
+                  </ItemsPanelTemplate>
+                </ListBox.ItemsPanel>
+                <ListBox.ItemTemplate>
+                  <DataTemplate x:DataType="vm:MediaItemViewModel">
+                    <StackPanel Width="160" Spacing="4">
+                      <Border Height="90" CornerRadius="4" ClipToBounds="True" Background="Black">
+                        <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                      </Border>
+                      <TextBlock Text="{Binding Name}" FontSize="11" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                  </DataTemplate>
+                </ListBox.ItemTemplate>
+              </ListBox>
+            </DockPanel>
+          </TabItem>
+
+          <!-- Themes & Settings -->
+          <TabItem Header="Themes &amp; Settings">
+            <Grid ColumnDefinitions="*,12,*,12,300">
+              <views:ThemeEditorView Grid.Column="0" DataContext="{Binding SongThemeEditor}" />
+              <views:ThemeEditorView Grid.Column="2" DataContext="{Binding ScriptureThemeEditor}" />
+
+              <ScrollViewer Grid.Column="4">
+                <StackPanel Spacing="10">
+                  <TextBlock Classes="header" Text="OUTPUT" />
+                  <TextBlock Classes="hint" Text="Projector screen" />
+                  <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding ScreenNames}" SelectedIndex="{Binding OutputScreenIndex, Mode=TwoWay}" />
+                  <TextBlock Classes="hint" Text="With only one screen connected, the output opens in a window you can move and resize." />
+
+                  <TextBlock Classes="header" Text="SLIDES" Margin="0,8,0,0" />
+                  <TextBlock Classes="hint" Text="Split long song sections into" />
+                  <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding LinesPerSlideOptions}" SelectedIndex="{Binding LinesPerSlideIndex, Mode=TwoWay}" />
+                  <TextBlock Classes="hint" Text="Scripture per slide" />
+                  <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding VersesPerSlideOptions}" SelectedIndex="{Binding VersesPerSlideIndex, Mode=TwoWay}" />
+                  <CheckBox Content="Show verse numbers" IsChecked="{Binding ShowVerseNumbers}" />
+
+                  <TextBlock Classes="header" Text="DATA" Margin="0,8,0,0" />
+                  <Button Content="Open data folder" Command="{Binding OpenDataFolderCommand}" />
+                </StackPanel>
+              </ScrollViewer>
+            </Grid>
+          </TabItem>
+
+        </TabControl>
+      </Border>
+    </Grid>
+  </DockPanel>
+</Window>

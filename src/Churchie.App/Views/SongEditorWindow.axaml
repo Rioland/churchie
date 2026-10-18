@@ -1,0 +1,55 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:Churchie.App.ViewModels"
+        x:Class="Churchie.App.Views.SongEditorWindow"
+        x:DataType="vm:SongEditorViewModel"
+        Title="{Binding WindowTitle}"
+        Icon="/Assets/churchie.ico"
+        Width="780" Height="760" MinWidth="520" MinHeight="480"
+        WindowStartupLocation="CenterOwner"
+        ShowInTaskbar="False">
+
+  <DockPanel Margin="18">
+
+    <!-- Buttons -->
+    <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" Spacing="8" Margin="0,12,0,0">
+      <TextBlock Text="{Binding Error}" Foreground="#FF6B6B" VerticalAlignment="Center" Margin="0,0,12,0" />
+      <Button Content="Cancel" Command="{Binding CancelCommand}" IsCancel="True" MinWidth="90" />
+      <Button Classes="accent" Content="Save" Command="{Binding SaveCommand}" MinWidth="90" />
+    </StackPanel>
+
+    <!-- Title and details -->
+    <StackPanel DockPanel.Dock="Top" Spacing="8">
+      <TextBlock Classes="hint" Text="Title" />
+      <TextBox Text="{Binding Title}" FontSize="16" />
+
+      <Grid ColumnDefinitions="*,12,*,12,140" IsVisible="{Binding ShowSongFields}">
+        <StackPanel Grid.Column="0" Spacing="4">
+          <TextBlock Classes="hint" Text="Author" />
+          <TextBox Text="{Binding Author}" />
+        </StackPanel>
+        <StackPanel Grid.Column="2" Spacing="4">
+          <TextBlock Classes="hint" Text="Copyright" />
+          <TextBox Text="{Binding Copyright}" />
+        </StackPanel>
+        <StackPanel Grid.Column="4" Spacing="4">
+          <TextBlock Classes="hint" Text="CCLI number" />
+          <TextBox Text="{Binding Ccli}" />
+        </StackPanel>
+      </Grid>
+
+      <TextBlock Classes="hint" Text="{Binding LyricsHint}" Margin="0,6,0,0" />
+    </StackPanel>
+
+    <TextBlock DockPanel.Dock="Bottom" Classes="hint" Text="{Binding SectionSummary}" Margin="0,8,0,0" TextWrapping="Wrap" />
+
+    <!-- Lyrics -->
+    <TextBox Text="{Binding Lyrics}"
+             AcceptsReturn="True"
+             TextWrapping="Wrap"
+             FontSize="15"
+             Margin="0,8,0,0"
+             VerticalContentAlignment="Top"
+             ScrollViewer.VerticalScrollBarVisibility="Auto" />
+  </DockPanel>
+</Window>
