@@ -1,3 +1,4 @@
+using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Input;
 
@@ -22,4 +23,18 @@ public partial class OutputWindow : Window
 
     private void ToggleFullScreen() =>
         WindowState = WindowState == WindowState.FullScreen ? WindowState.Normal : WindowState.FullScreen;
+
+    protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
+    {
+        base.OnPropertyChanged(change);
+
+        // Hide the mouse pointer only in full screen, so it never sits on top of the words
+        // on the projector — but you can still find it when the output is a normal window.
+        if (change.Property == WindowStateProperty)
+        {
+            Cursor = WindowState == WindowState.FullScreen
+                ? new Cursor(StandardCursorType.None)
+                : Cursor.Default;
+        }
+    }
 }

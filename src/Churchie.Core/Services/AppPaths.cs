@@ -20,7 +20,17 @@ public sealed class AppPaths
     {
         Root = root
                ?? Environment.GetEnvironmentVariable("CHURCHIE_DATA")
-               ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ApplicationData), "Churchie");
+               ?? DefaultRoot();
+    }
+
+    private static string DefaultRoot()
+    {
+        // On macOS, .NET calls ~/Library/Application Support "LocalApplicationData".
+        // On Windows and Linux, ApplicationData is the usual place (%AppData%, ~/.config).
+        var folder = OperatingSystem.IsMacOS()
+            ? Environment.SpecialFolder.LocalApplicationData
+            : Environment.SpecialFolder.ApplicationData;
+        return Path.Combine(Environment.GetFolderPath(folder), "Churchie");
     }
 
     public void EnsureCreated()

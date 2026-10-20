@@ -6,8 +6,7 @@
         x:DataType="vm:MainWindowViewModel"
         Title="Churchie — Projector"
         Icon="/Assets/churchie.ico"
-        Background="Black"
-        Cursor="None">
+        Background="Black">
 
   <!-- The projector window: one big slide, nothing else. -->
   <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />

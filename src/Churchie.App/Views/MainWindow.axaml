@@ -4,7 +4,7 @@
         xmlns:views="using:Churchie.App.Views"
         xmlns:c="using:Churchie.App.Controls"
         xmlns:m="using:Churchie.Core.Models"
-        xmlns:sys="using:System"
+        xmlns:b="using:Churchie.Core.Bible"
         x:Class="Churchie.App.Views.MainWindow"
         x:DataType="vm:MainWindowViewModel"
         Title="{Binding WindowTitle}"
@@ -240,8 +240,11 @@
                 </StackPanel>
                 <ListBox ItemsSource="{Binding ScriptureVerses}">
                   <ListBox.ItemTemplate>
-                    <DataTemplate x:DataType="sys:String">
-                      <TextBlock Text="{Binding}" TextWrapping="Wrap" />
+                    <DataTemplate x:DataType="b:Verse">
+                      <Grid ColumnDefinitions="36,*">
+                        <TextBlock Text="{Binding Number}" Foreground="#B7A6FF" FontWeight="SemiBold" />
+                        <TextBlock Grid.Column="1" Text="{Binding Text}" TextWrapping="Wrap" />
+                      </Grid>
                     </DataTemplate>
                   </ListBox.ItemTemplate>
                 </ListBox>

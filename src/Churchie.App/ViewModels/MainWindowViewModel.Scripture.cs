@@ -10,7 +10,7 @@ namespace Churchie.App.ViewModels;
 public partial class MainWindowViewModel
 {
     public ObservableCollection<BibleTranslation> Bibles { get; } = new();
-    public ObservableCollection<string> ScriptureVerses { get; } = new();
+    public ObservableCollection<Verse> ScriptureVerses { get; } = new();
 
     [ObservableProperty] private BibleTranslation? _selectedBible;
     [ObservableProperty] private IReadOnlyList<BibleBook> _books = Array.Empty<BibleBook>();
@@ -63,7 +63,7 @@ public partial class MainWindowViewModel
 
         _passage = passage;
         ScriptureStatus = $"{passage.Title} ({passage.Bible.Abbreviation}) — {passage.Verses.Count} verse{(passage.Verses.Count == 1 ? "" : "s")}";
-        foreach (var verse in passage.Verses) ScriptureVerses.Add($"{verse.Number}   {verse.Text}");
+        foreach (var verse in passage.Verses) ScriptureVerses.Add(verse);
         ShowInPreview(ScheduleItem.ForScripture(passage.Bible.Abbreviation, passage.Title));
     }
 
