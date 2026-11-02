@@ -164,4 +164,55 @@
   if (jump) {
     jump.addEventListener("change", function () { if (jump.value) location.hash = jump.value; });
   }
+
+  // ---------- Contact form: hand the message to WhatsApp or email ----------
+  // A static website can't send messages by itself, so the form writes the message
+  // into WhatsApp (or the visitor's email app) and the visitor presses Send there.
+  var contact = document.querySelector("[data-contact]");
+  if (contact) {
+    var PHONE = "2348149916721";          // wa.me wants the country code and number, no "+" or spaces
+    var EMAIL = "riotech2222@gmail.com";
+    var field = function (id) { return document.getElementById(id); };
+    var value = function (id) { return field(id).value.trim(); };
+    var status = contact.querySelector("[data-contact-status]");
+
+    var say = function (text) { status.textContent = text; status.hidden = false; };
+
+    // The message exactly as it will appear in WhatsApp or the email.
+    var compose = function () {
+      var church = value("c-church");
+      return "Hello, I'm " + value("c-name") + (church ? " from " + church : "") + ".\n" +
+             "About: " + value("c-topic") + "\n\n" +
+             value("c-message") + "\n\n" +
+             "(Sent from the Churchie website)";
+    };
+
+    // "required" alone accepts a box full of spaces, so check the trimmed text too.
+    var ready = function () {
+      ["c-name", "c-message"].forEach(function (id) {
+        field(id).setCustomValidity(value(id) ? "" : "Please fill this in.");
+      });
+      return contact.reportValidity();
+    };
+    ["c-name", "c-message"].forEach(function (id) {
+      field(id).addEventListener("input", function () { field(id).setCustomValidity(""); });
+    });
+
+    contact.addEventListener("submit", function (e) {
+      e.preventDefault();
+      if (!ready()) return;
+      var url = "https://wa.me/" + PHONE + "?text=" + encodeURIComponent(compose());
+      var tab = window.open(url, "_blank");
+      if (tab) tab.opener = null; else location.href = url; // pop-up blocked: open it here instead
+      say("WhatsApp should now be open with your message. Press Send in WhatsApp to deliver it.");
+    });
+
+    contact.querySelector("[data-contact-email]").addEventListener("click", function () {
+      if (!ready()) return;
+      location.href = "mailto:" + EMAIL +
+        "?subject=" + encodeURIComponent("Churchie: " + value("c-topic")) +
+        "&body=" + encodeURIComponent(compose());
+      say("Your email app should now be open with the message. Press Send there. If nothing opened, email " + EMAIL + " directly.");
+    });
+  }
 })();
