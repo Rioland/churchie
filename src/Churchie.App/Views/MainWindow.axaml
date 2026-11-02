@@ -135,9 +135,11 @@
             </StackPanel>
 
             <!-- Exactly what the congregation sees -->
-            <Border DockPanel.Dock="Top" Classes="screen" Height="250">
-              <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
-            </Border>
+            <c:AspectRatioBox DockPanel.Dock="Top" MaxHeight="440">
+              <Border Classes="screen">
+                <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
+              </Border>
+            </c:AspectRatioBox>
 
             <WrapPanel DockPanel.Dock="Top" Margin="0,8,0,8">
               <Button Content="◀  Prev" Command="{Binding PreviousSlideCommand}" Margin="0,0,4,4" />

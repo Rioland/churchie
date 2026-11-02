@@ -1,6 +1,7 @@
 <Application xmlns="https://github.com/avaloniaui"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
              x:Class="Churchie.App.App"
+             Name="Churchie"
              RequestedThemeVariant="Dark">
 
   <Application.Styles>
@@ -53,6 +54,19 @@
 
     <Style Selector="ToggleButton.danger:checked /template/ ContentPresenter">
       <Setter Property="Background" Value="#E5484D" />
+    </Style>
+
+    <!-- Lists sit in a slightly darker well than the panel around them. -->
+    <Style Selector="ListBox">
+      <Setter Property="Background" Value="#161925" />
+      <Setter Property="CornerRadius" Value="6" />
+    </Style>
+
+    <!-- Smaller tab headers than Fluent's default. -->
+    <Style Selector="TabItem">
+      <Setter Property="FontSize" Value="15" />
+      <Setter Property="MinHeight" Value="38" />
+      <Setter Property="Padding" Value="12,0" />
     </Style>
 
     <Style Selector="ListBox.slides">

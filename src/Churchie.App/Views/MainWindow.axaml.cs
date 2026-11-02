@@ -81,7 +81,9 @@ public partial class MainWindow : Window
         }
         else
         {
-            // Only one screen: a normal window, so the operator can still see this one.
+            // Only one screen: a normal window that floats above this one, so it
+            // doesn't disappear behind the (often maximised) control window.
+            window.Topmost = true;
             window.Width = 960;
             window.Height = 540;
             window.Position = new PixelPoint(target.WorkingArea.X + 60, target.WorkingArea.Y + 60);

@@ -23,6 +23,9 @@ echo "== Making Churchie.app..."
 KEEP_APP=1 bash "$ROOT/build/make-macos-app.sh" "$PUBLISH" "$RID" "$VERSION"
 
 mkdir -p "$HOME/Applications"
+# Quit a running Churchie so its app bundle can be replaced
+# (the schedule autosaves on every change, so nothing is lost).
+pkill -x Churchie 2>/dev/null && sleep 1 || true
 rm -rf "$DEST"
 mv "$ROOT/dist/Churchie.app" "$DEST"
 echo "== Installed ${DEST}"
