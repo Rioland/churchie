@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
-  <link rel="stylesheet" href="assets/site.css?v=2">
+  <link rel="stylesheet" href="assets/site.css?v=3">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -54,7 +54,7 @@
 
     <section class="section">
       <div class="wrap">
-        <p class="notice" data-no-release hidden>The downloads are being published right now. If a button takes you to an empty page, check back in a little while.</p>
+        <p class="notice" data-no-release hidden tabindex="-1">The first version of Churchie is being published right now, so the downloads aren't ready yet. Please check back soon. Questions? <a href="contact.html">Get in touch</a>.</p>
 
         <div class="platforms">
           <article class="platform" id="windows" data-platform="windows">
@@ -65,19 +65,21 @@
               </h2>
               <p class="meta">Windows 10 or 11, 64-bit</p>
               <div class="downloads">
-                <a class="btn btn-primary" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-win-x64.zip">
-                  <span>Download for Windows</span><small data-size="Churchie-win-x64.zip">.zip</small>
+                <a class="btn btn-primary" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-Setup-win-x64.exe">
+                  <span>Download for Windows</span><small data-size="Churchie-Setup-win-x64.exe">Installer (.exe)</small>
                 </a>
               </div>
+              <p class="meta">Need it on a USB stick, or can't install programs on this computer? Get the <a href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-win-x64.zip">portable version (.zip)</a>: extract it and double-click <strong>Churchie.exe</strong>.</p>
             </div>
             <div>
               <h3>Install</h3>
               <ol>
-                <li>Open the downloaded <code>Churchie-win-x64.zip</code> and choose <strong>Extract all</strong>.</li>
-                <li>Open the extracted <strong>Churchie</strong> folder and double-click <strong>Churchie.exe</strong>.</li>
+                <li>Open the downloaded <strong>Churchie-Setup-win-x64.exe</strong>.</li>
                 <li>If Windows shows "Windows protected your PC", click <strong>More info</strong>, then <strong>Run anyway</strong>. This appears because Churchie isn't signed with a paid certificate yet.</li>
-                <li>To find it easily next time, right-click <strong>Churchie.exe</strong> and choose <strong>Pin to Start</strong>, or <strong>Send to → Desktop (create shortcut)</strong>.</li>
+                <li>Click <strong>Next</strong>, <strong>Install</strong>, then <strong>Finish</strong>. No administrator password is needed.</li>
+                <li>Churchie opens. Next time, find it in the <strong>Start menu</strong>, or use the desktop shortcut.</li>
               </ol>
+              <p class="note">To remove it later: <strong>Settings → Apps → Installed apps → Churchie → Uninstall</strong>. Your songs and settings stay on the computer in case you reinstall.</p>
             </div>
           </article>
 
@@ -89,25 +91,25 @@
               </h2>
               <p class="meta">macOS 12 Monterey or newer</p>
               <div class="downloads">
-                <a class="btn btn-primary" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-arm64.zip">
-                  <span>Mac with Apple Silicon (M1 or newer)</span><small data-size="Churchie-osx-arm64.zip">.zip</small>
+                <a class="btn btn-primary" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-arm64.pkg">
+                  <span>Mac with Apple Silicon (M1 or newer)</span><small data-size="Churchie-osx-arm64.pkg">Installer (.pkg)</small>
                 </a>
-                <a class="btn btn-light" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-x64.zip">
-                  <span>Mac with Intel processor</span><small data-size="Churchie-osx-x64.zip">.zip</small>
+                <a class="btn btn-light" href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-x64.pkg">
+                  <span>Mac with Intel processor</span><small data-size="Churchie-osx-x64.pkg">Installer (.pkg)</small>
                 </a>
               </div>
               <p class="meta">Not sure which? Open the Apple menu and choose About This Mac. "Chip: Apple M…" means Apple Silicon; "Processor: Intel…" means Intel.</p>
+              <p class="meta">Rather drag the app into Applications yourself? Get Churchie.app as a .zip for <a href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-arm64.zip">Apple Silicon</a> or <a href="https://github.com/Rioland/churchie/releases/latest/download/Churchie-osx-x64.zip">Intel</a>.</p>
             </div>
             <div>
               <h3>Install</h3>
               <ol>
-                <li>Open the downloaded zip if your browser didn't already. You'll get <strong>Churchie.app</strong>.</li>
-                <li>Drag <strong>Churchie.app</strong> into your <strong>Applications</strong> folder.</li>
-                <li>Open it. The first time, macOS says it can't check the app, because Churchie isn't notarised by Apple yet. Click <strong>Done</strong>.</li>
-                <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down to the message about Churchie and click <strong>Open Anyway</strong>, then confirm with your password.</li>
-                <li>From then on, Churchie opens normally from Launchpad, Spotlight or the Dock.</li>
+                <li>Open the downloaded <strong>.pkg</strong> file. The first time, macOS says it can't check it, because Churchie isn't notarised by Apple yet. Click <strong>Done</strong>.</li>
+                <li>Open <strong>System Settings → Privacy &amp; Security</strong>, scroll down to the message about Churchie and click <strong>Open Anyway</strong>, then confirm with your password or Touch ID.</li>
+                <li>The installer opens. Click <strong>Continue</strong>, then <strong>Install</strong>, enter your password, and click <strong>Close</strong>. Churchie is now in your Applications folder.</li>
+                <li>Open Churchie from Launchpad, Spotlight or Applications. If macOS asks about Churchie again, do step 2 once more.</li>
               </ol>
-              <p class="note">On macOS 14 or older you can instead Control-click Churchie.app, choose <strong>Open</strong>, then <strong>Open</strong> again.</p>
+              <p class="note">On macOS 14 or older you can instead Control-click the .pkg file, choose <strong>Open</strong>, then <strong>Open</strong> again.</p>
             </div>
           </article>
 
@@ -190,6 +192,6 @@
     </div>
   </footer>
 
-  <script src="assets/site.js?v=2" defer></script>
+  <script src="assets/site.js?v=3" defer></script>
 </body>
 </html>

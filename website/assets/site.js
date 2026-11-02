@@ -5,10 +5,16 @@
   var REPO = "Rioland/churchie";
   var LATEST = "https://github.com/" + REPO + "/releases/latest/download/";
   var FILES = {
-    windows: { file: "Churchie-win-x64.zip", label: "Download for Windows" },
-    "mac-arm": { file: "Churchie-osx-arm64.zip", label: "Download for Mac (Apple Silicon)" },
-    "mac-intel": { file: "Churchie-osx-x64.zip", label: "Download for Mac (Intel)" },
+    windows: { file: "Churchie-Setup-win-x64.exe", label: "Download for Windows" },
+    "mac-arm": { file: "Churchie-osx-arm64.pkg", label: "Download for Mac (Apple Silicon)" },
+    "mac-intel": { file: "Churchie-osx-x64.pkg", label: "Download for Mac (Intel)" },
     linux: { file: "Churchie-linux-x64.tar.gz", label: "Download for Linux" },
+  };
+  // If a release doesn't have an installer yet, offer the plain download instead.
+  var FALLBACK = {
+    "Churchie-Setup-win-x64.exe": "Churchie-win-x64.zip",
+    "Churchie-osx-arm64.pkg": "Churchie-osx-arm64.zip",
+    "Churchie-osx-x64.pkg": "Churchie-osx-x64.zip",
   };
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -76,10 +82,17 @@
     return Promise.resolve("mac-arm");
   }
 
+  var noRelease = false;    // set below if nothing has been published on GitHub yet
+  var releaseFiles = null;  // name -> size, once the latest release has been read
+
   function setButton(button, key) {
     var info = FILES[key];
     if (!info) return;
-    button.href = LATEST + info.file;
+    // (If there's no release yet, the release check below has already pointed it elsewhere.)
+    if (noRelease) return;
+    var file = info.file;
+    if (releaseFiles && releaseFiles[file] === undefined && FALLBACK[file]) file = FALLBACK[file];
+    button.href = LATEST + file;
     var label = button.querySelector("[data-label]");
     if (label) label.textContent = info.label;
   }
@@ -117,27 +130,59 @@
   }
 
   // ---------- Latest release: version, sizes, availability ----------
-  var needsRelease = document.querySelector("[data-version], [data-size], [data-no-release]");
+  // The download links go straight to the file (GitHub sends it, the visitor stays here).
+  // This checks the latest release so the page can show the version and file sizes, and
+  // copes with a release that doesn't exist yet or is missing a file.
+  var downloadLinks = function () {
+    return Array.prototype.slice.call(document.querySelectorAll("a[href*='/releases/latest/download/']"));
+  };
+  var fileOf = function (a) { return a.getAttribute("href").split("/").pop(); };
+
+  var needsRelease = document.querySelector("[data-version], [data-size], [data-no-release], [data-download]");
   if (needsRelease && window.fetch) {
     fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (release) {
         var version = (release.tag_name || "").replace(/^v/, "");
         document.querySelectorAll("[data-version]").forEach(function (el) { el.textContent = "Version " + version; });
-        (release.assets || []).forEach(function (asset) {
-          var mb = Math.round(asset.size / 1048576);
-          document.querySelectorAll("[data-size='" + asset.name + "']").forEach(function (el) { el.textContent = mb + " MB"; });
+
+        var sizes = {};
+        (release.assets || []).forEach(function (asset) { sizes[asset.name] = asset.size; });
+        releaseFiles = sizes;
+
+        downloadLinks().forEach(function (a) {
+          var name = fileOf(a);
+          if (sizes[name] === undefined && FALLBACK[name] && sizes[FALLBACK[name]] !== undefined) {
+            a.href = LATEST + FALLBACK[name]; // no installer in this release: use the .zip
+            var label = a.querySelector("[data-size]");
+            if (label) label.setAttribute("data-size", FALLBACK[name]);
+          }
+        });
+        Object.keys(sizes).forEach(function (name) {
+          var mb = Math.max(1, Math.round(sizes[name] / 1048576));
+          document.querySelectorAll("[data-size='" + name + "']").forEach(function (el) {
+            var kind = /\.exe$|\.pkg$/.test(name) ? "Installer, " : "";
+            el.textContent = kind + mb + " MB";
+          });
         });
         document.querySelectorAll("[data-release-notes]").forEach(function (a) { a.href = release.html_url; });
       })
       .catch(function (status) {
-        if (status === 404) {
-          // No release published yet: point download buttons at the releases page.
-          document.querySelectorAll("[data-no-release]").forEach(function (el) { el.hidden = false; });
-          document.querySelectorAll("a[href*='/releases/latest/download/']").forEach(function (a) {
-            a.href = "https://github.com/" + REPO + "/releases";
+        if (status !== 404) return; // e.g. GitHub busy: the links still work as they are
+        noRelease = true;
+        // Nothing published yet. Keep people on this site rather than sending them to an
+        // empty GitHub page: explain on the download page, or send them there.
+        var notice = document.querySelector("[data-no-release]");
+        if (notice) notice.hidden = false;
+        downloadLinks().concat(Array.prototype.slice.call(document.querySelectorAll("[data-download]"))).forEach(function (a) {
+          if (!notice) { a.href = "download.html"; return; }
+          a.href = "#";
+          a.addEventListener("click", function (e) {
+            e.preventDefault();
+            notice.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+            notice.focus({ preventScroll: true });
           });
-        }
+        });
       });
   }
 

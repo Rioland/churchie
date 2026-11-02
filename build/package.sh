@@ -4,12 +4,14 @@
 #   rid:   win-x64 | linux-x64 | osx-arm64 | osx-x64
 #
 # Produces (the website's download links use these exact names):
-#   dist/Churchie-win-x64.zip        (a "Churchie" folder with Churchie.exe)
+#   dist/Churchie-Setup-win-x64.exe  (Windows installer; needs NSIS, see make-windows-installer.sh)
+#   dist/Churchie-win-x64.zip        (a "Churchie" folder with Churchie.exe, no installer)
 #   dist/Churchie-linux-x64.tar.gz   (a "Churchie" folder with the Churchie program)
-#   dist/Churchie-osx-arm64.zip      (Churchie.app for Apple Silicon Macs)
-#   dist/Churchie-osx-x64.zip        (Churchie.app for Intel Macs)
+#   dist/Churchie-osx-arm64.pkg/.zip (installer / plain Churchie.app for Apple Silicon Macs)
+#   dist/Churchie-osx-x64.pkg/.zip   (the same for Intel Macs)
 #
-# The macOS packages must be built on a Mac (they are signed with codesign).
+# The macOS packages must be built on a Mac (codesign, pkgbuild and productbuild).
+# Set REQUIRE_INSTALLER=1 to stop with an error if NSIS is missing (used on GitHub).
 # Used by GitHub Actions and by the Mac "Make Downloads" launcher.
 set -euo pipefail
 
@@ -49,6 +51,13 @@ case "$RID" in
     rm -rf "$(dirname "$STAGE")" && mkdir -p "$STAGE"
     cp -R "$PUBLISH"/. "$STAGE/"
     make_zip "$(dirname "$STAGE")" Churchie "$DIST/Churchie-${RID}.zip"
+    # The Setup.exe needs NSIS. Without it (e.g. on a Mac) the .zip is still made.
+    if command -v makensis >/dev/null 2>&1 || [ -x "/c/Program Files (x86)/NSIS/makensis.exe" ] \
+       || [ "${REQUIRE_INSTALLER:-0}" = "1" ]; then
+      bash "$ROOT/build/make-windows-installer.sh" "$STAGE" "$VERSION" "$DIST/Churchie-Setup-${RID}.exe"
+    else
+      echo "!! NSIS (makensis) isn't installed, so only the .zip was made."
+    fi
     ;;
   linux-*)
     rm -rf "$(dirname "$STAGE")" && mkdir -p "$STAGE"
@@ -65,4 +74,4 @@ case "$RID" in
     ;;
 esac
 
-echo "== Done: $(ls "$DIST"/Churchie-"${RID}".* )"
+echo "== Done:"; ls -1 "$DIST"/*"${RID}"*

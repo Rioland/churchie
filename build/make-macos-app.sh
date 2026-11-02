@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
-# Wraps the published macOS build in a proper Churchie.app bundle and zips it.
+# Wraps the published macOS build in a proper Churchie.app bundle, zips it, and builds
+# the .pkg installer (build/make-macos-pkg.sh).
 # Runs on the macOS GitHub runner, and locally via build/install-mac-app.sh.
 #   usage: make-macos-app.sh <publish-folder> <rid> <version>
 # Set KEEP_APP=1 to leave dist/Churchie.app in place instead of zipping it.
@@ -57,5 +58,6 @@ fi
 
 cd "$OUT"
 ditto -c -k --keepParent Churchie.app "Churchie-${RID}.zip"
-rm -rf "$APP"
 echo "Created $OUT/Churchie-${RID}.zip"
+bash "$ROOT/build/make-macos-pkg.sh" "$APP" "$RID" "$VERSION"
+rm -rf "$APP"

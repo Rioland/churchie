@@ -33,17 +33,18 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 
 ## Download
 
-Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)** (or the [Releases](https://github.com/Rioland/churchie/releases) page).
+Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)** (or the [Releases](https://github.com/Rioland/churchie/releases) page):
 
-Every push to `main` also builds the app on GitHub. Open the **Actions** tab → the latest **Build** run → **Artifacts**:
+| Computer | Download | |
+| --- | --- | --- |
+| Windows 10/11 | `Churchie-Setup-win-x64.exe` | Installer: Next → Install → Finish, no admin password. Portable `Churchie-win-x64.zip` also available |
+| Mac, Apple Silicon | `Churchie-osx-arm64.pkg` | Installer that puts Churchie.app in Applications (`.zip` of the app also available) |
+| Mac, Intel | `Churchie-osx-x64.pkg` | The same for Intel Macs |
+| Linux | `Churchie-linux-x64.tar.gz` | Extract and run `./Churchie/Churchie` |
 
-- `Churchie-win-x64` — unzip and run `Churchie.exe`
-- `Churchie-osx-arm64` — Apple Silicon Macs (M1/M2/M3…); `Churchie-osx-x64` for Intel Macs
-- `Churchie-linux-x64` — extract and run `./Churchie`
+> Churchie isn't code-signed yet. On Windows click **More info → Run anyway** the first time; on a Mac use **System Settings → Privacy & Security → Open Anyway**.
 
-To make a proper release with download links, push a tag: `git tag v0.1.0 && git push --tags`.
-
-> **macOS:** the app isn't notarised by Apple yet. The first time, right-click `Churchie.app` → **Open** → **Open**, or run `xattr -cr Churchie.app` in Terminal.
+Every push to `main` also builds all of these on GitHub (**Actions** tab → latest **Build** run → **Artifacts**), and pushing a tag (`git tag v0.1.0 && git push --tags`) publishes them as a release.
 
 ## Work on it from anywhere (no PC needed)
 
@@ -60,7 +61,7 @@ Small edits can also be made straight on github.com (press `.` on the repo page 
 
 The website lives in [`website/`](website/) (plain HTML/CSS/JS, no build step) and is hosted on Netlify (`netlify.toml` publishes that folder). Its download buttons point at the latest GitHub release, using the file names produced by `build/package.sh`.
 
-To make a release: build the packages (`bash build/package.sh <rid>` for `win-x64`, `linux-x64`, `osx-arm64`, `osx-x64` — the macOS ones on a Mac), then create a GitHub release named `vX.Y.Z` and attach the files from `dist/`. Once GitHub Actions is available, pushing a `vX.Y.Z` tag does all of this automatically.
+To make a release: build the packages (`bash build/package.sh <rid>` for `win-x64`, `linux-x64`, `osx-arm64`, `osx-x64` — the macOS ones on a Mac; the Windows installer needs [NSIS](https://nsis.sourceforge.io)), then create a GitHub release named `vX.Y.Z` and attach every file from `dist/`. Once GitHub Actions is available, pushing a `vX.Y.Z` tag does all of this automatically.
 
 ## Project layout
 
