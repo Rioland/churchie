@@ -13,16 +13,16 @@ esac
 PUBLISH="$ROOT/publish/$RID"
 DEST="$HOME/Applications/Churchie.app"
 
-echo "== Publishing Churchie $VERSION for $RID…"
+echo "== Publishing Churchie ${VERSION} for ${RID}..."
 rm -rf "$PUBLISH"
 dotnet publish "$ROOT/src/Churchie.App/Churchie.App.csproj" \
   -c Release -r "$RID" --self-contained true \
   -p:Version="$VERSION" -v minimal -o "$PUBLISH"
 
-echo "== Making Churchie.app…"
+echo "== Making Churchie.app..."
 KEEP_APP=1 bash "$ROOT/build/make-macos-app.sh" "$PUBLISH" "$RID" "$VERSION"
 
 mkdir -p "$HOME/Applications"
 rm -rf "$DEST"
 mv "$ROOT/dist/Churchie.app" "$DEST"
-echo "== Installed $DEST"
+echo "== Installed ${DEST}"
