@@ -95,6 +95,12 @@ p { margin: 0 0 1em; }
 .nav a:hover { background: rgba(255, 255, 255, 0.08); color: #fff; }
 .nav a[aria-current="page"] { color: var(--gold); }
 .nav .btn { margin-left: 8px; min-height: 42px; padding: 0.5em 1.05em; }
+/* The Download button keeps its gold look in the menu. Without these, the plain ".nav a"
+   rules above win and give it pale text, a see-through hover and gold-on-gold text on the
+   Download page itself. */
+.nav a.btn-gold,
+.nav a.btn-gold[aria-current="page"] { background: var(--gold); color: var(--ink); }
+.nav a.btn-gold:hover { background: #FFD266; color: var(--ink); }
 .nav-toggle { display: none; margin-left: auto; background: none; border: 0; color: #fff; padding: 10px; cursor: pointer; }
 .nav-toggle svg { width: 26px; height: 26px; }
 
