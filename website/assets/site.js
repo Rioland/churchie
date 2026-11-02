@@ -146,6 +146,7 @@
   if (tocLinks.length && "IntersectionObserver" in window) {
     var byId = {};
     tocLinks.forEach(function (a) { byId[a.getAttribute("href").slice(1)] = a; });
+    tocLinks[0].classList.add("active"); // the first section is on screen when the page opens
     var observer = new IntersectionObserver(function (entries) {
       entries.forEach(function (entry) {
         if (!entry.isIntersecting) return;
