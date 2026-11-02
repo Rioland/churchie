@@ -4,6 +4,8 @@
 
 # Churchie
 
+**Website: [churchie.netlify.app](https://churchie.netlify.app)** · [Download](https://churchie.netlify.app/download.html) · [How to use](https://churchie.netlify.app/docs.html)
+
 Worship presentation software in the spirit of EasyWorship — song lyrics, scripture and pictures on the projector — written in **C#** with **Avalonia**, so the same app runs on **Windows, macOS and Linux**.
 
 ## What it does (version 0.1)
@@ -31,7 +33,9 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 
 ## Download
 
-Every push to `main` builds the app on GitHub. Open the **Actions** tab → the latest **Build** run → **Artifacts**:
+Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)** (or the [Releases](https://github.com/Rioland/churchie/releases) page).
+
+Every push to `main` also builds the app on GitHub. Open the **Actions** tab → the latest **Build** run → **Artifacts**:
 
 - `Churchie-win-x64` — unzip and run `Churchie.exe`
 - `Churchie-osx-arm64` — Apple Silicon Macs (M1/M2/M3…); `Churchie-osx-x64` for Intel Macs
@@ -51,6 +55,12 @@ The repository includes a **GitHub Codespaces** setup, so you can code in a brow
 4. Back in VS Code: **Terminal → Run Task… → run app** (or press F5). Churchie appears in the desktop tab.
 
 Small edits can also be made straight on github.com (press `.` on the repo page to open the web editor); every push triggers a new build.
+
+## Website
+
+The website lives in [`website/`](website/) (plain HTML/CSS/JS, no build step) and is hosted on Netlify (`netlify.toml` publishes that folder). Its download buttons point at the latest GitHub release, using the file names produced by `build/package.sh`.
+
+To make a release: build the packages (`bash build/package.sh <rid>` for `win-x64`, `linux-x64`, `osx-arm64`, `osx-x64` — the macOS ones on a Mac), then create a GitHub release named `vX.Y.Z` and attach the files from `dist/`. Once GitHub Actions is available, pushing a `vX.Y.Z` tag does all of this automatically.
 
 ## Project layout
 
