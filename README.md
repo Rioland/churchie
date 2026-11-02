@@ -97,6 +97,7 @@ Install the [.NET 10 SDK](https://dotnet.microsoft.com/download), then:
 ```bash
 dotnet run --project src/Churchie.App    # start the app
 dotnet test                              # run the tests
+bash build/install-mac-app.sh            # Mac only: install ~/Applications/Churchie.app
 ```
 
 ## Learn as you build

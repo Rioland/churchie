@@ -1,7 +1,8 @@
 #!/usr/bin/env bash
 # Wraps the published macOS build in a proper Churchie.app bundle and zips it.
-# Runs on the macOS GitHub runner.
+# Runs on the macOS GitHub runner, and locally via build/install-mac-app.sh.
 #   usage: make-macos-app.sh <publish-folder> <rid> <version>
+# Set KEEP_APP=1 to leave dist/Churchie.app in place instead of zipping it.
 set -euo pipefail
 
 PUBLISH_DIR="$1"
@@ -48,6 +49,11 @@ PLIST
 
 # Ad-hoc signature so Apple Silicon Macs will run it (not notarised — see README).
 codesign --force --deep --sign - "$APP"
+
+if [ "${KEEP_APP:-0}" = "1" ]; then
+  echo "Created $APP"
+  exit 0
+fi
 
 cd "$OUT"
 ditto -c -k --keepParent Churchie.app "Churchie-${RID}.zip"
