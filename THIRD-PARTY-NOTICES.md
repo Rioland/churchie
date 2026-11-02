@@ -1,10 +1,38 @@
 # Third-party notices
 
-## King James Version text — scrollmapper/bible_databases
+## Bibles included with Churchie
 
-The file `src/Churchie.App/Bibles/kjv.json.gz` was converted from
-`formats/json/KJV.json` in https://github.com/scrollmapper/bible_databases.
-The KJV text itself is in the public domain; the database is distributed under this licence:
+The files in `src/Churchie.App/Bibles/` are built by `tools/bibles/convert.py`. The Bible
+text is unchanged; only the file format is converted.
+
+| File | Translation | Licence | Source |
+| --- | --- | --- | --- |
+| `en-kjv.json.gz` | King James Version (1769) | Public domain | scrollmapper/bible_databases |
+| `en-bsb.json.gz` | Berean Standard Bible | Public domain (dedicated 2023) | scrollmapper/bible_databases |
+| `en-asv.json.gz` | American Standard Version (1901) | Public domain | scrollmapper/bible_databases |
+| `en-bbe.json.gz` | Bible in Basic English (1949/1964) | Public domain | scrollmapper/bible_databases |
+| `en-ylt.json.gz` | Young's Literal Translation (1898) | Public domain | scrollmapper/bible_databases |
+| `en-web.json.gz` | World English Bible | Public domain ("World English Bible" is a trademark of eBible.org) | BibleNLP/ebible, from eBible.org |
+| `yo-oycb.json.gz` | Open Yoruba Contemporary Bible (Bíbélì Mímọ́ Yorùbá Òde-Òní) | CC BY-SA 4.0 | BibleNLP/ebible, from eBible.org |
+
+### Open Yoruba Contemporary Bible — required attribution
+
+> Biblica® Open Yoruba Contemporary Bible™ Copyright © 2009, 2017 by Biblica, Inc.
+> Original work available for free at www.biblica.com and open.bible.
+> Licensed under the Creative Commons Attribution-ShareAlike 4.0 International License
+> (http://creativecommons.org/licenses/by-sa/4.0/).
+
+`yo-oycb.json.gz` is a reformatted copy of that work and is itself shared under CC BY-SA 4.0.
+Churchie shows this notice in the Scripture tab whenever the Yoruba Bible is selected. This use
+does not imply endorsement by Biblica, Inc.
+
+### Berean Standard Bible
+
+> The Berean Bible (www.berean.bible) Berean Standard Bible (BSB) is produced in cooperation with
+> Bible Hub, Discovery Bible, OpenBible.com, and the Berean Bible Translation Committee.
+> This text of God's Word has been dedicated to the public domain.
+
+### scrollmapper/bible_databases (database format) — MIT licence
 
 ```
 MIT License
@@ -29,6 +57,11 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 ```
+
+### BibleNLP/ebible
+
+Collected from eBible.org; each text keeps its original licence
+(https://github.com/BibleNLP/ebible/tree/main/metadata/licenses).
 
 ## Libraries
 

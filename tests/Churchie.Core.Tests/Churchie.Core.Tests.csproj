@@ -22,9 +22,11 @@
     <ProjectReference Include="..\..\src\Churchie.Core\Churchie.Core.csproj" />
   </ItemGroup>
 
-  <!-- The bundled King James Bible, so tests can look up real verses. -->
+  <!-- Bundled Bibles, so tests can look up real verses. -->
   <ItemGroup>
-    <None Include="..\..\src\Churchie.App\Bibles\kjv.json.gz" Link="kjv.json.gz" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Churchie.App\Bibles\en-kjv.json.gz" Link="kjv.json.gz" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Churchie.App\Bibles\yo-oycb.json.gz" Link="yo-oycb.json.gz" CopyToOutputDirectory="PreserveNewest" />
+    <None Include="..\..\src\Churchie.App\Bibles\en-web.json.gz" Link="en-web.json.gz" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
 </Project>

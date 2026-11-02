@@ -16,6 +16,13 @@ public sealed class BibleLibrary
         _bibles.Add(bible);
     }
 
+    /// <summary>KJV first, then other English Bibles, then other languages — each group by name.</summary>
+    public IReadOnlyList<BibleTranslation> InDisplayOrder() => _bibles
+        .OrderBy(b => string.Equals(b.Abbreviation, "KJV", StringComparison.OrdinalIgnoreCase) ? 0
+                      : b.Language.StartsWith("en", StringComparison.OrdinalIgnoreCase) ? 1 : 2)
+        .ThenBy(b => b.Name, StringComparer.CurrentCultureIgnoreCase)
+        .ToList();
+
     public BibleTranslation? Find(string? abbreviation) =>
         _bibles.FirstOrDefault(b => string.Equals(b.Abbreviation, abbreviation, StringComparison.OrdinalIgnoreCase));
 
@@ -60,9 +67,19 @@ public sealed class BibleLibrary
         var first = reference.StartVerse ?? 1;
         var last = reference.EndVerse ?? (reference.StartVerse is null ? chapterVerses.Count : first);
 
+        // Some modern translations leave out a few verses (e.g. Acts 8:37); skip those.
         var verses = new List<Verse>();
         for (var v = first; v <= last && v <= chapterVerses.Count; v++)
-            verses.Add(new Verse(v, chapterVerses[v - 1]));
+        {
+            if (!string.IsNullOrWhiteSpace(chapterVerses[v - 1]))
+                verses.Add(new Verse(v, chapterVerses[v - 1]));
+        }
+
+        if (verses.Count == 0)
+        {
+            error = $"{reference.Format(book.Name)} is not included in {bible.Abbreviation}";
+            return null;
+        }
 
         error = null;
         return new Passage(bible, book, reference, verses);

@@ -7,6 +7,12 @@ public sealed class BibleTranslation
     public required string Name { get; init; }
     public required IReadOnlyList<BibleBook> Books { get; init; }
 
+    /// <summary>Language code such as "en" or "yo". Empty if the file didn't say.</summary>
+    public string Language { get; init; } = "";
+
+    /// <summary>Copyright / licence line to show users (some licences require it).</summary>
+    public string Copyright { get; init; } = "";
+
     /// <summary>Finds a book by its standard number (1 = Genesis ... 66 = Revelation).</summary>
     public BibleBook? GetBook(int number) => Books.FirstOrDefault(b => b.Number == number);
 
@@ -21,7 +27,7 @@ public sealed class BibleBook
     /// <summary>Display name in the translation's own language.</summary>
     public required string Name { get; init; }
 
-    /// <summary>Chapters[chapter - 1][verse - 1] = verse text.</summary>
+    /// <summary>Chapters[chapter - 1][verse - 1] = verse text ("" if the translation omits that verse).</summary>
     public required IReadOnlyList<IReadOnlyList<string>> Chapters { get; init; }
 
     public int ChapterCount => Chapters.Count;

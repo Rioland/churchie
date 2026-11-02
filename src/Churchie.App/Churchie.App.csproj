@@ -15,8 +15,8 @@
 
   <ItemGroup>
     <AvaloniaResource Include="Assets\**" />
-    <!-- The King James Bible ships inside the app (public domain). -->
-    <EmbeddedResource Include="Bibles\kjv.json.gz" LogicalName="Churchie.Bibles.kjv.json.gz" />
+    <!-- Free Bibles ship inside the app (see THIRD-PARTY-NOTICES.md). Built by tools/bibles/convert.py. -->
+    <EmbeddedResource Include="Bibles\*.json.gz" LogicalName="Churchie.Bibles.%(Filename)%(Extension)" />
   </ItemGroup>
 
   <ItemGroup>

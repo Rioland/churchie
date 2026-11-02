@@ -423,7 +423,8 @@ public partial class MainWindowViewModel : ViewModelBase
         UpdateOutput();
     }
 
-    private async Task LoadBiblesAsync()
+    /// <param name="select">Abbreviation to select afterwards (e.g. a Bible that was just imported).</param>
+    private async Task LoadBiblesAsync(string? select = null)
     {
         StatusMessage = "Loading Bibles…";
         try
@@ -431,37 +432,51 @@ public partial class MainWindowViewModel : ViewModelBase
             var folder = _paths.Bibles;
             var (found, errors) = await Task.Run(() =>
             {
-                var list = new List<BibleTranslation>();
-                var problems = new List<string>();
+                var problems = new System.Collections.Concurrent.ConcurrentBag<string>();
 
-                try
-                {
-                    using var resource = typeof(MainWindowViewModel).Assembly.GetManifestResourceStream("Churchie.Bibles.kjv.json.gz");
-                    if (resource is not null)
+                // 1. The Bibles built into the app (embedded resources named Churchie.Bibles.*.json.gz),
+                //    read in parallel because each one takes a moment to unpack.
+                var assembly = typeof(MainWindowViewModel).Assembly;
+                var builtIn = assembly.GetManifestResourceNames()
+                    .Where(n => n.StartsWith("Churchie.Bibles.", StringComparison.Ordinal) && n.EndsWith(".json.gz", StringComparison.Ordinal))
+                    .AsParallel()
+                    .Select(resourceName =>
                     {
-                        using var unzipped = new GZipStream(resource, CompressionMode.Decompress);
-                        list.Add(BibleLoader.LoadJson(unzipped));
-                    }
-                }
-                catch (Exception ex)
-                {
-                    problems.Add("KJV: " + ex.Message);
-                }
+                        try
+                        {
+                            using var resource = assembly.GetManifestResourceStream(resourceName)!;
+                            using var unzipped = new GZipStream(resource, CompressionMode.Decompress);
+                            return BibleLoader.LoadJson(unzipped);
+                        }
+                        catch (Exception ex)
+                        {
+                            problems.Add($"{resourceName}: {ex.Message}");
+                            return null;
+                        }
+                    })
+                    .Where(b => b is not null)
+                    .Select(b => b!)
+                    .ToList();
 
+                // 2. Bibles the user added to the Bibles folder (these win if the abbreviation is the same).
                 var fromFolder = new BibleLibrary();
                 fromFolder.LoadFolder(folder);
-                list.AddRange(fromFolder.Bibles);
-                problems.AddRange(fromFolder.LoadErrors);
-                return (list, problems);
+                foreach (var problem in fromFolder.LoadErrors) problems.Add(problem);
+
+                return (builtIn.Concat(fromFolder.Bibles).ToList(), problems.ToList());
             });
 
             foreach (var bible in found) _bibles.Add(bible);
 
+            // Remember the choice before the list is refilled (refilling clears the selection).
+            var keep = select ?? SelectedBible?.Abbreviation ?? _settings.DefaultBible;
+
             _loading = true;
             Bibles.Clear();
-            foreach (var bible in _bibles.Bibles) Bibles.Add(bible);
-            SelectedBible = _bibles.Find(_settings.DefaultBible) ?? _bibles.Bibles.FirstOrDefault();
+            foreach (var bible in _bibles.InDisplayOrder()) Bibles.Add(bible);
+            SelectedBible = _bibles.Find(keep) ?? _bibles.Find(_settings.DefaultBible) ?? Bibles.FirstOrDefault();
             _loading = false;
+            OnPropertyChanged(nameof(SelectedBibleCopyright));
 
             StatusMessage = errors.Count == 0
                 ? $"Ready — {_songs.Songs.Count} songs, {Bibles.Count} Bible{(Bibles.Count == 1 ? "" : "s")}"

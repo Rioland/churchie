@@ -13,7 +13,7 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | **Layout** | Schedule (service order) · Preview · Live, with resource tabs underneath — the familiar EasyWorship arrangement |
 | **Projector** | Full-screen output on the second screen (or a floating window when you only have one), smooth **cross-fade** between slides (cut / quick / normal / slow), **Black**, **Clear** (hide words, keep background) and **Logo** buttons |
 | **Songs** | Library with search by title, words or author; editor that understands `[Verse 1]`, `[Chorus]`, `Bridge:`, `V2`…; import from `.txt` and OpenLyrics `.xml`; three public-domain hymns to start with |
-| **Scripture** | King James Version built in; type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`); browse by book and chapter; add more translations as Zefania XML files (e.g. Yoruba, Igbo, Hausa) |
+| **Scripture** | Seven Bibles built in: KJV, World English Bible, Berean Standard Bible, ASV, Bible in Basic English, Young's Literal and the Yoruba Contemporary Bible. Type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`, `Johanu 3:16`); browse by book and chapter; **Import Bible…** for other versions (Zefania, OpenSong or OSIS XML) |
 | **Media** | Pictures as song or scripture backgrounds, as the logo, or shown full-screen |
 | **Themes** | Separate looks for songs and scripture: size, font, colours, bold/shadow/uppercase, alignment, background picture with darkening — changes appear on screen instantly |
 | **Safety** | The schedule autosaves after every change; long text automatically shrinks to fit the screen |
@@ -81,14 +81,18 @@ Songs, settings and the autosaved schedule are kept in:
 
 Use **File → Open data folder** to get there. Set the `CHURCHIE_DATA` environment variable to keep everything somewhere else (a USB stick, a synced folder).
 
-### Adding Bible translations
+### Bible versions
 
-Put Bible files in the `Bibles` folder inside the data folder (**Scripture tab → Open Bibles folder**) and press **Reload**. Supported:
+Built in (free to use and share): **KJV**, **WEB** (World English Bible), **BSB** (Berean Standard Bible), **ASV**, **BBE** (Bible in Basic English), **YLT** (Young's Literal) and **OYCB** (Open Yoruba Contemporary Bible — *Bíbélì Mímọ́ Yorùbá Òde-Òní*). Each one's copyright line is shown under the Scripture tab.
 
-- **Zefania XML** (`.xml`) — a free format with many translations, including African languages
-- **Churchie JSON** (`.json` / `.json.gz`) — same format as the bundled KJV
+To add another version, use **Scripture tab → Import Bible…** (or drop files into the `Bibles` folder and press **Reload**). Supported files:
 
-Book names in the translation's own language work in the reference box (e.g. `Johanu 3:16`). Many modern translations are copyrighted, so only add ones your church is allowed to project.
+- **Zefania XML**, **OpenSong XML** and **OSIS XML** (`.xml`) — the formats most Bible-software downloads use
+- **Churchie JSON** (`.json` / `.json.gz`) — the format of the built-in Bibles
+
+Book names in the translation's own language work in the reference box (e.g. `Johanu 3:16`, `Saamu 23`).
+
+**NIV, Amplified, NKJV, ESV, NLT and most other modern versions are copyrighted.** Their publishers (e.g. Biblica for the NIV, The Lockman Foundation for the Amplified) license them separately, so Churchie can't include them. If your church has a licensed file of one of them, import it with **Import Bible…**.
 
 ## Building on a computer
 

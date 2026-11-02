@@ -22,8 +22,14 @@ public partial class MainWindowViewModel
 
     private Passage? _passage;
 
+    /// <summary>Copyright / licence line of the chosen Bible (some licences require showing it).</summary>
+    public string SelectedBibleCopyright =>
+        SelectedBible is null ? "" :
+        string.IsNullOrWhiteSpace(SelectedBible.Copyright) ? SelectedBible.Name : SelectedBible.Copyright;
+
     partial void OnSelectedBibleChanged(BibleTranslation? value)
     {
+        OnPropertyChanged(nameof(SelectedBibleCopyright));
         var book = SelectedBook?.Number;
         Books = value?.Books ?? (IReadOnlyList<BibleBook>)Array.Empty<BibleBook>();
         SelectedBook = book is null ? null : value?.GetBook(book.Value);
@@ -88,4 +94,35 @@ public partial class MainWindowViewModel
 
     [RelayCommand]
     private Task ReloadBiblesAsync() => LoadBiblesAsync();
+
+    /// <summary>
+    /// Adds a Bible file (Zefania, OpenSong or OSIS XML, or Churchie JSON): checks it can be read,
+    /// copies it into the Bibles folder so it loads every time, then selects it.
+    /// </summary>
+    [RelayCommand]
+    private async Task ImportBibleAsync()
+    {
+        if (Dialogs is null) return;
+        var files = await Dialogs.PickFilesAsync("Import a Bible", "Bible files (Zefania, OpenSong, OSIS XML, JSON)",
+            new[] { "*.xml", "*.json", "*.gz" }, allowMultiple: false);
+        if (files.Count == 0) return;
+
+        var source = files[0];
+        try
+        {
+            var bible = await Task.Run(() => BibleLoader.LoadFile(source));
+            Directory.CreateDirectory(_paths.Bibles);
+            File.Copy(source, Path.Combine(_paths.Bibles, Path.GetFileName(source)), overwrite: true);
+
+            await LoadBiblesAsync(select: bible.Abbreviation);
+            var books = bible.Books.Count;
+            await Dialogs.ShowMessageAsync("Bible imported",
+                $"{bible.Abbreviation} — {bible.Name}\n{books} book{(books == 1 ? "" : "s")} added. It's now in the Bible list.");
+        }
+        catch (Exception ex)
+        {
+            await Dialogs.ShowMessageAsync("Couldn't import that file",
+                $"{Path.GetFileName(source)} could not be read as a Bible.\n\n{ex.Message}");
+        }
+    }
 }

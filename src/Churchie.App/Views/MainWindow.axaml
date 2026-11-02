@@ -223,7 +223,8 @@
             <Grid ColumnDefinitions="220,8,90,12,*">
               <DockPanel Grid.Column="0">
                 <ComboBox DockPanel.Dock="Top" HorizontalAlignment="Stretch" Margin="0,0,0,6"
-                          ItemsSource="{Binding Bibles}" SelectedItem="{Binding SelectedBible}" />
+                          ItemsSource="{Binding Bibles}" SelectedItem="{Binding SelectedBible}"
+                          ToolTip.Tip="{Binding SelectedBibleCopyright}" />
                 <ListBox ItemsSource="{Binding Books}" SelectedItem="{Binding SelectedBook}" />
               </DockPanel>
 
@@ -237,11 +238,16 @@
                   <Button Grid.Column="3" Classes="live" Content="Go Live" Command="{Binding ScriptureGoLiveCommand}" Margin="6,0,0,0" />
                 </Grid>
                 <TextBlock DockPanel.Dock="Top" Classes="hint" Text="{Binding ScriptureStatus}" Margin="0,0,0,6" />
-                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" Spacing="8" Margin="0,6,0,0">
-                  <TextBlock Classes="hint" VerticalAlignment="Center" Text="More translations: put Zefania XML Bibles in the Bibles folder." />
-                  <Button Content="Open Bibles folder" Command="{Binding OpenBiblesFolderCommand}" />
-                  <Button Content="Reload" Command="{Binding ReloadBiblesCommand}" />
-                </StackPanel>
+                <DockPanel DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                  <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" Margin="8,0,0,0">
+                    <Button Content="Import Bible…" Command="{Binding ImportBibleCommand}" />
+                    <Button Content="Open Bibles folder" Command="{Binding OpenBiblesFolderCommand}" />
+                    <Button Content="Reload" Command="{Binding ReloadBiblesCommand}" />
+                  </StackPanel>
+                  <TextBlock Classes="hint" VerticalAlignment="Center" FontSize="11" MaxHeight="32"
+                             TextTrimming="CharacterEllipsis" Text="{Binding SelectedBibleCopyright}"
+                             ToolTip.Tip="{Binding SelectedBibleCopyright}" />
+                </DockPanel>
                 <ListBox ItemsSource="{Binding ScriptureVerses}">
                   <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="b:Verse">

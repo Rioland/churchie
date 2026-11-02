@@ -6,7 +6,7 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 
 - Schedule / Preview / Live workflow, projector output, Black / Clear / Logo
 - Song library, editor, search, `.txt` and OpenLyrics import
-- KJV built in, reference parser, Zefania XML Bibles
+- Seven free Bibles built in (KJV, WEB, BSB, ASV, BBE, YLT, Yoruba OYCB), reference parser, Import Bible (Zefania / OpenSong / OSIS XML)
 - Picture backgrounds and themes, live theme editing
 - Autosave, schedule files, keyboard and clicker control
 - Smooth cross-fade on the live output (going live, next verse, switching items, Black/Clear/Logo), with cut/quick/normal/slow settings
@@ -25,6 +25,7 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 - PowerPoint / PDF presentations as schedule items (rendered to images)
 - Song arrangement (V1 C V2 C B C) without duplicating text
 - Multiple Bibles side by side (e.g. English + Yoruba on one slide)
+- Catholic Bibles with deuterocanonical books (Douay-Rheims)
 
 ## Phase 4 — Beyond one screen
 
