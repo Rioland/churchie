@@ -3,8 +3,11 @@
   publish = "website"
   command = ""
 
+# Pictures rarely change, so browsers may keep them for a week. The CSS and JS are left
+# out on purpose: Netlify then makes browsers re-check them on each visit, so a style fix
+# shows up straight away instead of up to a week later.
 [[headers]]
-  for = "/assets/*"
+  for = "/assets/img/*"
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
