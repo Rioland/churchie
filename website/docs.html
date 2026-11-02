@@ -1,0 +1,465 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>How to use Churchie</title>
+  <meta name="description" content="The complete guide to Churchie: planning a service, songs, scripture in seven Bibles, pictures, going live, the projector screen, themes and keyboard shortcuts.">
+  <meta property="og:title" content="How to use Churchie">
+  <meta property="og:description" content="Step-by-step guide with screenshots.">
+  <meta property="og:image" content="assets/img/social-card.jpg">
+  <meta name="theme-color" content="#15122E">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="34" height="34">Churchie</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="index.html#features">Features</a>
+        <a href="docs.html" aria-current="page">How to use</a>
+        <a href="index.html#questions">Questions</a>
+        <a class="btn btn-gold" href="download.html">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="page-head">
+    <div class="wrap">
+      <h1>How to use Churchie</h1>
+      <p>Everything from your first launch to running a full service, with pictures of each screen. New to Churchie? Read the first three sections, then try it with the sample hymns that come with it.</p>
+    </div>
+  </section>
+
+  <div class="wrap docs">
+    <nav class="toc" aria-label="Guide contents">
+      <p>On this page</p>
+      <ol>
+        <li><a href="#getting-started">Getting started</a></li>
+        <li><a href="#main-window">The main window</a></li>
+        <li><a href="#schedule">Plan a service</a></li>
+        <li><a href="#songs">Songs</a></li>
+        <li><a href="#scripture">Scripture</a></li>
+        <li><a href="#pictures">Pictures and backgrounds</a></li>
+        <li><a href="#going-live">Going live</a></li>
+        <li><a href="#projector">The projector screen</a></li>
+        <li><a href="#themes">Themes and settings</a></li>
+        <li><a href="#saving">Saving and backups</a></li>
+        <li><a href="#shortcuts">Keyboard shortcuts</a></li>
+        <li><a href="#troubleshooting">Troubleshooting</a></li>
+      </ol>
+    </nav>
+
+    <main class="doc" id="main">
+      <div class="toc-mobile">
+        <label class="visually-hidden" for="toc-jump">Jump to a section</label>
+        <select id="toc-jump" data-toc-jump>
+          <option value="">Jump to a section…</option>
+          <option value="getting-started">Getting started</option>
+          <option value="main-window">The main window</option>
+          <option value="schedule">Plan a service</option>
+          <option value="songs">Songs</option>
+          <option value="scripture">Scripture</option>
+          <option value="pictures">Pictures and backgrounds</option>
+          <option value="going-live">Going live</option>
+          <option value="projector">The projector screen</option>
+          <option value="themes">Themes and settings</option>
+          <option value="saving">Saving and backups</option>
+          <option value="shortcuts">Keyboard shortcuts</option>
+          <option value="troubleshooting">Troubleshooting</option>
+        </select>
+      </div>
+
+      <!-- ===================================================== -->
+      <section id="getting-started">
+        <h2>Getting started</h2>
+        <h3>Install Churchie</h3>
+        <p><a href="download.html">Download Churchie</a> for your computer and follow the install steps on that page. It takes about two minutes. Churchie is free and doesn't need an account.</p>
+
+        <h3>Your first launch</h3>
+        <p>When Churchie opens for the first time you'll find three hymns in the song library (Amazing Grace, Blessed Assurance and Holy, Holy, Holy) and seven Bibles ready to use. Try them before adding your own songs:</p>
+        <ol>
+          <li>In the <strong>Songs</strong> tab at the bottom, double-click <strong>Amazing Grace</strong>. It's added to the schedule on the left.</li>
+          <li>Click it in the schedule. Its verses appear in <strong>Preview</strong>.</li>
+          <li>Double-click the first verse. It appears in <strong>Live</strong>, which is what the congregation sees.</li>
+          <li>Press <kbd>Page Down</kbd> to move to the next verse.</li>
+        </ol>
+        <p>That's the whole idea: plan in the schedule, check in Preview, show in Live.</p>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="main-window">
+        <h2>The main window</h2>
+        <figure class="wide">
+          <img class="shot" src="assets/img/overview-annotated.webp" width="1226" height="792" loading="lazy"
+               alt="The Churchie main window with five numbered areas: the schedule, Preview, Live, the live controls and the tabs at the bottom.">
+          <figcaption>The five areas of the Churchie window.</figcaption>
+        </figure>
+        <ul class="legend">
+          <li><b class="num">1</b><span><strong>Schedule.</strong> The order of service: songs, readings, announcements and pictures.</span></li>
+          <li><b class="num">2</b><span><strong>Preview.</strong> The slides of whatever you've selected, for checking before it goes live.</span></li>
+          <li><b class="num">3</b><span><strong>Live.</strong> Exactly what's on the projector right now. The red frame reminds you it's live.</span></li>
+          <li><b class="num">4</b><span><strong>Live controls.</strong> Previous and next slide, Black, Clear, Logo, the projector window and the fade speed.</span></li>
+          <li><b class="num">5</b><span><strong>Tabs.</strong> Your song library, the Bibles, your pictures, and the look of the slides.</span></li>
+        </ul>
+        <p>You can drag the gaps between the areas to make any of them bigger. The menus at the top have the same commands as the buttons, plus <strong>Help → Keyboard shortcuts</strong>.</p>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="schedule">
+        <h2>Plan a service</h2>
+        <p>The schedule is your order of service. Give it a name at the top (for example "Sunday Service, 8 November") and add items in the order you'll use them.</p>
+
+        <h3>Adding items</h3>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>To add</th><th>Do this</th></tr></thead>
+            <tbody>
+              <tr><td>A song</td><td>In the <strong>Songs</strong> tab, double-click it, or select it and click <strong>Add to schedule</strong>.</td></tr>
+              <tr><td>A Bible reading</td><td>In the <strong>Scripture</strong> tab, type the reference and click <strong>Add to schedule</strong>.</td></tr>
+              <tr><td>A picture</td><td>In the <strong>Media</strong> tab, select it and click <strong>Add to schedule</strong>.</td></tr>
+              <tr><td>Announcements or other words</td><td>Click <strong>+ Text slide</strong> under the schedule, give it a title and type the text. Leave a blank line between slides.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Each item has a coloured tag so you can tell them apart at a glance: <strong>SONG</strong>, <strong>BIBLE</strong>, <strong>TEXT</strong> or <strong>IMAGE</strong>.</p>
+
+        <h3>Changing the order</h3>
+        <ul>
+          <li><strong>Up</strong> and <strong>Down</strong> move the selected item.</li>
+          <li><strong>Edit</strong> opens a song or text slide for changes. Editing a song here also updates it in your library.</li>
+          <li><strong>Remove</strong> takes the item out of the schedule (the song stays in your library).</li>
+        </ul>
+        <div class="tip"><p>Click an item to see it in Preview. Double-click it to send it straight to Live.</p></div>
+        <p>Churchie saves the schedule after every change and reopens it next time, so you can prepare during the week and pick up on Sunday. See <a href="#saving">Saving and backups</a> to keep more than one schedule.</p>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="songs">
+        <h2>Songs</h2>
+        <h3>Finding a song</h3>
+        <p>Type in the search box in the <strong>Songs</strong> tab. Churchie looks through titles, lyrics and authors, and shows title matches first. Click a song to read its words on the right and see its slides in Preview.</p>
+
+        <h3>Adding a new song</h3>
+        <ol>
+          <li>Click <strong>New song</strong>.</li>
+          <li>Type the title. Author, copyright and CCLI number are optional.</li>
+          <li>Paste or type the lyrics, leaving a blank line between slides.</li>
+          <li>Click <strong>Save</strong>.</li>
+        </ol>
+        <figure>
+          <img class="shot" src="assets/img/song-editor.webp" width="683" height="690" loading="lazy"
+               alt="The song editor with title, author, copyright and CCLI number fields, the lyrics of It Is Well with My Soul, and a summary reading 4 slides: Verse 1, Chorus, Verse 2, Chorus.">
+          <figcaption>The line under the lyrics shows how many slides you'll get and what each is called.</figcaption>
+        </figure>
+
+        <h3>How lyrics become slides</h3>
+        <ul>
+          <li><strong>A blank line starts a new slide.</strong></li>
+          <li>Name a section by putting its name on the line above it: <code>[Verse 1]</code>, <code>[Chorus]</code>, <code>[Bridge]</code>.</li>
+          <li>Plain headings work too: <code>Verse 2</code>, <code>Chorus</code>, <code>Bridge:</code>, <code>Pre-chorus</code>, <code>Tag</code>, <code>Ending</code>, or short forms like <code>V1</code> and <code>C2</code>.</li>
+          <li>Slides without a name are called Verse 1, Verse 2 and so on.</li>
+          <li>If a chorus is sung several times, include it each time you want it to appear.</li>
+        </ul>
+        <div class="tip"><p>Long sections can be split automatically: in <strong>Themes &amp; Settings → Split long song sections into</strong>, choose the most lines you want on one slide.</p></div>
+
+        <h3>Editing and deleting</h3>
+        <p>Select a song and click <strong>Edit</strong> or <strong>Delete</strong>. Deleting asks you to confirm, because it can't be undone.</p>
+
+        <h3>Importing songs from other programs</h3>
+        <p>Click <strong>Import…</strong> (or <strong>File → Import songs</strong>) and choose one or more files:</p>
+        <ul>
+          <li><strong>Plain text (.txt).</strong> The file name becomes the title, or start the file with a line like <code>Title: Way Maker</code>. The lyrics follow the same rules as the editor.</li>
+          <li><strong>OpenLyrics (.xml).</strong> The open format used by OpenLP and other worship programs.</li>
+        </ul>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="scripture">
+        <h2>Scripture</h2>
+        <h3>Looking up a passage</h3>
+        <p>In the <strong>Scripture</strong> tab, type a reference and press <kbd>Enter</kbd> (or click <strong>Find</strong>). The verses appear in the list and as slides in Preview. Then click <strong>Go Live</strong> to show them, or <strong>Add to schedule</strong> to save them for later.</p>
+        <figure class="wide">
+          <img class="shot" src="assets/img/scripture.webp" width="1226" height="792" loading="lazy"
+               alt="Psalm 23 from the King James Version: six verse slides in Preview, verse 1 live with the reference Psalms 23:1 (KJV) at the bottom, and the verses listed in the Scripture tab.">
+          <figcaption>Psalm 23 looked up and live. Each slide shows the reference at the bottom.</figcaption>
+        </figure>
+        <p>Type references however you're used to writing them:</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>You type</th><th>You get</th></tr></thead>
+            <tbody>
+              <tr><td><code>John 3:16</code> or <code>jn 3 16</code></td><td>John chapter 3, verse 16</td></tr>
+              <tr><td><code>1 Cor 13:4-7</code> or <code>1cor13:4-7</code></td><td>1 Corinthians 13, verses 4 to 7</td></tr>
+              <tr><td><code>Psalm 23</code></td><td>The whole of Psalm 23</td></tr>
+              <tr><td><code>II Kings 2:11</code> or <code>2 Ki 2:11</code></td><td>2 Kings 2:11 (Roman numerals work)</td></tr>
+              <tr><td><code>Rev. 21:4</code></td><td>Revelation 21:4</td></tr>
+              <tr><td><code>Gen</code></td><td>Genesis chapter 1</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>You can also click a book in the list on the left and then a chapter number to open a whole chapter. If a reference doesn't exist (say, John 22), Churchie tells you what's wrong, such as how many chapters the book has.</p>
+
+        <h3>Choosing a Bible version</h3>
+        <p>Pick a version from the list above the books. Churchie includes seven, free to use and share:</p>
+        <figure>
+          <img class="shot" src="assets/img/bible-versions.webp" width="934" height="419" loading="lazy"
+               alt="The Bible version list: KJV, ASV, BSB, BBE, WEB, YLT and OYCB, the Yoruba Contemporary Bible.">
+        </figure>
+        <p>Switching versions while a passage is showing in Preview reloads it in the new version. The reference at the bottom of each slide shows which version is on screen, and the line under the verse list shows the version's copyright.</p>
+
+        <h3>Yoruba</h3>
+        <p>Choose <strong>OYCB</strong>, the Yoruba Contemporary Bible (<span lang="yo">Bíbélì Mímọ́ Yorùbá Òde-Òní</span>). You can type the Yoruba book names, like <code>Johanu 3:16</code>, <code>Saamu 23</code> or <code>Òwe 3:5</code>, or the English ones you already know.</p>
+        <figure class="wide">
+          <img class="shot" src="assets/img/yoruba.webp" width="1226" height="792" loading="lazy"
+               alt="John 3:16 and 17 in Yoruba: Johanu 3:16 is live with the reference Johanu 3:16 (OYCB), and the Scripture tab lists the Yoruba book names.">
+          <figcaption>Johanu 3:16 in the Yoruba Bible, with all tone marks shown correctly.</figcaption>
+        </figure>
+
+        <h3>Verses per slide and verse numbers</h3>
+        <p>In <strong>Themes &amp; Settings</strong>, <strong>Scripture per slide</strong> puts one to four verses on each slide, and <strong>Show verse numbers</strong> turns the small numbers on or off.</p>
+
+        <h3>Adding another Bible</h3>
+        <p>Click <strong>Import Bible…</strong> in the Scripture tab and choose a Bible file. Churchie reads Zefania XML, OpenSong XML and OSIS XML, the formats most Bible downloads use, and adds it to the version list. Imported Bibles are kept in the <strong>Bibles</strong> folder (open it with <strong>Open Bibles folder</strong>); if you copy files there yourself, press <strong>Reload</strong>.</p>
+        <div class="tip"><p><strong>NIV, Amplified, NKJV, ESV, NLT</strong> and most modern versions are copyrighted and need a licence from their publishers, so Churchie can't include them. If your church has a licensed file, import it as above.</p></div>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="pictures">
+        <h2>Pictures and backgrounds</h2>
+        <p>The <strong>Media</strong> tab holds pictures you use in services: song backgrounds, your church logo, announcement slides.</p>
+        <figure class="wide">
+          <img class="shot" src="assets/img/media.webp" width="1226" height="792" loading="lazy"
+               alt="The Media tab with five pictures: Sunrise, Deep Blue, Purple Glow, Mountains and a church logo, and buttons for using them as backgrounds or as the logo.">
+          <figcaption>Pictures in the Media tab. Click one to preview it.</figcaption>
+        </figure>
+        <ul>
+          <li><strong>Add pictures…</strong> adds PNG, JPG, BMP, GIF or WebP images. Pictures 1920×1080 pixels or larger look best.</li>
+          <li><strong>Use as song background</strong> and <strong>Use as scripture background</strong> put the picture behind your lyrics or Bible verses.</li>
+          <li><strong>Use as logo</strong> makes it the picture shown when you press <strong>Logo</strong>. The line at the bottom shows the current logo.</li>
+          <li><strong>Show live</strong> puts the picture on the projector straight away. <strong>Add to schedule</strong> saves it for its place in the service.</li>
+          <li><strong>Remove</strong> takes it out of the list. The file on your computer isn't deleted.</li>
+        </ul>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="going-live">
+        <h2>Going live</h2>
+        <h3>Putting something on screen</h3>
+        <ul>
+          <li>Double-click a slide in Preview to show it.</li>
+          <li>Or select a slide in Preview and click <strong>Go Live</strong> (<kbd>Ctrl</kbd>+<kbd>Enter</kbd>, or <kbd>⌘</kbd>+<kbd>Enter</kbd> on a Mac).</li>
+          <li>Double-click an item in the schedule to show its first slide.</li>
+        </ul>
+        <p>Once something is live, its slides are listed under the Live picture. Click any of them to jump straight there, for example back to the chorus.</p>
+
+        <h3>Moving through slides</h3>
+        <ul>
+          <li><strong>Next ▶</strong> and <strong>◀ Prev</strong>, or <kbd>Page Down</kbd> and <kbd>Page Up</kbd>. Most presentation clickers send these keys, so they work too.</li>
+          <li>After clicking in the Live area, the arrow keys and <kbd>Space</kbd> also move through slides.</li>
+        </ul>
+
+        <h3>Black, Clear and Logo</h3>
+        <figure>
+          <img class="shot" src="assets/img/live-panel.webp" width="482" height="360" loading="lazy"
+               alt="The Live area showing the Grace Community Church logo, with the Logo button highlighted red.">
+          <figcaption>Logo is on: the button turns red while it's active.</figcaption>
+        </figure>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Button</th><th>Key</th><th>What it does</th></tr></thead>
+            <tbody>
+              <tr><td>Black</td><td><kbd>B</kbd></td><td>Fades the screen to black, for example during prayer or a sermon without slides.</td></tr>
+              <tr><td>Clear</td><td><kbd>C</kbd></td><td>Hides the words but keeps the background, so the screen still looks alive.</td></tr>
+              <tr><td>Logo</td><td><kbd>L</kbd></td><td>Shows your church logo (set it in the Media tab). Good before and after the service.</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>Press the same button or key again to bring the slide back.</p>
+
+        <h3>Fades between slides</h3>
+        <p>Every change on the screen fades smoothly into the next. Choose the speed in the picker under the live buttons, or in Themes &amp; Settings:</p>
+        <ul>
+          <li><strong>Cut</strong>: changes instantly, with no fade.</li>
+          <li><strong>Quick fade</strong>: a quarter of a second.</li>
+          <li><strong>Fade</strong>: half a second (the default).</li>
+          <li><strong>Slow fade</strong>: one second.</li>
+        </ul>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="projector">
+        <h2>The projector screen</h2>
+        <p>The congregation sees the <strong>projector window</strong>: the Live slide, full size, with nothing else on it.</p>
+        <figure>
+          <img class="shot" src="assets/img/projector.webp" width="859" height="510" loading="lazy"
+               alt="The projector window showing It is well with my soul in large white letters on a warm background.">
+          <figcaption>The projector window, here in practice mode on a single screen.</figcaption>
+        </figure>
+
+        <h3>With a projector or TV</h3>
+        <ol>
+          <li>Connect the projector or TV to your computer.</li>
+          <li>Set it to <strong>extend</strong> your desktop, not mirror it. On Windows press <kbd>Windows</kbd>+<kbd>P</kbd> and choose <strong>Extend</strong>. On a Mac open <strong>System Settings → Displays</strong> and make sure the projector isn't set to mirror.</li>
+          <li>In Churchie, open <strong>Themes &amp; Settings</strong> and choose the projector under <strong>Projector screen</strong>.</li>
+          <li>Click <strong>Projector output</strong>. The window opens full screen on the projector, and your laptop keeps showing the Churchie controls.</li>
+        </ol>
+        <p>Click <strong>Projector output</strong> again to close it. The mouse pointer is hidden on the projector while it's full screen.</p>
+
+        <h3>With one screen (practice)</h3>
+        <p>Without a second screen, the projector window opens as a normal window that stays on top of Churchie. Move and resize it as you like, double-click it (or press <kbd>F11</kbd>) to make it full screen, and press <kbd>Esc</kbd> to close it.</p>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="themes">
+        <h2>Themes and settings</h2>
+        <p>The <strong>Themes &amp; Settings</strong> tab controls how slides look. Songs and scripture each have their own look, so lyrics can be big and centred while Bible verses are smaller and left-aligned. Changes show on screen immediately, even while something is live.</p>
+        <figure class="wide">
+          <img class="shot" src="assets/img/themes.webp" width="1226" height="792" loading="lazy"
+               alt="The Themes and Settings tab: song settings on the left, scripture settings in the middle, and output, transition and slide settings on the right.">
+          <figcaption>Song look on the left, scripture look in the middle, other settings on the right.</figcaption>
+        </figure>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Setting</th><th>What it changes</th></tr></thead>
+            <tbody>
+              <tr><td>Text size</td><td>How big the words are. Very long slides shrink automatically to fit the screen.</td></tr>
+              <tr><td>Font</td><td>Type the name of any font installed on your computer, for example Arial or Montserrat. Leave it empty for the default.</td></tr>
+              <tr><td>Text colour and Background</td><td>Colours as hex codes, such as <code>#FFFFFF</code> for white. The small square shows the colour.</td></tr>
+              <tr><td>Bold, Shadow, UPPERCASE</td><td>Shadow helps words stand out on busy pictures.</td></tr>
+              <tr><td>Alignment</td><td>Left, centre or right, and top, centre or bottom of the screen.</td></tr>
+              <tr><td>Picture</td><td>A background picture. <strong>Choose…</strong> picks one, <strong>Clear</strong> removes it.</td></tr>
+              <tr><td>Darken picture</td><td>Dims the background picture so the words are easier to read.</td></tr>
+              <tr><td>Footer size</td><td>Size of the reference line under Bible verses.</td></tr>
+              <tr><td>Projector screen</td><td>Which display the projector window opens on.</td></tr>
+              <tr><td>Transition</td><td>The fade speed between slides.</td></tr>
+              <tr><td>Split long song sections into</td><td>The most lines on one song slide. Longer sections are split across slides.</td></tr>
+              <tr><td>Scripture per slide</td><td>How many verses go on each Bible slide (1 to 4).</td></tr>
+              <tr><td>Show verse numbers</td><td>Turns the small numbers before each verse on or off.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="saving">
+        <h2>Saving and backups</h2>
+        <h3>Schedules</h3>
+        <p>The current schedule saves itself after every change. To keep a schedule for later, such as a wedding or Easter service, use the <strong>File</strong> menu:</p>
+        <ul>
+          <li><strong>Save schedule</strong> (<kbd>Ctrl</kbd>+<kbd>S</kbd>) and <strong>Save schedule as…</strong> save it as a <code>.churchie</code> file.</li>
+          <li><strong>Open schedule…</strong> (<kbd>Ctrl</kbd>+<kbd>O</kbd>) opens one again.</li>
+          <li><strong>New schedule</strong> (<kbd>Ctrl</kbd>+<kbd>N</kbd>) starts an empty one.</li>
+        </ul>
+        <p>On a Mac, use <kbd>⌘</kbd> instead of <kbd>Ctrl</kbd>. A saved schedule includes copies of its songs, so you can open it on another computer.</p>
+
+        <h3>Where Churchie keeps your things</h3>
+        <p>Songs, settings and the current schedule are stored in one folder. Open it with <strong>File → Open data folder</strong>.</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Computer</th><th>Folder</th></tr></thead>
+            <tbody>
+              <tr><td>Windows</td><td><code>%AppData%\Churchie</code></td></tr>
+              <tr><td>Mac</td><td><code>~/Library/Application Support/Churchie</code></td></tr>
+              <tr><td>Linux</td><td><code>~/.config/Churchie</code></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div class="tip"><p><strong>To back up</strong>, copy that whole folder to a USB stick or cloud drive. To move to a new computer, install Churchie there and copy the folder into the same place.</p></div>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="shortcuts">
+        <h2>Keyboard shortcuts</h2>
+        <p>On a Mac, use <kbd>⌘</kbd> wherever this table says <kbd>Ctrl</kbd>.</p>
+        <div class="table-scroll">
+          <table>
+            <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+            <tbody>
+              <tr><td><kbd>Page Down</kbd> / <kbd>Page Up</kbd></td><td>Next / previous slide (also works with clickers)</td></tr>
+              <tr><td><kbd>→</kbd> <kbd>←</kbd> or <kbd>Space</kbd></td><td>Next / previous slide, after clicking in the Live area</td></tr>
+              <tr><td><kbd>B</kbd></td><td>Black screen on or off</td></tr>
+              <tr><td><kbd>C</kbd></td><td>Clear the words on or off</td></tr>
+              <tr><td><kbd>L</kbd></td><td>Logo on or off</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>Enter</kbd></td><td>Send the Preview slide live</td></tr>
+              <tr><td><kbd>Enter</kbd> in the reference box</td><td>Look up the passage</td></tr>
+              <tr><td><kbd>Ctrl</kbd>+<kbd>S</kbd> / <kbd>O</kbd> / <kbd>N</kbd></td><td>Save / open / new schedule</td></tr>
+              <tr><td><kbd>F11</kbd> or double-click</td><td>Projector window full screen on or off</td></tr>
+              <tr><td><kbd>Esc</kbd></td><td>Close the projector window (when it's selected)</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p>The letter keys don't work while you're typing in a box, so you can't blank the screen by accident while searching for a song.</p>
+      </section>
+
+      <!-- ===================================================== -->
+      <section id="troubleshooting">
+        <h2>Troubleshooting</h2>
+
+        <h3>Windows says "Windows protected your PC"</h3>
+        <p>Click <strong>More info</strong>, then <strong>Run anyway</strong>. Windows shows this for programs that aren't signed with a paid certificate. You'll only see it the first time.</p>
+
+        <h3>My Mac says Churchie can't be opened</h3>
+        <p>Click <strong>Done</strong>, then open <strong>System Settings → Privacy &amp; Security</strong>, scroll down and click <strong>Open Anyway</strong> next to the message about Churchie. This happens once, because Churchie isn't notarised by Apple yet. If you're comfortable with Terminal, this does the same:</p>
+        <pre><code>xattr -dr com.apple.quarantine /Applications/Churchie.app</code></pre>
+
+        <h3>Churchie won't start on Linux</h3>
+        <p>Make sure it's allowed to run with <code>chmod +x Churchie/Churchie</code>. On Debian or Ubuntu, install <code>libice6</code>, <code>libsm6</code> and <code>libfontconfig1</code>.</p>
+
+        <h3>The projector shows my whole desktop, or the same as my laptop</h3>
+        <p>The screens are mirrored. Set the projector to <strong>extend</strong> the desktop (see <a href="#projector">The projector screen</a>), then choose it under <strong>Projector screen</strong> in Themes &amp; Settings and open Projector output again.</p>
+
+        <h3>The words are too small or too big</h3>
+        <p>Change <strong>Text size</strong> in Themes &amp; Settings. Churchie shrinks slides that don't fit, so if a song looks small, its slides probably have too many lines: split them with a blank line, or set <strong>Split long song sections into</strong>.</p>
+
+        <h3>A Bible I added doesn't appear</h3>
+        <p>Use <strong>Import Bible…</strong>, which explains the problem if the file can't be read. Churchie reads Zefania, OpenSong and OSIS XML files. Files copied into the Bibles folder by hand appear after you press <strong>Reload</strong>.</p>
+
+        <h3>A verse is missing</h3>
+        <p>Some modern versions leave out a few verses that older manuscripts don't have, such as Acts 8:37 in the World English Bible. Churchie skips them and tells you if you look one up on its own. The KJV includes them.</p>
+
+        <h3>Something else</h3>
+        <p>Ask a question or report a problem on <a href="https://github.com/Rioland/churchie/issues">GitHub</a>. It helps to say which computer you use and what you clicked before it went wrong.</p>
+      </section>
+    </main>
+  </div>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="34" height="34">Churchie</a>
+        <p style="margin-top:12px">Free worship presentation software for Windows, Mac and Linux. Made by Engr. Adedamola Emmanuel.</p>
+      </div>
+      <div>
+        <h3>Get started</h3>
+        <ul>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="docs.html">How to use</a></li>
+          <li><a href="docs.html#troubleshooting">Troubleshooting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Project</h3>
+        <ul>
+          <li><a href="https://github.com/Rioland/churchie">Source code on GitHub</a></li>
+          <li><a href="https://github.com/Rioland/churchie/releases">Release notes</a></li>
+          <li><a href="https://github.com/Rioland/churchie/blob/main/THIRD-PARTY-NOTICES.md">Credits and licences</a></li>
+        </ul>
+      </div>
+      <p class="credits">Screenshots show Bible text from the King James Version (public domain) and the Open Yoruba Contemporary Bible™, copyright © 2009, 2017 by Biblica, Inc., original work available for free at www.biblica.com and open.bible, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Hymns shown are in the public domain.</p>
+    </div>
+  </footer>
+
+  <script src="assets/site.js" defer></script>
+</body>
+</html>

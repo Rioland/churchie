@@ -1,0 +1,261 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Churchie: free worship presentation software</title>
+  <meta name="description" content="Churchie is free presentation software for church services: song lyrics, seven Bibles including Yoruba, smooth fades and a projector window. For Windows, Mac and Linux.">
+  <meta property="og:title" content="Churchie: songs and scripture on the big screen">
+  <meta property="og:description" content="Free presentation software for church services. Windows, Mac and Linux.">
+  <meta property="og:image" content="assets/img/social-card.jpg">
+  <meta property="og:type" content="website">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="theme-color" content="#15122E">
+  <link rel="icon" type="image/png" href="assets/img/favicon.png">
+  <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@500;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
+  <link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+  <a class="skip" href="#main">Skip to content</a>
+
+  <header class="site-header">
+    <div class="wrap">
+      <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="34" height="34">Churchie</a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" aria-label="Menu">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+      </button>
+      <nav class="nav" id="site-nav" aria-label="Main">
+        <a href="index.html#features">Features</a>
+        <a href="docs.html">How to use</a>
+        <a href="index.html#questions">Questions</a>
+        <a class="btn btn-gold" href="download.html">Download</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main">
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <h1>Songs and scripture on the big screen</h1>
+          <p class="lede">Churchie is free presentation software for church services. Build the order of service, put lyrics and Bible verses on the projector, and move through them with one click. It runs on Windows, Mac and Linux, with no internet needed on Sunday.</p>
+          <div class="hero-actions">
+            <a class="btn btn-gold" data-download="auto" href="download.html">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+              <span data-label>Download Churchie</span>
+            </a>
+            <a class="btn btn-ghost" href="docs.html">How to use Churchie</a>
+          </div>
+          <p class="hero-note"><span data-version>Version 0.1</span>, free. <span data-detected></span> <a href="download.html">All downloads</a></p>
+        </div>
+
+        <figure class="stage" aria-label="Example of what Churchie shows on a projector">
+          <div class="screen" data-demo>
+            <span class="tally">LIVE</span>
+            <div class="slide" style="background-image:url(assets/img/bg-sunrise.jpg);--dim:.3" data-label="&lt;strong&gt;Amazing Grace&lt;/strong&gt;, verse 1">
+              <p>Amazing grace! How sweet the sound
+That saved a wretch like me!
+I once was lost, but now am found;
+Was blind, but now I see.</p>
+            </div>
+            <div class="slide scripture" style="background-image:url(assets/img/bg-deepblue.jpg);--dim:.2" data-label="&lt;strong&gt;John 3:16&lt;/strong&gt;, King James Version">
+              <p>16 For God so loved the world, that he gave his only begotten Son, that whosoever believeth in him should not perish, but have everlasting life.</p>
+              <span class="ref">John 3:16 (KJV)</span>
+            </div>
+            <div class="slide scripture" lang="yo" style="background-image:url(assets/img/bg-deepblue.jpg);--dim:.2" data-label="&lt;strong&gt;Johanu 3:16&lt;/strong&gt;, Yoruba Bible">
+              <p>16 “Nítorí Ọlọ́run fẹ́ aráyé tó bẹ́ẹ̀ gẹ́ẹ́, tí ó fi ọmọ rẹ̀ kan ṣoṣo fún ni, kí ẹnikẹ́ni tí ó bá gbà á gbọ́, má bà á ṣègbé, ṣùgbọ́n kí ó lè ní ìyè àìnípẹ̀kun.</p>
+              <span class="ref">Johanu 3:16 (OYCB)</span>
+            </div>
+            <div class="slide" style="background-image:url(assets/img/bg-purple.jpg);--dim:.3" data-label="&lt;strong&gt;Blessed Assurance&lt;/strong&gt;, chorus">
+              <p>This is my story, this is my song,
+Praising my Savior all the day long;
+This is my story, this is my song,
+Praising my Savior all the day long.</p>
+            </div>
+          </div>
+          <div class="stage-bar">
+            <span class="now" data-demo-now aria-live="polite"></span>
+            <button class="op-btn" type="button" data-demo-prev aria-label="Previous slide">
+              <svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M11 2 4 8l7 6z"/></svg>Prev
+            </button>
+            <button class="op-btn" type="button" data-demo-next aria-label="Next slide">
+              Next<svg viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="m5 2 7 6-7 6z"/></svg>
+            </button>
+          </div>
+        </figure>
+      </div>
+    </section>
+
+    <section class="section" id="features">
+      <div class="wrap">
+        <div class="section-intro">
+          <h2>How a service runs in Churchie</h2>
+          <p>Everything happens in one window, laid out the way worship teams already work: what's coming up on the left, what you're checking in the middle, and what the congregation sees on the right.</p>
+        </div>
+        <div class="flow">
+          <figure>
+            <img class="shot" src="assets/img/overview.webp" width="1226" height="792" loading="lazy"
+                 alt="The Churchie window: the service schedule on the left, slides of Amazing Grace in Preview in the middle, and the live slide on the right with Prev, Next, Black, Clear and Logo buttons.">
+          </figure>
+          <ol class="steps">
+            <li>
+              <h3>Plan the service</h3>
+              <p>Add songs, Bible readings, announcements and pictures to the schedule in the order you'll use them. It saves itself as you go.</p>
+            </li>
+            <li>
+              <h3>Check it in Preview</h3>
+              <p>Click anything in the schedule to see its slides before the congregation does.</p>
+            </li>
+            <li>
+              <h3>Go live</h3>
+              <p>Double-click a slide or press Go Live. Move on with Next, the arrow keys or a presentation clicker, and each change fades smoothly.</p>
+            </li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <section class="section section-mist">
+      <div class="wrap">
+        <div class="feature">
+          <div class="feature-text">
+            <h2>Seven Bibles, including Yoruba</h2>
+            <p>Type a reference the way you'd say it, like <code>jn 3 16</code>, <code>1 Cor 13:4-7</code> or <code>Psalm 23</code>, and the verses are ready to show. Yoruba book names work too: try <code>Johanu 3:16</code> or <code>Saamu 23</code>.</p>
+            <ul class="versions" aria-label="Bible versions included">
+              <li><b>KJV</b> King James</li>
+              <li><b>WEB</b> World English</li>
+              <li><b>BSB</b> Berean Standard</li>
+              <li><b>ASV</b> American Standard</li>
+              <li><b>BBE</b> Basic English</li>
+              <li><b>YLT</b> Young's Literal</li>
+              <li><b>OYCB</b> Yoruba Contemporary</li>
+            </ul>
+            <p style="margin-top:18px">Have a licensed copy of another version? Add it with Import Bible.</p>
+          </div>
+          <img class="shot" src="assets/img/yoruba.webp" width="1226" height="792" loading="lazy"
+               alt="Churchie showing John 3:16 from the Yoruba Contemporary Bible live on screen, with the Scripture tab open below.">
+        </div>
+
+        <div class="feature flip">
+          <div class="feature-text">
+            <h2>Make it look like your church</h2>
+            <p>Choose a background picture, font, size and colour for songs, and a separate look for scripture. Changes show on the screen straight away, and long verses shrink to fit so nothing runs off the edge.</p>
+          </div>
+          <img class="shot" src="assets/img/themes.webp" width="1226" height="792" loading="lazy"
+               alt="The Themes and Settings tab with sliders for text size and picture darkness, alignment choices and background pictures for songs and scripture.">
+        </div>
+
+        <div class="feature">
+          <div class="feature-text">
+            <h2>Calm, confident projection</h2>
+            <p>The projector window opens full screen on your second display. Every change cross-fades instead of jumping, and the buttons you need in a hurry are one key away.</p>
+            <ul>
+              <li><strong>Black</strong> <kbd>B</kbd> blanks the screen</li>
+              <li><strong>Clear</strong> <kbd>C</kbd> hides the words but keeps the background</li>
+              <li><strong>Logo</strong> <kbd>L</kbd> shows your church logo</li>
+              <li>Fade speed: cut, quick, normal or slow</li>
+            </ul>
+          </div>
+          <img class="shot" src="assets/img/projector.webp" width="859" height="510" loading="lazy"
+               alt="The projector window showing the chorus of It Is Well with My Soul on a warm background.">
+        </div>
+      </div>
+    </section>
+
+    <section class="section">
+      <div class="wrap">
+        <div class="section-intro">
+          <h2>Also included</h2>
+        </div>
+        <dl class="also">
+          <div><dt>Song library</dt><dd>Search by title, words or author. Paste lyrics and Churchie splits them into slides.</dd></div>
+          <div><dt>Import songs</dt><dd>Bring in plain-text lyrics or OpenLyrics files from other programs.</dd></div>
+          <div><dt>Saves itself</dt><dd>The service order is saved after every change, so a power cut won't lose it.</dd></div>
+          <div><dt>Works offline</dt><dd>Songs, Bibles and pictures live on your computer. No account and no internet needed.</dd></div>
+          <div><dt>Clicker friendly</dt><dd>Page Up and Page Down move the slides, so most presentation remotes just work.</dd></div>
+          <div><dt>Free</dt><dd>No subscription and no watermark. The code is open on GitHub.</dd></div>
+        </dl>
+      </div>
+    </section>
+
+    <section class="section band">
+      <div class="wrap">
+        <div>
+          <h2>Ready for Sunday?</h2>
+          <p>Free for Windows, Mac and Linux. Setup takes about two minutes.</p>
+        </div>
+        <div class="band-actions">
+          <a class="btn btn-gold" data-download="auto" href="download.html">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11m0 0-4.5-4.5M12 15l4.5-4.5M5 19h14"/></svg>
+            <span data-label>Download Churchie</span>
+          </a>
+          <a class="btn btn-ghost" href="download.html">All downloads</a>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="questions">
+      <div class="wrap">
+        <div class="section-intro"><h2>Questions</h2></div>
+        <div class="faq">
+          <details>
+            <summary>Is Churchie really free?</summary>
+            <p>Yes. There's no subscription, no watermark and no account to create. The source code is public on <a href="https://github.com/Rioland/churchie">GitHub</a>.</p>
+          </details>
+          <details>
+            <summary>Which computers does it run on?</summary>
+            <p>Windows 10 and 11 (64-bit), macOS 12 or newer on Apple Silicon or Intel Macs, and 64-bit Linux. Everything Churchie needs comes in the download, so there's nothing else to install.</p>
+          </details>
+          <details>
+            <summary>Do I need internet during the service?</summary>
+            <p>No. Songs, Bibles and pictures are all stored on your computer.</p>
+          </details>
+          <details>
+            <summary>Can I use the NIV, Amplified or NKJV?</summary>
+            <p>Those versions are copyrighted, so Churchie can't include them. If your church has a licensed copy as a Zefania, OpenSong or OSIS file, add it with Import Bible in the Scripture tab.</p>
+          </details>
+          <details>
+            <summary>How do I connect a projector or TV?</summary>
+            <p>Connect it as a second screen set to extend your desktop (not mirror it), then press Projector output. The <a href="docs.html#projector">projector section of the guide</a> walks through it.</p>
+          </details>
+          <details>
+            <summary>Can I bring my songs over from EasyWorship?</summary>
+            <p>Not directly yet. You can paste lyrics into the song editor, or import plain-text and OpenLyrics files. A direct EasyWorship import is planned.</p>
+          </details>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div>
+        <a class="brand" href="index.html"><img src="assets/img/logo-96.png" alt="" width="34" height="34">Churchie</a>
+        <p style="margin-top:12px">Free worship presentation software for Windows, Mac and Linux. Made by Engr. Adedamola Emmanuel.</p>
+      </div>
+      <div>
+        <h3>Get started</h3>
+        <ul>
+          <li><a href="download.html">Download</a></li>
+          <li><a href="docs.html">How to use</a></li>
+          <li><a href="docs.html#troubleshooting">Troubleshooting</a></li>
+        </ul>
+      </div>
+      <div>
+        <h3>Project</h3>
+        <ul>
+          <li><a href="https://github.com/Rioland/churchie">Source code on GitHub</a></li>
+          <li><a href="https://github.com/Rioland/churchie/releases">Release notes</a></li>
+          <li><a href="https://github.com/Rioland/churchie/blob/main/THIRD-PARTY-NOTICES.md">Credits and licences</a></li>
+        </ul>
+      </div>
+      <p class="credits">Bible text on this page: King James Version (public domain); Open Yoruba Contemporary Bible™ copyright © 2009, 2017 by Biblica, Inc., original work available for free at www.biblica.com and open.bible, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Hymns shown are in the public domain. Churchie is built with .NET and Avalonia.</p>
+    </div>
+  </footer>
+
+  <script src="assets/site.js" defer></script>
+</body>
+</html>
