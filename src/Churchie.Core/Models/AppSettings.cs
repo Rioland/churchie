@@ -12,6 +12,9 @@ public sealed class AppSettings
     /// <summary>Split song sections longer than this into several slides. 0 = never split.</summary>
     public int MaxLinesPerSlide { get; set; }
 
+    /// <summary>How long the live screen fades between slides, in seconds. 0 = cut.</summary>
+    public double TransitionSeconds { get; set; } = 0.5;
+
     public int VersesPerSlide { get; set; } = 1;
     public bool ShowVerseNumbers { get; set; } = true;
     public string DefaultBible { get; set; } = "KJV";

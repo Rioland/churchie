@@ -9,13 +9,14 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 - KJV built in, reference parser, Zefania XML Bibles
 - Picture backgrounds and themes, live theme editing
 - Autosave, schedule files, keyboard and clicker control
+- Smooth cross-fade on the live output (going live, next verse, switching items, Black/Clear/Logo), with cut/quick/normal/slow settings
 - Cross-platform builds on GitHub Actions, Codespaces dev environment
 
 ## Phase 2 — Motion and media
 
 - Video and motion backgrounds (LibVLCSharp), looping
 - Play video items in the schedule with transport controls
-- Slide transitions (fade/cut) on the projector
+- More transition styles (slide, zoom), per-item transition choice
 - Per-song theme override
 
 ## Phase 3 — Bringing churches over

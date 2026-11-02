@@ -103,9 +103,11 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty] private bool _isCleared;
     [ObservableProperty] private bool _isLogo;
 
-    /// <summary>The slide on the projector right now (after Black/Clear/Logo are applied).</summary>
-    [ObservableProperty] private Slide? _outputSlide;
-    [ObservableProperty] private SlideTheme _outputAppearance = SlideTheme.Black();
+    /// <summary>
+    /// What's on the projector right now (after Black/Clear/Logo are applied).
+    /// The live screens fade from one frame to the next when this changes.
+    /// </summary>
+    [ObservableProperty] private LiveFrame _outputFrame = LiveFrame.Black();
 
     partial void OnSelectedLiveSlideChanged(SlideItemViewModel? value) => UpdateOutput();
     partial void OnIsBlackChanged(bool value) => UpdateOutput();
@@ -115,26 +117,25 @@ public partial class MainWindowViewModel : ViewModelBase
     private void UpdateOutput()
     {
         if (_loading) return;
+        OutputFrame = CurrentFrame();
+    }
 
+    private LiveFrame CurrentFrame()
+    {
         if (IsBlack || _liveItem is null && !IsLogo)
-        {
-            OutputAppearance = SlideTheme.Black();
-            OutputSlide = null;
-            return;
-        }
+            return LiveFrame.Black();
 
         if (IsLogo)
         {
-            OutputAppearance = SlideTheme.Black();
-            OutputSlide = string.IsNullOrEmpty(_settings.LogoPath) ? null : SlideBuilder.FromImage(_settings.LogoPath);
-            return;
+            var logo = string.IsNullOrEmpty(_settings.LogoPath) ? null : SlideBuilder.FromImage(_settings.LogoPath);
+            return new LiveFrame(logo, SlideTheme.Black());
         }
 
-        OutputAppearance = SlideFactory.ThemeFor(_liveItem!.Kind, _settings).Clone();
         var current = SelectedLiveSlide?.Slide;
         if (current is not null && IsCleared && current.ImagePath is null)
             current = current with { Text = "", Footer = null };
-        OutputSlide = current;
+
+        return new LiveFrame(current, SlideFactory.ThemeFor(_liveItem!.Kind, _settings).Clone());
     }
 
     /// <summary>Sends an item to the projector, starting at a given slide.</summary>

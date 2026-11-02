@@ -8,7 +8,7 @@
         Icon="/Assets/churchie.ico"
         Background="Black">
 
-  <!-- The projector window: one big slide, nothing else. -->
-  <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
+  <!-- The projector window: one big slide, nothing else (with a fade between slides). -->
+  <c:LiveSlideView Frame="{Binding OutputFrame}" TransitionDuration="{Binding TransitionDuration}" />
 
 </Window>

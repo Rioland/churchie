@@ -10,12 +10,20 @@ public partial class MainWindowViewModel
     private static readonly string[] LinesOptions = { "Don't split", "2 lines", "3 lines", "4 lines", "5 lines", "6 lines", "8 lines" };
     private static readonly int[] LinesValues = { 0, 2, 3, 4, 5, 6, 8 };
     private static readonly string[] VersesOptions = { "1 verse", "2 verses", "3 verses", "4 verses" };
+    private static readonly string[] TransitionOptions = { "Cut", "Quick fade", "Fade", "Slow fade" };
+    private static readonly double[] TransitionValues = { 0, 0.25, 0.5, 1.0 };
 
     public ThemeEditorViewModel SongThemeEditor { get; }
     public ThemeEditorViewModel ScriptureThemeEditor { get; }
 
     public string[] LinesPerSlideOptions => LinesOptions;
     public string[] VersesPerSlideOptions => VersesOptions;
+    public string[] TransitionChoices => TransitionOptions;
+
+    /// <summary>How long the live screens fade between slides (0 = cut).</summary>
+    public TimeSpan TransitionDuration => TimeSpan.FromSeconds(Math.Max(0, _settings.TransitionSeconds));
+
+    [ObservableProperty] private int _transitionIndex;
 
     /// <summary>Names of the connected monitors, filled in by the main window.</summary>
     public ObservableCollection<string> ScreenNames { get; } = new();
@@ -37,6 +45,25 @@ public partial class MainWindowViewModel
         VersesPerSlideIndex = Math.Clamp(_settings.VersesPerSlide - 1, 0, VersesOptions.Length - 1);
         ShowVerseNumbers = _settings.ShowVerseNumbers;
         OutputScreenIndex = _settings.OutputScreenIndex;
+        TransitionIndex = ClosestTransition(_settings.TransitionSeconds);
+    }
+
+    /// <summary>The menu choice nearest to a saved number of seconds.</summary>
+    private static int ClosestTransition(double seconds)
+    {
+        var best = 0;
+        for (var i = 1; i < TransitionValues.Length; i++)
+            if (Math.Abs(TransitionValues[i] - seconds) < Math.Abs(TransitionValues[best] - seconds)) best = i;
+        return best;
+    }
+
+    partial void OnTransitionIndexChanged(int value)
+    {
+        if (_loading || value < 0) return;
+        _settings.TransitionSeconds = TransitionValues[value];
+        SaveSettings();
+        OnPropertyChanged(nameof(TransitionDuration));
+        StatusMessage = value == 0 ? "Transition: cut (no fade)" : $"Transition: {TransitionOptions[value].ToLowerInvariant()} ({TransitionValues[value]:0.##} s)";
     }
 
     partial void OnLinesPerSlideIndexChanged(int value)

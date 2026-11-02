@@ -137,7 +137,7 @@
             <!-- Exactly what the congregation sees -->
             <c:AspectRatioBox DockPanel.Dock="Top" MaxHeight="440">
               <Border Classes="screen">
-                <c:SlideView Slide="{Binding OutputSlide}" Appearance="{Binding OutputAppearance}" />
+                <c:LiveSlideView Frame="{Binding OutputFrame}" TransitionDuration="{Binding TransitionDuration}" />
               </Border>
             </c:AspectRatioBox>
 
@@ -147,7 +147,9 @@
               <ToggleButton Classes="danger" Content="Black (B)" IsChecked="{Binding IsBlack}" Margin="0,0,4,4" />
               <ToggleButton Classes="danger" Content="Clear (C)" IsChecked="{Binding IsCleared}" Margin="0,0,4,4" />
               <ToggleButton Classes="danger" Content="Logo (L)" IsChecked="{Binding IsLogo}" Margin="0,0,12,4" />
-              <ToggleButton Content="Projector output" IsChecked="{Binding IsOutputOpen}" Margin="0,0,4,4" />
+              <ToggleButton Content="Projector output" IsChecked="{Binding IsOutputOpen}" Margin="0,0,12,4" />
+              <ComboBox ItemsSource="{Binding TransitionChoices}" SelectedIndex="{Binding TransitionIndex, Mode=TwoWay}"
+                        MinWidth="120" Margin="0,0,4,4" ToolTip.Tip="Transition between live slides" />
             </WrapPanel>
 
             <ListBox Classes="slides"
@@ -302,6 +304,10 @@
                   <TextBlock Classes="hint" Text="Projector screen" />
                   <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding ScreenNames}" SelectedIndex="{Binding OutputScreenIndex, Mode=TwoWay}" />
                   <TextBlock Classes="hint" Text="With only one screen connected, the output opens in a window you can move and resize." />
+
+                  <TextBlock Classes="header" Text="TRANSITION" Margin="0,8,0,0" />
+                  <TextBlock Classes="hint" Text="When the live slide changes" />
+                  <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding TransitionChoices}" SelectedIndex="{Binding TransitionIndex, Mode=TwoWay}" />
 
                   <TextBlock Classes="header" Text="SLIDES" Margin="0,8,0,0" />
                   <TextBlock Classes="hint" Text="Split long song sections into" />

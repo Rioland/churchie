@@ -11,7 +11,7 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | Area | Features |
 | --- | --- |
 | **Layout** | Schedule (service order) · Preview · Live, with resource tabs underneath — the familiar EasyWorship arrangement |
-| **Projector** | Full-screen output on the second screen (or a movable window when you only have one), **Black**, **Clear** (hide words, keep background) and **Logo** buttons |
+| **Projector** | Full-screen output on the second screen (or a floating window when you only have one), smooth **cross-fade** between slides (cut / quick / normal / slow), **Black**, **Clear** (hide words, keep background) and **Logo** buttons |
 | **Songs** | Library with search by title, words or author; editor that understands `[Verse 1]`, `[Chorus]`, `Bridge:`, `V2`…; import from `.txt` and OpenLyrics `.xml`; three public-domain hymns to start with |
 | **Scripture** | King James Version built in; type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`); browse by book and chapter; add more translations as Zefania XML files (e.g. Yoruba, Igbo, Hausa) |
 | **Media** | Pictures as song or scripture backgrounds, as the logo, or shown full-screen |
