@@ -1,7 +1,8 @@
-# Churchie 0.1.0 downloads
+# Churchie downloads
 
-These are the installers that the download buttons on https://churchie.netlify.app point to.
-They were built from tag `v0.1.0` of https://github.com/Rioland/churchie.
+This branch holds only the installers. The download buttons on https://churchie.netlify.app
+link to `/get/<file name>`, and the redirect rule in `netlify.toml` (on `main`) sends that here.
 
-They live under the git ref `refs/downloads/v0.1.0` (not a branch), so cloning the
-source code does not download them. Check a file with `SHA256SUMS.txt`.
+Current files: version 0.1.0, built from tag `v0.1.0`. Check a file with `SHA256SUMS.txt`.
+
+For a new version, replace these files with everything from `dist/` (see README → Website on `main`).
