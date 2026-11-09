@@ -3,18 +3,19 @@
   "use strict";
 
   var REPO = "Rioland/churchie";
-  var LATEST = "https://github.com/" + REPO + "/releases/latest/download/";
+  var GITHUB = "https://github.com/" + REPO + "/releases/latest/download/";
+  // The website keeps its own copy of these files (copied into website/downloads/ each time
+  // it is published), so downloads work straight from here.
+  var HOSTED = {
+    "Churchie-Setup-win-x64.exe": true, "Churchie-win-x64.zip": true,
+    "Churchie-osx-arm64.pkg": true, "Churchie-osx-x64.pkg": true,
+    "Churchie-linux-x64.tar.gz": true, "SHA256SUMS.txt": true,
+  };
   var FILES = {
     windows: { file: "Churchie-Setup-win-x64.exe", label: "Download for Windows" },
     "mac-arm": { file: "Churchie-osx-arm64.pkg", label: "Download for Mac (Apple Silicon)" },
     "mac-intel": { file: "Churchie-osx-x64.pkg", label: "Download for Mac (Intel)" },
     linux: { file: "Churchie-linux-x64.tar.gz", label: "Download for Linux" },
-  };
-  // If a release doesn't have an installer yet, offer the plain download instead.
-  var FALLBACK = {
-    "Churchie-Setup-win-x64.exe": "Churchie-win-x64.zip",
-    "Churchie-osx-arm64.pkg": "Churchie-osx-arm64.zip",
-    "Churchie-osx-x64.pkg": "Churchie-osx-x64.zip",
   };
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
@@ -82,20 +83,47 @@
     return Promise.resolve("mac-arm");
   }
 
-  var noRelease = false;    // set below if nothing has been published on GitHub yet
-  var releaseFiles = null;  // name -> size, once the latest release has been read
+  // ---------- Where each download comes from ----------
+  // GitHub when the latest release has the file (GitHub doesn't limit downloads), otherwise
+  // the website's own copy. Either way the browser starts saving the file straight away.
+  var releaseFiles = null; // file name -> size, once the latest GitHub release has been read
+
+  function sourceOf(file) {
+    if (releaseFiles && releaseFiles[file] !== undefined) return GITHUB + file;
+    if (HOSTED[file]) return "downloads/" + file;
+    return null;
+  }
+
+  // Shown instead of an error page if a file can't be found anywhere: on the download page
+  // the button scrolls to the notice at the top; elsewhere it leads to the download page.
+  function holdLink(a) {
+    var notice = document.querySelector("[data-no-release]");
+    if (!notice) { a.href = "download.html"; return; }
+    notice.hidden = false;
+    a.href = "#";
+    if (a.getAttribute("data-held")) return;
+    a.setAttribute("data-held", "1");
+    a.addEventListener("click", function (e) {
+      if (a.getAttribute("href") !== "#") return;
+      e.preventDefault();
+      notice.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      notice.focus({ preventScroll: true });
+    });
+  }
+
+  function point(a, file) {
+    var url = sourceOf(file);
+    a.setAttribute("data-file", file);
+    if (url) { a.href = url; a.removeAttribute("data-held"); return; }
+    // Optional extras sit in a line that stays hidden until GitHub has them.
+    if (a.closest && a.closest("[data-optional]")) return;
+    holdLink(a);
+  }
 
   function setButton(button, key) {
     var info = FILES[key];
     if (!info) return;
-    // (If there's no release yet, the release check below has already pointed it elsewhere.)
-    if (noRelease) return;
-    var file = info.file;
-    if (releaseFiles) {
-      if (releaseFiles[file] === undefined && FALLBACK[file] && releaseFiles[FALLBACK[file]] !== undefined) file = FALLBACK[file];
-      if (releaseFiles[file] === undefined) { holdLink(button); return; } // file not uploaded yet
-    }
-    button.href = LATEST + file;
+    point(button, info.file);
     var label = button.querySelector("[data-label]");
     if (label) label.textContent = info.label;
   }
@@ -132,71 +160,35 @@
     });
   }
 
-  // ---------- Latest release: version, sizes, availability ----------
-  // The download links go straight to the file (GitHub sends it, the visitor stays here).
-  // This checks the latest release so the page can show the version and file sizes, and
-  // copes with a release that doesn't exist yet or is missing a file.
-  var downloadLinks = function () {
-    return Array.prototype.slice.call(document.querySelectorAll("a[href*='/releases/latest/download/']"));
-  };
-  var fileOf = function (a) { return a.getAttribute("href").split("/").pop(); };
-
-  // A download whose file isn't on GitHub (yet) would open GitHub's "Not Found" page.
-  // Instead, keep the visitor here: on the download page the button shows the notice at
-  // the top; elsewhere it leads to the download page.
-  function holdLink(a) {
-    var notice = document.querySelector("[data-no-release]");
-    if (!notice) { a.href = "download.html"; return; }
-    notice.hidden = false;
-    a.href = "#";
-    if (a.getAttribute("data-held")) return;
-    a.setAttribute("data-held", "1");
-    a.addEventListener("click", function (e) {
-      if (a.getAttribute("href") !== "#") return;
-      e.preventDefault();
-      notice.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-      notice.focus({ preventScroll: true });
-    });
-  }
-
-  var needsRelease = document.querySelector("[data-version], [data-size], [data-no-release], [data-download]");
-  if (needsRelease && window.fetch) {
+  // ---------- Latest release on GitHub: version, sizes, and GitHub copies ----------
+  if (window.fetch && document.querySelector("a[data-file], [data-version]")) {
     fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
       .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
       .then(function (release) {
         var version = (release.tag_name || "").replace(/^v/, "");
-        document.querySelectorAll("[data-version]").forEach(function (el) { el.textContent = "Version " + version; });
+        if (version) document.querySelectorAll("[data-version]").forEach(function (el) { el.textContent = "Version " + version; });
 
         var sizes = {};
-        (release.assets || []).forEach(function (asset) { sizes[asset.name] = asset.size; });
+        // Count only files that finished uploading.
+        (release.assets || []).forEach(function (asset) { if (asset.state === "uploaded") sizes[asset.name] = asset.size; });
         releaseFiles = sizes;
 
-        downloadLinks().forEach(function (a) {
-          var name = fileOf(a);
-          if (sizes[name] !== undefined) return; // the file is there: nothing to do
-          if (FALLBACK[name] && sizes[FALLBACK[name]] !== undefined) {
-            a.href = LATEST + FALLBACK[name]; // no installer in this release: use the .zip
-            var label = a.querySelector("[data-size]");
-            if (label) label.setAttribute("data-size", FALLBACK[name]);
-          } else {
-            holdLink(a); // not uploaded at all
-          }
+        // Re-point every download (GitHub copy if there is one, else the website's copy).
+        document.querySelectorAll("a[data-file]").forEach(function (a) { point(a, a.getAttribute("data-file")); });
+        // Extra downloads that only GitHub has: show their line once they're there.
+        document.querySelectorAll("[data-optional]").forEach(function (el) {
+          var links = el.querySelectorAll("a[data-file]");
+          el.hidden = !Array.prototype.every.call(links, function (a) { return sizes[a.getAttribute("data-file")] !== undefined; });
         });
         Object.keys(sizes).forEach(function (name) {
           var mb = Math.max(1, Math.round(sizes[name] / 1048576));
           document.querySelectorAll("[data-size='" + name + "']").forEach(function (el) {
-            var kind = /\.exe$|\.pkg$/.test(name) ? "Installer, " : "";
-            el.textContent = kind + mb + " MB";
+            el.textContent = (/\.exe$|\.pkg$/.test(name) ? "Installer, " : "") + mb + " MB";
           });
         });
         document.querySelectorAll("[data-release-notes]").forEach(function (a) { a.href = release.html_url; });
       })
-      .catch(function (status) {
-        if (status !== 404) return; // e.g. GitHub busy: the links still work as they are
-        noRelease = true;
-        // Nothing published yet: hold every download button.
-        downloadLinks().concat(Array.prototype.slice.call(document.querySelectorAll("[data-download]"))).forEach(holdLink);
-      });
+      .catch(function () { /* no release, or GitHub busy: the website's own copies are used */ });
   }
 
   // ---------- "Your download has started" ----------
@@ -205,9 +197,9 @@
   var INSTALL_STEPS = { exe: "#windows", zip: "#windows", pkg: "#mac", gz: "#linux" };
   var toast = null, toastTimer = null;
   document.addEventListener("click", function (e) {
-    var a = e.target.closest ? e.target.closest("a[href*='/releases/latest/download/']") : null;
-    if (!a || a.getAttribute("data-held")) return;
-    var name = fileOf(a);
+    var a = e.target.closest ? e.target.closest("a[data-file]") : null;
+    if (!a || a.getAttribute("data-held") || a.getAttribute("href") === "#") return;
+    var name = a.getAttribute("data-file");
     if (name === "SHA256SUMS.txt") return;
     var ext = name.split(".").pop();
     var steps = "download.html" + (/osx/.test(name) ? "#mac" : (INSTALL_STEPS[ext] || ""));
