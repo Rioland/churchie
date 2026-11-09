@@ -3,6 +3,16 @@
   publish = "website"
   command = ""
 
+# Every download button links to /get/<file name>, and this rule sends the browser on to
+# wherever the files are kept. So moving the files later means changing only this line.
+# Right now they're on the "downloads" branch of the GitHub project (see README → Website).
+# A 302 is a "temporary" redirect, so browsers don't remember it and a change here works at once.
+[[redirects]]
+  from = "/get/*"
+  to = "https://raw.githubusercontent.com/Rioland/churchie/downloads/:splat"
+  status = 302
+  force = true
+
 # Pictures rarely change, so browsers may keep them for a week. The CSS and JS are left
 # out on purpose: Netlify then makes browsers re-check them on each visit, so a style fix
 # shows up straight away instead of up to a week later.

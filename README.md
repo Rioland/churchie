@@ -33,7 +33,7 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 
 ## Download
 
-Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)** (or the [Releases](https://github.com/Rioland/churchie/releases) page):
+Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)**:
 
 | Computer | Download | |
 | --- | --- | --- |
@@ -59,9 +59,17 @@ Small edits can also be made straight on github.com (press `.` on the repo page 
 
 ## Website
 
-The website lives in [`website/`](website/) (plain HTML/CSS/JS, no build step) and is hosted on Netlify (`netlify.toml` publishes that folder). Its download buttons point at the latest GitHub release, using the file names produced by `build/package.sh`.
+The website lives in [`website/`](website/) (plain HTML/CSS/JS, no build step) and is hosted on Netlify (`netlify.toml` publishes that folder).
 
-To make a release: build the packages (`bash build/package.sh <rid>` for `win-x64`, `linux-x64`, `osx-arm64`, `osx-x64` — the macOS ones on a Mac; the Windows installer needs [NSIS](https://nsis.sourceforge.io)), then create a GitHub release named `vX.Y.Z` and attach every file from `dist/`. Once GitHub Actions is available, pushing a `vX.Y.Z` tag does all of this automatically.
+**Where the downloads come from.** Every download button links to `/get/<file name>` (for example `/get/Churchie-Setup-win-x64.exe`), using the file names produced by `build/package.sh`. One redirect rule in `netlify.toml` sends that on to the real file, so moving the files means changing only that rule. Right now the files are on the [`downloads`](https://github.com/Rioland/churchie/tree/downloads) branch of this project, which holds nothing but the installers. (The clones on the build machines fetch only `main`, so they don't download it.)
+
+To publish a new version's downloads:
+
+1. Build the packages: `bash build/package.sh <rid>` for `win-x64`, `linux-x64`, `osx-arm64` and `osx-x64`. The macOS ones must be built on a Mac, and the Windows installer needs [NSIS](https://nsis.sourceforge.io).
+2. Replace the files on the `downloads` branch with everything from `dist/`.
+3. Optionally create a GitHub release named `vX.Y.Z` and attach the same files. To serve the downloads from releases instead (GitHub's own download service, best for heavy use), change the rule in `netlify.toml` to `https://github.com/Rioland/churchie/releases/latest/download/:splat` and publish the website.
+
+Once GitHub Actions is available, pushing a `vX.Y.Z` tag builds the files and makes the release automatically.
 
 ## Project layout
 
