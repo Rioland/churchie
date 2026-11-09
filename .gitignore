@@ -22,6 +22,3 @@ TestResults/
 
 # Netlify CLI link state
 .netlify/
-
-# App downloads are copied in when the website is published (too big for git)
-website/downloads/
