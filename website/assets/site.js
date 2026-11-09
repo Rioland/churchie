@@ -91,7 +91,10 @@
     // (If there's no release yet, the release check below has already pointed it elsewhere.)
     if (noRelease) return;
     var file = info.file;
-    if (releaseFiles && releaseFiles[file] === undefined && FALLBACK[file]) file = FALLBACK[file];
+    if (releaseFiles) {
+      if (releaseFiles[file] === undefined && FALLBACK[file] && releaseFiles[FALLBACK[file]] !== undefined) file = FALLBACK[file];
+      if (releaseFiles[file] === undefined) { holdLink(button); return; } // file not uploaded yet
+    }
     button.href = LATEST + file;
     var label = button.querySelector("[data-label]");
     if (label) label.textContent = info.label;
@@ -138,6 +141,24 @@
   };
   var fileOf = function (a) { return a.getAttribute("href").split("/").pop(); };
 
+  // A download whose file isn't on GitHub (yet) would open GitHub's "Not Found" page.
+  // Instead, keep the visitor here: on the download page the button shows the notice at
+  // the top; elsewhere it leads to the download page.
+  function holdLink(a) {
+    var notice = document.querySelector("[data-no-release]");
+    if (!notice) { a.href = "download.html"; return; }
+    notice.hidden = false;
+    a.href = "#";
+    if (a.getAttribute("data-held")) return;
+    a.setAttribute("data-held", "1");
+    a.addEventListener("click", function (e) {
+      if (a.getAttribute("href") !== "#") return;
+      e.preventDefault();
+      notice.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
+      notice.focus({ preventScroll: true });
+    });
+  }
+
   var needsRelease = document.querySelector("[data-version], [data-size], [data-no-release], [data-download]");
   if (needsRelease && window.fetch) {
     fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
@@ -152,10 +173,13 @@
 
         downloadLinks().forEach(function (a) {
           var name = fileOf(a);
-          if (sizes[name] === undefined && FALLBACK[name] && sizes[FALLBACK[name]] !== undefined) {
+          if (sizes[name] !== undefined) return; // the file is there: nothing to do
+          if (FALLBACK[name] && sizes[FALLBACK[name]] !== undefined) {
             a.href = LATEST + FALLBACK[name]; // no installer in this release: use the .zip
             var label = a.querySelector("[data-size]");
             if (label) label.setAttribute("data-size", FALLBACK[name]);
+          } else {
+            holdLink(a); // not uploaded at all
           }
         });
         Object.keys(sizes).forEach(function (name) {
@@ -170,21 +194,45 @@
       .catch(function (status) {
         if (status !== 404) return; // e.g. GitHub busy: the links still work as they are
         noRelease = true;
-        // Nothing published yet. Keep people on this site rather than sending them to an
-        // empty GitHub page: explain on the download page, or send them there.
-        var notice = document.querySelector("[data-no-release]");
-        if (notice) notice.hidden = false;
-        downloadLinks().concat(Array.prototype.slice.call(document.querySelectorAll("[data-download]"))).forEach(function (a) {
-          if (!notice) { a.href = "download.html"; return; }
-          a.href = "#";
-          a.addEventListener("click", function (e) {
-            e.preventDefault();
-            notice.scrollIntoView({ behavior: reduceMotion ? "auto" : "smooth", block: "center" });
-            notice.focus({ preventScroll: true });
-          });
-        });
+        // Nothing published yet: hold every download button.
+        downloadLinks().concat(Array.prototype.slice.call(document.querySelectorAll("[data-download]"))).forEach(holdLink);
       });
   }
+
+  // ---------- "Your download has started" ----------
+  // The file comes straight from GitHub and the browser saves it, so the page itself doesn't
+  // change. A short note confirms it worked and points to the install steps.
+  var INSTALL_STEPS = { exe: "#windows", zip: "#windows", pkg: "#mac", gz: "#linux" };
+  var toast = null, toastTimer = null;
+  document.addEventListener("click", function (e) {
+    var a = e.target.closest ? e.target.closest("a[href*='/releases/latest/download/']") : null;
+    if (!a || a.getAttribute("data-held")) return;
+    var name = fileOf(a);
+    if (name === "SHA256SUMS.txt") return;
+    var ext = name.split(".").pop();
+    var steps = "download.html" + (/osx/.test(name) ? "#mac" : (INSTALL_STEPS[ext] || ""));
+    if (!toast) {
+      toast = document.createElement("div");
+      toast.className = "toast";
+      toast.setAttribute("role", "status");
+      document.body.appendChild(toast);
+    }
+    toast.innerHTML = "";
+    var text = document.createElement("p");
+    text.innerHTML = "<strong>Your download has started.</strong> ";
+    text.appendChild(document.createTextNode(name + " is being saved to your Downloads folder."));
+    var links = document.createElement("p");
+    var again = document.createElement("a"); again.href = a.href; again.textContent = "Didn't start? Try again";
+    var how = document.createElement("a"); how.href = steps; how.textContent = "How to install";
+    var close = document.createElement("button"); close.type = "button"; close.className = "toast-close";
+    close.setAttribute("aria-label", "Close"); close.textContent = "\u00d7";
+    close.addEventListener("click", function () { toast.hidden = true; });
+    links.appendChild(again); links.appendChild(document.createTextNode(" · ")); links.appendChild(how);
+    toast.appendChild(text); toast.appendChild(links); toast.appendChild(close);
+    toast.hidden = false;
+    window.clearTimeout(toastTimer);
+    toastTimer = window.setTimeout(function () { toast.hidden = true; }, 15000);
+  });
 
   // ---------- Docs: highlight the section you're reading ----------
   var tocLinks = document.querySelectorAll(".toc a[href^='#']");
