@@ -185,7 +185,7 @@
 
       <!-- ===================== Bottom: resource tabs ===================== -->
       <Border Grid.Row="2" Classes="panel" Padding="6">
-        <TabControl Padding="4,6,4,0">
+        <TabControl Padding="4,6,4,0" SelectedIndex="{Binding SelectedTabIndex, Mode=TwoWay}">
 
           <!-- Songs -->
           <TabItem Header="Songs">
