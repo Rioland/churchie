@@ -16,8 +16,11 @@
 set -euo pipefail
 
 RID="${1:?usage: package.sh <rid> [version]}"
-VERSION="${2:-0.1.0}"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# The version number lives in one place, Directory.Build.props (<Version>0.2.0</Version>).
+# This reads it from there, so a new release only needs that one line changed.
+DEFAULT_VERSION="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' "$ROOT/Directory.Build.props" | head -1)"
+VERSION="${2:-${DEFAULT_VERSION:-0.0.0}}"
 PUBLISH="$ROOT/publish/${RID}"
 STAGE="$ROOT/publish/stage-${RID}/Churchie"
 DIST="$ROOT/dist"

@@ -2,7 +2,6 @@
 (function () {
   "use strict";
 
-  var REPO = "Rioland/churchie";
   // Every download link is /get/<file name>. netlify.toml sends that on to wherever the
   // files are kept, so the website never has to know (or change) where that is.
   var DOWNLOADS = "/get/";
@@ -116,21 +115,6 @@
         ? "Churchie runs on computers, not phones. Open this page on the computer you'll use for church."
         : "";
     });
-  }
-
-  // ---------- Latest release: version number and release notes ----------
-  // Only for display: the download links work whether or not this succeeds.
-  if (document.querySelector("[data-version], [data-release-notes]") && window.fetch) {
-    fetch("https://api.github.com/repos/" + REPO + "/releases/latest", { headers: { Accept: "application/vnd.github+json" } })
-      .then(function (r) { return r.ok ? r.json() : Promise.reject(r.status); })
-      .then(function (release) {
-        var version = (release.tag_name || "").replace(/^v/, "");
-        if (version) {
-          document.querySelectorAll("[data-version]").forEach(function (el) { el.textContent = "Version " + version; });
-        }
-        document.querySelectorAll("[data-release-notes]").forEach(function (a) { a.href = release.html_url; });
-      })
-      .catch(function () { /* GitHub busy or offline: keep the text that's in the page */ });
   }
 
   // ---------- "Your download has started" ----------

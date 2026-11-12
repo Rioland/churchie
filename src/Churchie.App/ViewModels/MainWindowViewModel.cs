@@ -547,7 +547,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         if (Dialogs is null) return;
         await Dialogs.ShowMessageAsync("About Churchie",
-            "Churchie 0.1 — worship lyrics and scripture presentation.\n\n" +
+            "Churchie 0.2 — worship lyrics and scripture presentation.\n\n" +
             "Built with C# and Avalonia; runs on Windows, macOS and Linux.\n" +
             $"Your songs and settings are stored in:\n{_paths.Root}");
     }
