@@ -80,6 +80,15 @@
       <Setter Property="CornerRadius" Value="6" />
     </Style>
 
+    <!-- Recording level meter: green normally, red when the sound is too loud. -->
+    <Style Selector="ProgressBar.level">
+      <Setter Property="Foreground" Value="#3DD68C" />
+      <Setter Property="Background" Value="#161925" />
+    </Style>
+    <Style Selector="ProgressBar.level.clip">
+      <Setter Property="Foreground" Value="#E5484D" />
+    </Style>
+
     <Style Selector="Border.badge">
       <Setter Property="CornerRadius" Value="4" />
       <Setter Property="Padding" Value="5,1" />

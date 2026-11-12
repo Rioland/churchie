@@ -38,6 +38,9 @@ public partial class MainWindowViewModel
     [ObservableProperty] private bool _showVerseNumbers;
     [ObservableProperty] private int _outputScreenIndex;
 
+    /// <summary>Which bottom tab is showing (Songs, Scripture, Media, Record, Themes &amp; Settings).</summary>
+    [ObservableProperty] private int _selectedTabIndex;
+
     /// <summary>The main window watches this and opens/closes the projector window.</summary>
     [ObservableProperty] private bool _isOutputOpen;
 
@@ -51,6 +54,7 @@ public partial class MainWindowViewModel
         ShowVerseNumbers = _settings.ShowVerseNumbers;
         OutputScreenIndex = _settings.OutputScreenIndex;
         TransitionIndex = ClosestTransition(_settings.TransitionSeconds);
+        SelectedTabIndex = Math.Max(0, _settings.SelectedTab);
         PictureFitIndex = Math.Clamp((int)_settings.PictureFit, 0, PictureFitChoices.Length - 1);
     }
 
@@ -70,6 +74,13 @@ public partial class MainWindowViewModel
         SaveSettings();
         OnPropertyChanged(nameof(TransitionDuration));
         StatusMessage = value == 0 ? "Transition: cut (no fade)" : $"Transition: {TransitionOptions[value].ToLowerInvariant()} ({TransitionValues[value]:0.##} s)";
+    }
+
+    partial void OnSelectedTabIndexChanged(int value)
+    {
+        if (_loading || value < 0) return;
+        _settings.SelectedTab = value;
+        SaveSettings();
     }
 
     partial void OnPictureFitIndexChanged(int value)

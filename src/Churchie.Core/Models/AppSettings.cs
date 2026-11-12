@@ -25,5 +25,11 @@ public sealed class AppSettings
     /// <summary>How picture slides (Media tab) are sized to the screen. Fit = show the whole picture.</summary>
     public ImageFit PictureFit { get; set; } = ImageFit.Fit;
 
+    /// <summary>Which bottom tab was open last time (0 = Songs), so the app reopens where you left it.</summary>
+    public int SelectedTab { get; set; }
+
+    /// <summary>Name of the microphone last used for recording. Null = the computer's default microphone.</summary>
+    public string? RecordingDevice { get; set; }
+
     public List<string> MediaFiles { get; set; } = new();
 }

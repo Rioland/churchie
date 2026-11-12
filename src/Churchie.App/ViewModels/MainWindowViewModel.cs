@@ -17,6 +17,7 @@ namespace Churchie.App.ViewModels;
 ///   MainWindowViewModel.Scripture.cs — the Scripture tab
 ///   MainWindowViewModel.Media.cs     — the Media tab
 ///   MainWindowViewModel.Settings.cs  — themes and settings
+///   MainWindowViewModel.Recording.cs — the Record tab (sermon recording)
 /// </summary>
 public partial class MainWindowViewModel : ViewModelBase
 {
@@ -58,6 +59,8 @@ public partial class MainWindowViewModel : ViewModelBase
         _loading = false;
         UpdateOutput();
         _ = LoadBiblesAsync();
+        RefreshRecordings();
+        _ = LoadMicrophonesAsync();
     }
 
     public string WindowTitle =>

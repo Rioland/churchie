@@ -66,6 +66,8 @@ Collected from eBible.org; each text keeps its original licence
 ## Libraries
 
 - Avalonia UI — MIT licence — https://github.com/AvaloniaUI/Avalonia
+- PortAudio (sound recording) — MIT-style licence — https://www.portaudio.com
+- PortAudioSharp2 (.NET wrapper for PortAudio) — Apache 2.0 licence — https://github.com/csukuangfj/PortAudioSharp2
 - CommunityToolkit.Mvvm — MIT licence — https://github.com/CommunityToolkit/dotnet
 - xUnit (tests only) — Apache 2.0 — https://github.com/xunit/xunit
 
