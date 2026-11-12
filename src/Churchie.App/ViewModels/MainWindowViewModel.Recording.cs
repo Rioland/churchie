@@ -128,11 +128,16 @@ public partial class MainWindowViewModel
     // Check level / Record / Pause / Stop
     // ------------------------------------------------------------------
 
-    private bool CanUseMicrophone() => SelectedMicrophone is not null && !IsRecording;
+    // True for the moment between pressing a button and the microphone being open.
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(StartRecordingCommand), nameof(CheckLevelCommand))]
+    private bool _isOpeningMicrophone;
+
+    private bool CanUseMicrophone() => SelectedMicrophone is not null && !IsRecording && !IsOpeningMicrophone;
 
     /// <summary>Opens the microphone just to watch the meter, so the level can be set before the service.</summary>
     [RelayCommand(CanExecute = nameof(CanUseMicrophone))]
-    private void CheckLevel()
+    private async Task CheckLevelAsync()
     {
         if (IsCheckingLevel)
         {
@@ -141,15 +146,15 @@ public partial class MainWindowViewModel
             return;
         }
 
-        if (!OpenMicrophone()) return;
+        if (!await OpenMicrophoneAsync()) return;
         IsCheckingLevel = true;
         RecordingStatus = "Listening (not recording). Speak: the bar should reach about three-quarters and never turn red.";
     }
 
     [RelayCommand(CanExecute = nameof(CanUseMicrophone))]
-    private void StartRecording()
+    private async Task StartRecordingAsync()
     {
-        if (!OpenMicrophone()) return; // does nothing if "Check level" already opened it
+        if (!await OpenMicrophoneAsync()) return; // does nothing if "Check level" already opened it
 
         try
         {
@@ -198,17 +203,30 @@ public partial class MainWindowViewModel
         StatusMessage = problem is null ? "Recording saved" : "Recording stopped: " + problem;
     }
 
-    private bool OpenMicrophone()
+    /// <summary>
+    /// Opens the microphone on a background thread. The first time, macOS and Windows may
+    /// ask the user for permission, and that can take as long as the user takes to answer;
+    /// doing it in the background keeps the window working meanwhile.
+    /// </summary>
+    private async Task<bool> OpenMicrophoneAsync()
     {
-        if (SelectedMicrophone is null) return false;
+        if (SelectedMicrophone is not { } microphone) return false;
+        if (_recorder.IsOpen) return true;
+
+        IsOpeningMicrophone = true;
+        RecordingStatus = "Opening the microphone… If the computer asks whether Churchie may use it, choose Allow.";
         try
         {
-            _recorder.Open(SelectedMicrophone);
+            await Task.Run(() => _recorder.Open(microphone));
         }
         catch (Exception ex)
         {
             RecordingStatus = "Couldn't open the microphone: " + ex.Message;
             return false;
+        }
+        finally
+        {
+            IsOpeningMicrophone = false;
         }
 
         _recordingTimer ??= new DispatcherTimer(TimeSpan.FromMilliseconds(80), DispatcherPriority.Background, (_, _) => OnRecordingTick());
