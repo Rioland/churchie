@@ -6,6 +6,8 @@
 
   <Application.Styles>
     <FluentTheme />
+    <!-- Styles for the colour picker (a separate Avalonia package); without this line it draws nothing. -->
+    <StyleInclude Source="avares://Avalonia.Controls.ColorPicker/Themes/Fluent/Fluent.xaml" />
 
     <!-- A dark "control room" look, like other worship presentation tools. -->
     <Style Selector="Window">

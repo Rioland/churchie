@@ -121,6 +121,7 @@ public sealed class SlideView : UserControl
             _backgroundImage.IsVisible = false;
             _dim.IsVisible = false;
             _slideImage.Source = ImageCache.Get(picture);
+            _slideImage.Stretch = ToStretch(slide.ImageFit);
             _slideImage.IsVisible = true;
             _textFit.IsVisible = false;
             _footer.IsVisible = false;
@@ -133,6 +134,7 @@ public sealed class SlideView : UserControl
         _background.Background = new SolidColorBrush(ParseColor(theme.BackgroundColor, Colors.Black));
         var bitmap = string.IsNullOrEmpty(theme.BackgroundImage) ? null : ImageCache.Get(theme.BackgroundImage);
         _backgroundImage.Source = bitmap;
+        _backgroundImage.Stretch = ToStretch(theme.BackgroundFit);
         _backgroundImage.IsVisible = bitmap is not null;
         _dim.IsVisible = bitmap is not null && theme.BackgroundDim > 0;
         _dim.Opacity = Math.Clamp(theme.BackgroundDim, 0, 1);
@@ -174,6 +176,14 @@ public sealed class SlideView : UserControl
         if (string.IsNullOrWhiteSpace(theme.FontFamily)) _footer.ClearValue(TextBlock.FontFamilyProperty);
         else _footer.FontFamily = new FontFamily(theme.FontFamily);
     }
+
+    /// <summary>Translates our own fit setting into Avalonia's name for the same thing.</summary>
+    private static Stretch ToStretch(ImageFit fit) => fit switch
+    {
+        ImageFit.Fill => Stretch.UniformToFill, // cover the screen, edges may be cropped
+        ImageFit.Stretch => Stretch.Fill,       // exact screen shape, picture may look squashed
+        _ => Stretch.Uniform,                   // whole picture, bars beside it
+    };
 
     private static Color ParseColor(string? hex, Color fallback) =>
         !string.IsNullOrWhiteSpace(hex) && Color.TryParse(hex.Trim(), out var color) ? color : fallback;

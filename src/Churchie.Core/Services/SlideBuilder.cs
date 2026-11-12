@@ -56,8 +56,9 @@ public static class SlideBuilder
         return blocks.Select((b, i) => new Slide(SlideKind.Text, $"Slide {i + 1}", b)).ToList();
     }
 
-    public static Slide FromImage(string path) =>
-        new(SlideKind.Image, Path.GetFileNameWithoutExtension(path), "", null, path);
+    /// <param name="fit">How the picture is sized to the screen. The default shows the whole picture.</param>
+    public static Slide FromImage(string path, ImageFit fit = ImageFit.Fit) =>
+        new(SlideKind.Image, Path.GetFileNameWithoutExtension(path), "", null, path, fit);
 
     private static List<T[]> Chunk<T>(IReadOnlyList<T> items, int size)
     {

@@ -20,10 +20,11 @@
         <TextBox Grid.Column="1" Text="{Binding FontFamily}" Watermark="Default (Inter) — or type e.g. Arial, Montserrat" />
       </Grid>
 
-      <Grid ColumnDefinitions="110,*,8,32">
+      <Grid ColumnDefinitions="110,*,8,Auto">
         <TextBlock Classes="hint" Text="Text colour" VerticalAlignment="Center" />
         <TextBox Grid.Column="1" Text="{Binding TextColor}" Watermark="#FFFFFF" />
-        <Border Grid.Column="3" Width="28" Height="28" CornerRadius="4" BorderBrush="#555" BorderThickness="1" Background="{Binding TextBrush}" />
+        <!-- Click to open the colour picker. Transparency is off: slides are always solid. -->
+        <ColorPicker Grid.Column="3" Color="{Binding TextColorValue, Mode=TwoWay}" IsAlphaEnabled="False" IsAlphaVisible="False" />
       </Grid>
 
       <WrapPanel>
@@ -38,10 +39,11 @@
         <ComboBox Grid.Column="3" HorizontalAlignment="Stretch" ItemsSource="{Binding VerticalAlignments}" SelectedItem="{Binding VerticalAlignment, Mode=TwoWay}" />
       </Grid>
 
-      <Grid ColumnDefinitions="110,*,8,32">
+      <Grid ColumnDefinitions="110,*,8,Auto">
         <TextBlock Classes="hint" Text="Background" VerticalAlignment="Center" />
         <TextBox Grid.Column="1" Text="{Binding BackgroundColor}" Watermark="#000000" />
-        <Border Grid.Column="3" Width="28" Height="28" CornerRadius="4" BorderBrush="#555" BorderThickness="1" Background="{Binding BackgroundBrush}" />
+        <!-- Click to open the colour picker. Transparency is off: slides are always solid. -->
+        <ColorPicker Grid.Column="3" Color="{Binding BackgroundColorValue, Mode=TwoWay}" IsAlphaEnabled="False" IsAlphaVisible="False" />
       </Grid>
 
       <Grid ColumnDefinitions="110,*,Auto,Auto">
@@ -49,6 +51,12 @@
         <TextBlock Grid.Column="1" Text="{Binding BackgroundImageName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
         <Button Grid.Column="2" Content="Choose…" Command="{Binding ChooseImageCommand}" Margin="6,0,0,0" />
         <Button Grid.Column="3" Content="Clear" Command="{Binding ClearImageCommand}" Margin="6,0,0,0" />
+      </Grid>
+
+      <!-- For pictures that aren't the same shape as the screen (e.g. a tall phone photo). -->
+      <Grid ColumnDefinitions="110,*">
+        <TextBlock Classes="hint" Text="Picture size" VerticalAlignment="Center" />
+        <ComboBox Grid.Column="1" HorizontalAlignment="Stretch" ItemsSource="{Binding FitChoices}" SelectedIndex="{Binding BackgroundFitIndex, Mode=TwoWay}" />
       </Grid>
 
       <Grid ColumnDefinitions="110,*,60">

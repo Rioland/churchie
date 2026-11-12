@@ -16,13 +16,15 @@ public enum SlideKind
 /// <param name="Label">Short name shown on thumbnails, e.g. "Chorus" or "John 3:16".</param>
 /// <param name="Text">The words shown on screen.</param>
 /// <param name="Footer">Small text at the bottom, e.g. the scripture reference.</param>
-/// <param name="ImagePath">When set, this image fills the screen (used for media slides and the logo).</param>
+/// <param name="ImagePath">When set, this image is shown instead of text (used for media slides and the logo).</param>
+/// <param name="ImageFit">How that image is sized to the screen.</param>
 public sealed record Slide(
     SlideKind Kind,
     string Label,
     string Text,
     string? Footer = null,
-    string? ImagePath = null)
+    string? ImagePath = null,
+    ImageFit ImageFit = ImageFit.Fit)
 {
     /// <summary>A slide with nothing on it — shows only the background.</summary>
     public static Slide Empty { get; } = new(SlideKind.Text, "", "");

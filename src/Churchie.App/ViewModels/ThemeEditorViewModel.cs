@@ -16,6 +16,9 @@ public partial class ThemeEditorViewModel : ViewModelBase
     private static readonly string[] HorizontalOptions = { "Left", "Center", "Right" };
     private static readonly string[] VerticalOptions = { "Top", "Center", "Bottom" };
 
+    /// <summary>Choices for sizing a picture, in the same order as the <see cref="ImageFit"/> enum.</summary>
+    public static readonly string[] FitOptions = { "Fill the screen (crop edges)", "Show whole picture", "Stretch to screen" };
+
     private readonly SlideTheme _theme;
     private readonly Func<Task<string?>> _pickImage;
     private readonly bool _loading;
@@ -33,6 +36,7 @@ public partial class ThemeEditorViewModel : ViewModelBase
         TextColor = theme.TextColor;
         BackgroundColor = theme.BackgroundColor;
         BackgroundImage = theme.BackgroundImage;
+        BackgroundFitIndex = (int)theme.BackgroundFit;
         BackgroundDim = theme.BackgroundDim;
         Bold = theme.Bold;
         Uppercase = theme.Uppercase;
@@ -46,12 +50,14 @@ public partial class ThemeEditorViewModel : ViewModelBase
     public string Title => _theme.Name;
     public string[] Alignments => HorizontalOptions;
     public string[] VerticalAlignments => VerticalOptions;
+    public string[] FitChoices => FitOptions;
 
     [ObservableProperty] private double _fontSize;
     [ObservableProperty] private string _fontFamily = "";
     [ObservableProperty] private string _textColor = "#FFFFFF";
     [ObservableProperty] private string _backgroundColor = "#000000";
     [ObservableProperty] private string? _backgroundImage;
+    [ObservableProperty] private int _backgroundFitIndex;
     [ObservableProperty] private double _backgroundDim;
     [ObservableProperty] private bool _bold;
     [ObservableProperty] private bool _uppercase;
@@ -60,9 +66,22 @@ public partial class ThemeEditorViewModel : ViewModelBase
     [ObservableProperty] private string _verticalAlignment = "Center";
     [ObservableProperty] private double _footerFontSize;
 
+    // The colour picker buttons work with a Color, while the theme stores hex text
+    // ("#RRGGBB"). These two properties translate between them, so the picker and
+    // the text box next to it always show the same colour.
+    public Color TextColorValue
+    {
+        get => ToColor(TextColor, Colors.White);
+        set { if (value != TextColorValue) TextColor = ToHex(value); }
+    }
+
+    public Color BackgroundColorValue
+    {
+        get => ToColor(BackgroundColor, Colors.Black);
+        set { if (value != BackgroundColorValue) BackgroundColor = ToHex(value); }
+    }
+
     // Read-only helpers for the UI
-    public IBrush TextBrush => ToBrush(TextColor, Colors.White);
-    public IBrush BackgroundBrush => ToBrush(BackgroundColor, Colors.Black);
     public string BackgroundImageName => string.IsNullOrEmpty(BackgroundImage) ? "No image" : Path.GetFileName(BackgroundImage);
     public string FontSizeText => $"{FontSize:0} px";
     public string FooterFontSizeText => $"{FooterFontSize:0} px";
@@ -88,13 +107,13 @@ public partial class ThemeEditorViewModel : ViewModelBase
 
         switch (e.PropertyName)
         {
-            case nameof(TextColor): OnPropertyChanged(nameof(TextBrush)); break;
-            case nameof(BackgroundColor): OnPropertyChanged(nameof(BackgroundBrush)); break;
+            case nameof(TextColor): OnPropertyChanged(nameof(TextColorValue)); break;
+            case nameof(BackgroundColor): OnPropertyChanged(nameof(BackgroundColorValue)); break;
             case nameof(BackgroundImage): OnPropertyChanged(nameof(BackgroundImageName)); break;
             case nameof(FontSize): OnPropertyChanged(nameof(FontSizeText)); break;
             case nameof(FooterFontSize): OnPropertyChanged(nameof(FooterFontSizeText)); break;
             case nameof(BackgroundDim): OnPropertyChanged(nameof(BackgroundDimText)); break;
-            case nameof(TextBrush) or nameof(BackgroundBrush) or nameof(BackgroundImageName)
+            case nameof(TextColorValue) or nameof(BackgroundColorValue) or nameof(BackgroundImageName)
                 or nameof(FontSizeText) or nameof(FooterFontSizeText) or nameof(BackgroundDimText):
                 return; // these are only display helpers
         }
@@ -104,6 +123,8 @@ public partial class ThemeEditorViewModel : ViewModelBase
         _theme.TextColor = TextColor?.Trim() ?? "";
         _theme.BackgroundColor = BackgroundColor?.Trim() ?? "";
         _theme.BackgroundImage = BackgroundImage;
+        // -1 can appear for a moment while a drop-down list is being filled; treat it as the first choice.
+        _theme.BackgroundFit = (ImageFit)Math.Clamp(BackgroundFitIndex, 0, FitOptions.Length - 1);
         _theme.BackgroundDim = BackgroundDim;
         _theme.Bold = Bold;
         _theme.Uppercase = Uppercase;
@@ -115,6 +136,10 @@ public partial class ThemeEditorViewModel : ViewModelBase
         Changed?.Invoke();
     }
 
-    private static IBrush ToBrush(string? hex, Color fallback) =>
-        new SolidColorBrush(!string.IsNullOrWhiteSpace(hex) && Color.TryParse(hex.Trim(), out var c) ? c : fallback);
+    /// <summary>Reads hex text such as "#FFCC00"; anything unreadable (e.g. half-typed) gives the fallback.</summary>
+    private static Color ToColor(string? hex, Color fallback) =>
+        !string.IsNullOrWhiteSpace(hex) && Color.TryParse(hex.Trim(), out var c) ? c : fallback;
+
+    /// <summary>Writes a colour as "#RRGGBB" (slides are never see-through, so no transparency part).</summary>
+    private static string ToHex(Color c) => $"#{c.R:X2}{c.G:X2}{c.B:X2}";
 }

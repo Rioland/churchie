@@ -22,5 +22,8 @@ public sealed class AppSettings
     /// <summary>Image shown when the operator presses "Logo".</summary>
     public string? LogoPath { get; set; }
 
+    /// <summary>How picture slides (Media tab) are sized to the screen. Fit = show the whole picture.</summary>
+    public ImageFit PictureFit { get; set; } = ImageFit.Fit;
+
     public List<string> MediaFiles { get; set; } = new();
 }

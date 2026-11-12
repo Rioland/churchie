@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Churchie.Core.Models;
 using Churchie.Core.Services;
 
 namespace Churchie.App.ViewModels;
@@ -19,11 +20,15 @@ public partial class MainWindowViewModel
     public string[] LinesPerSlideOptions => LinesOptions;
     public string[] VersesPerSlideOptions => VersesOptions;
     public string[] TransitionChoices => TransitionOptions;
+    public string[] PictureFitChoices => ThemeEditorViewModel.FitOptions;
 
     /// <summary>How long the live screens fade between slides (0 = cut).</summary>
     public TimeSpan TransitionDuration => TimeSpan.FromSeconds(Math.Max(0, _settings.TransitionSeconds));
 
     [ObservableProperty] private int _transitionIndex;
+
+    /// <summary>How picture slides are sized to the screen (position in <see cref="PictureFitChoices"/>).</summary>
+    [ObservableProperty] private int _pictureFitIndex;
 
     /// <summary>Names of the connected monitors, filled in by the main window.</summary>
     public ObservableCollection<string> ScreenNames { get; } = new();
@@ -46,6 +51,7 @@ public partial class MainWindowViewModel
         ShowVerseNumbers = _settings.ShowVerseNumbers;
         OutputScreenIndex = _settings.OutputScreenIndex;
         TransitionIndex = ClosestTransition(_settings.TransitionSeconds);
+        PictureFitIndex = Math.Clamp((int)_settings.PictureFit, 0, PictureFitChoices.Length - 1);
     }
 
     /// <summary>The menu choice nearest to a saved number of seconds.</summary>
@@ -64,6 +70,15 @@ public partial class MainWindowViewModel
         SaveSettings();
         OnPropertyChanged(nameof(TransitionDuration));
         StatusMessage = value == 0 ? "Transition: cut (no fade)" : $"Transition: {TransitionOptions[value].ToLowerInvariant()} ({TransitionValues[value]:0.##} s)";
+    }
+
+    partial void OnPictureFitIndexChanged(int value)
+    {
+        if (_loading || value < 0) return;
+        _settings.PictureFit = (ImageFit)value;
+        SaveSettings();
+        RebuildSlides(); // picture slides remember their size, so make them again
+        StatusMessage = "Picture slides: " + PictureFitChoices[value].ToLowerInvariant();
     }
 
     partial void OnLinesPerSlideIndexChanged(int value)

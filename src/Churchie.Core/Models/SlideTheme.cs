@@ -12,6 +12,9 @@ public sealed class SlideTheme
     public string BackgroundColor { get; set; } = "#101828";
     public string? BackgroundImage { get; set; }
 
+    /// <summary>How the background picture is sized to the screen. Fill = cover the screen.</summary>
+    public ImageFit BackgroundFit { get; set; } = ImageFit.Fill;
+
     /// <summary>0 = image fully visible, 0.8 = image darkened a lot so text stands out.</summary>
     public double BackgroundDim { get; set; } = 0.35;
 
