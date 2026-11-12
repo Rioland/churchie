@@ -13,6 +13,9 @@ public sealed class AppPaths
     public string Songs => Path.Combine(Root, "Songs");
     public string Bibles => Path.Combine(Root, "Bibles");
     public string Schedules => Path.Combine(Root, "Schedules");
+
+    /// <summary>Where sound recordings (sermons, messages) are saved.</summary>
+    public string Recordings => Path.Combine(Root, "Recordings");
     public string SettingsFile => Path.Combine(Root, "settings.json");
     public string AutosaveSchedule => Path.Combine(Root, "last-schedule.churchie");
 

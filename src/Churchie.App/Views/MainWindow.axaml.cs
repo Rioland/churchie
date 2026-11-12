@@ -27,7 +27,11 @@ public partial class MainWindow : Window
         AddHandler(KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
 
         Opened += (_, _) => RefreshScreens();
-        Closing += (_, _) => _output?.Close();
+        Closing += (_, _) =>
+        {
+            _output?.Close();
+            _viewModel?.ShutdownRecording(); // finish a running recording so the file isn't cut off
+        };
     }
 
     protected override void OnDataContextChanged(EventArgs e)

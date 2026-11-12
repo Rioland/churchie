@@ -40,7 +40,12 @@
 
     <!-- ===================== Status bar ===================== -->
     <Border DockPanel.Dock="Bottom" Background="#10121A" Padding="12,5">
-      <TextBlock Text="{Binding StatusMessage}" Classes="hint" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+      <DockPanel>
+        <!-- Visible on every tab while a recording is running. -->
+        <TextBlock DockPanel.Dock="Right" Text="{Binding RecordingBadge}" IsVisible="{Binding IsRecording}"
+                   Foreground="#FF6B6F" FontWeight="SemiBold" FontSize="12" Margin="12,0,0,0" />
+        <TextBlock Text="{Binding StatusMessage}" Classes="hint" TextWrapping="NoWrap" TextTrimming="CharacterEllipsis" />
+      </DockPanel>
     </Border>
 
     <Grid RowDefinitions="*,6,310" Margin="8">
@@ -299,6 +304,57 @@
                 </ListBox.ItemTemplate>
               </ListBox>
             </DockPanel>
+          </TabItem>
+
+          <!-- Record: sermon / message recording -->
+          <TabItem Header="Record">
+            <Grid ColumnDefinitions="400,16,*">
+              <StackPanel Grid.Column="0" Spacing="8">
+                <TextBlock Classes="header" Text="MICROPHONE" />
+                <DockPanel>
+                  <Button DockPanel.Dock="Right" Content="Refresh" Command="{Binding RefreshMicrophonesCommand}" Margin="6,0,0,0" />
+                  <!-- The microphone can't be changed while it is in use. -->
+                  <ComboBox HorizontalAlignment="Stretch" ItemsSource="{Binding Microphones}"
+                            SelectedItem="{Binding SelectedMicrophone, Mode=TwoWay}" IsEnabled="{Binding CanChooseMicrophone}" />
+                </DockPanel>
+
+                <!-- Level meter: turns red when the sound is too loud. -->
+                <ProgressBar Classes="level" Classes.clip="{Binding IsClipping}" Minimum="0" Maximum="1"
+                             Value="{Binding RecordingLevel}" Height="14" MinWidth="50" />
+
+                <TextBlock Text="{Binding RecordingTime}" FontSize="40" FontWeight="SemiBold" Margin="0,2,0,0" />
+
+                <WrapPanel>
+                  <Button Classes="live" Content="● Record" Command="{Binding StartRecordingCommand}" Margin="0,0,6,4" />
+                  <Button Content="{Binding PauseButtonText}" Command="{Binding PauseRecordingCommand}" Margin="0,0,6,4" MinWidth="76" />
+                  <Button Content="■ Stop" Command="{Binding StopRecordingCommand}" Margin="0,0,16,4" />
+                  <Button Content="{Binding CheckLevelText}" Command="{Binding CheckLevelCommand}" Margin="0,0,6,4" />
+                </WrapPanel>
+
+                <TextBlock Classes="hint" Text="{Binding RecordingStatus}" />
+              </StackPanel>
+
+              <DockPanel Grid.Column="2">
+                <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
+                  <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
+                    <Button Content="Play" Command="{Binding PlayRecordingCommand}" />
+                    <Button Content="Delete" Command="{Binding DeleteRecordingCommand}" />
+                    <Button Content="Open folder" Command="{Binding OpenRecordingsFolderCommand}" />
+                  </StackPanel>
+                  <TextBlock Classes="header" Text="RECORDINGS" />
+                </DockPanel>
+                <ListBox ItemsSource="{Binding Recordings}" SelectedItem="{Binding SelectedRecording}">
+                  <ListBox.ItemTemplate>
+                    <DataTemplate x:DataType="vm:RecordingItemViewModel">
+                      <StackPanel Spacing="2">
+                        <TextBlock Text="{Binding Name}" FontWeight="SemiBold" TextTrimming="CharacterEllipsis" />
+                        <TextBlock Classes="hint" Text="{Binding Details}" TextWrapping="NoWrap" />
+                      </StackPanel>
+                    </DataTemplate>
+                  </ListBox.ItemTemplate>
+                </ListBox>
+              </DockPanel>
+            </Grid>
           </TabItem>
 
           <!-- Themes & Settings -->

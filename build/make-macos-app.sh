@@ -44,6 +44,7 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>CFBundlePackageType</key><string>APPL</string>
   <key>LSMinimumSystemVersion</key><string>12.0</string>
   <key>NSHighResolutionCapable</key><true/>
+  <key>NSMicrophoneUsageDescription</key><string>Churchie uses the microphone to record sermons and messages on the Record tab.</string>
 </dict>
 </plist>
 PLIST
