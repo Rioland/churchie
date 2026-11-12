@@ -8,7 +8,7 @@
 
 Worship presentation software in the spirit of EasyWorship — song lyrics, scripture and pictures on the projector — written in **C#** with **Avalonia**, so the same app runs on **Windows, macOS and Linux**.
 
-## What it does (version 0.2)
+## What it does (version 0.3)
 
 | Area | Features |
 | --- | --- |
@@ -17,6 +17,7 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | **Songs** | Library with search by title, words or author; editor that understands `[Verse 1]`, `[Chorus]`, `Bridge:`, `V2`…; import from `.txt` and OpenLyrics `.xml`; three public-domain hymns to start with |
 | **Scripture** | Seven Bibles built in: KJV, World English Bible, Berean Standard Bible, ASV, Bible in Basic English, Young's Literal and the Yoruba Contemporary Bible. Type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`, `Johanu 3:16`); browse by book and chapter; **Import Bible…** for other versions (Zefania, OpenSong or OSIS XML) |
 | **Media** | Pictures as song or scripture backgrounds, as the logo, or shown full-screen; choose whether a picture fills the screen, shows whole, or stretches |
+| **Record** | Record the sermon or a message from any microphone to a `.wav` file: level meter, pause and resume, list of recordings to play or delete. The file stays playable even if the power fails mid-recording |
 | **Themes** | Separate looks for songs and scripture: size, font, colours (with a colour picker), bold/shadow/uppercase, alignment, background picture with darkening — changes appear on screen instantly |
 | **Safety** | The schedule autosaves after every change; long text automatically shrinks to fit the screen |
 
