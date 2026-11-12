@@ -8,7 +8,7 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 - Song library, editor, search, `.txt` and OpenLyrics import
 - Seven free Bibles built in (KJV, WEB, BSB, ASV, BBE, YLT, Yoruba OYCB), reference parser, Import Bible (Zefania / OpenSong / OSIS XML)
 - Picture backgrounds and themes, live theme editing
-- Colour picker for text and background colours; picture size option (fill the screen / show whole picture / stretch) for backgrounds and picture slides *(written, waiting for a build and test)*
+- Colour picker for text and background colours; picture size option (fill the screen / show whole picture / stretch) for backgrounds and picture slides
 - Autosave, schedule files, keyboard and clicker control
 - Smooth cross-fade on the live output (going live, next verse, switching items, Black/Clear/Logo), with cut/quick/normal/slow settings
 - Cross-platform builds on GitHub Actions, Codespaces dev environment
