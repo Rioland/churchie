@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
-  <link rel="stylesheet" href="assets/site.css?v=7">
+  <link rel="stylesheet" href="assets/site.css?v=8">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -48,6 +48,7 @@
     <nav class="toc" aria-label="Guide contents">
       <p>On this page</p>
       <ol>
+        <li><a href="#whats-new">What's new</a></li>
         <li><a href="#getting-started">Getting started</a></li>
         <li><a href="#main-window">The main window</a></li>
         <li><a href="#schedule">Plan a service</a></li>
@@ -69,6 +70,7 @@
         <label class="visually-hidden" for="toc-jump">Jump to a section</label>
         <select id="toc-jump" data-toc-jump>
           <option value="">Jump to a section…</option>
+          <option value="whats-new">What's new</option>
           <option value="getting-started">Getting started</option>
           <option value="main-window">The main window</option>
           <option value="schedule">Plan a service</option>
@@ -84,6 +86,22 @@
           <option value="troubleshooting">Troubleshooting</option>
         </select>
       </div>
+
+      <!-- ===================================================== -->
+      <section id="whats-new">
+        <h2>What's new</h2>
+        <h3>Version 0.3</h3>
+        <ul>
+          <li><strong>Record tab:</strong> record the sermon or a message from a microphone. See <a href="#recording">Recording a message</a>.</li>
+          <li>Churchie reopens on the tab you used last.</li>
+        </ul>
+        <h3>Version 0.2</h3>
+        <ul>
+          <li><strong>Colour picker:</strong> click the colour button beside Text colour or Background to choose a colour. See <a href="#themes">Themes and settings</a>.</li>
+          <li><strong>Picture size:</strong> choose whether a background picture or a picture slide fills the screen, shows whole or stretches. See <a href="#themes">Themes and settings</a> and <a href="#pictures">Pictures and backgrounds</a>.</li>
+        </ul>
+        <p>To update, <a href="download.html">download Churchie</a> and install it again. The new version replaces the old one; your songs, schedules and settings stay.</p>
+      </section>
 
       <!-- ===================================================== -->
       <section id="getting-started">
@@ -244,8 +262,8 @@
         <h2>Pictures and backgrounds</h2>
         <p>The <strong>Media</strong> tab holds pictures you use in services: song backgrounds, your church logo, announcement slides.</p>
         <figure class="wide">
-          <img class="shot" src="assets/img/media.webp" width="1226" height="792" loading="lazy"
-               alt="The Media tab with five pictures: Sunrise, Deep Blue, Purple Glow, Mountains and a church logo, and buttons for using them as backgrounds or as the logo.">
+          <img class="shot" src="assets/img/media-2.webp" width="1226" height="792" loading="lazy"
+               alt="The Media tab with three background pictures, buttons for using them as backgrounds or as the logo, and the Picture slides choice set to Show whole picture.">
           <figcaption>Pictures in the Media tab. Click one to preview it.</figcaption>
         </figure>
         <ul>
@@ -262,6 +280,11 @@
       <section id="recording">
         <h2>Recording a message</h2>
         <p>The <strong>Record</strong> tab records the sermon, or any message, from a microphone into a sound file you can keep or share.</p>
+        <figure class="wide">
+          <img class="shot" src="assets/img/record.webp" width="1226" height="792" loading="lazy"
+               alt="The Record tab: a microphone chooser, level meter, clock and Record, Pause, Stop and Check level buttons on the left, and a list of three saved recordings on the right.">
+          <figcaption>The Record tab. Finished recordings are listed on the right.</figcaption>
+        </figure>
         <ol>
           <li>Choose the microphone under <strong>Microphone</strong>. If you've just plugged one in, press <strong>Refresh</strong>.</li>
           <li>Press <strong>Check level</strong> and speak. The green bar should reach about three-quarters. If it turns red the sound is too loud: turn the microphone down a little.</li>
@@ -345,8 +368,8 @@
         <h2>Themes and settings</h2>
         <p>The <strong>Themes &amp; Settings</strong> tab controls how slides look. Songs and scripture each have their own look, so lyrics can be big and centred while Bible verses are smaller and left-aligned. Changes show on screen immediately, even while something is live.</p>
         <figure class="wide">
-          <img class="shot" src="assets/img/themes.webp" width="1226" height="792" loading="lazy"
-               alt="The Themes and Settings tab: song settings on the left, scripture settings in the middle, and output, transition and slide settings on the right.">
+          <img class="shot" src="assets/img/themes-2.webp" width="1226" height="792" loading="lazy"
+               alt="The Themes and Settings tab with the colour picker open: song settings on the left, scripture settings in the middle, and output and transition settings on the right.">
           <figcaption>Song look on the left, scripture look in the middle, other settings on the right.</figcaption>
         </figure>
         <div class="table-scroll">
@@ -481,6 +504,6 @@
     </div>
   </footer>
 
-  <script src="assets/site.js?v=7" defer></script>
+  <script src="assets/site.js?v=8" defer></script>
 </body>
 </html>
