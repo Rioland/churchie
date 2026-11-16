@@ -18,7 +18,7 @@ Unicode true
 !include "x64.nsh"
 
 !define APPNAME   "Churchie"
-!define PUBLISHER "Engr. Adedamola Emmanuel"
+!define PUBLISHER "Riotech IT Global"
 !define WEBSITE   "https://churchie.netlify.app"
 !define UNINSTKEY "Software\Microsoft\Windows\CurrentVersion\Uninstall\Churchie"
 !define UNINSTEXE "Uninstall Churchie.exe"

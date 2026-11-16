@@ -7,7 +7,7 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <TreatWarningsAsErrors>false</TreatWarningsAsErrors>
     <Version>0.3.0</Version>
-    <Authors>Engr. Adedamola Emmanuel</Authors>
+    <Authors>Riotech IT Global</Authors>
     <Product>Churchie</Product>
   </PropertyGroup>
 </Project>
