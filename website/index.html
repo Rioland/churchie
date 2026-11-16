@@ -12,13 +12,13 @@
   <link rel="canonical" href="https://churchie.netlify.app/">
   <meta property="og:type" content="website">
   <meta name="twitter:card" content="summary_large_image">
-  <meta name="theme-color" content="#15122E">
+  <meta name="theme-color" content="#0F1A2E">
   <link rel="icon" type="image/png" href="assets/img/favicon.png">
   <link rel="apple-touch-icon" href="assets/img/apple-touch-icon.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@500;700&family=Newsreader:opsz,wght@6..72,500;6..72,600&display=swap">
-  <link rel="stylesheet" href="assets/site.css?v=8">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:ital,wght@0,400;0,700;1,400&family=Inter:wght@500;700&family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,500;1,600&family=Cinzel:wght@500;600;700&display=swap">
+  <link rel="stylesheet" href="assets/site.css?v=9">
 </head>
 <body>
   <a class="skip" href="#main">Skip to content</a>
@@ -41,8 +41,10 @@
 
   <main id="main">
     <section class="hero">
+      <div class="hero-art" aria-hidden="true"><img src="assets/img/window.svg" alt="" width="256" height="576"></div>
       <div class="wrap">
-        <div>
+        <div class="hero-text">
+          <p class="eyebrow">Free worship software for your church</p>
           <h1>Songs and scripture on the big screen</h1>
           <p class="lede">Churchie is free presentation software for church services. Build the order of service, put lyrics and Bible verses on the projector, and move through them with one click. It runs on Windows, Mac and Linux, with no internet needed on Sunday.</p>
           <div class="hero-actions">
@@ -92,6 +94,32 @@ Praising my Savior all the day long.</p>
       </div>
     </section>
 
+    <section class="section section-stone pillars-section">
+      <div class="wrap">
+        <div class="section-intro center">
+          <h2>For every part of the service</h2>
+          <p>From the first hymn to the closing prayer, Churchie keeps the whole congregation on the same page.</p>
+        </div>
+        <div class="pillars">
+          <a class="pillar" href="#features">
+            <span class="pillar-glass ruby"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M18 34V12l18-4v22"/><circle cx="13" cy="34" r="5"/><circle cx="31" cy="30" r="5"/></svg></span>
+            <h3>Worship</h3>
+            <p>Lyrics the whole church can follow, one verse at a time, over the background you choose.</p>
+          </a>
+          <a class="pillar" href="#bibles">
+            <span class="pillar-glass sapphire"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M24 14c-4-3-9-4-16-4v26c7 0 12 1 16 4 4-3 9-4 16-4V10c-7 0-12 1-16 4zM24 14v26"/></svg></span>
+            <h3>The Word</h3>
+            <p>Seven Bibles built in, in English and Yoruba. Type a reference and the verse is ready.</p>
+          </a>
+          <a class="pillar" href="#recording">
+            <span class="pillar-glass emerald"><svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="18" y="6" width="12" height="22" rx="6"/><path d="M11 22a13 13 0 0 0 26 0M24 35v7M17 42h14"/></svg></span>
+            <h3>The Message</h3>
+            <p>Record the sermon from any microphone while you run the slides, and keep it for those who missed it.</p>
+          </a>
+        </div>
+      </div>
+    </section>
+
     <section class="section" id="features">
       <div class="wrap">
         <div class="section-intro">
@@ -125,7 +153,7 @@ Praising my Savior all the day long.</p>
       <div class="wrap">
         <div class="feature">
           <div class="feature-text">
-            <h2>Seven Bibles, including Yoruba</h2>
+            <h2 id="bibles">Seven Bibles, including Yoruba</h2>
             <p>Type a reference the way you'd say it, like <code>jn 3 16</code>, <code>1 Cor 13:4-7</code> or <code>Psalm 23</code>, and the verses are ready to show. Yoruba book names work too: try <code>Johanu 3:16</code> or <code>Saamu 23</code>.</p>
             <ul class="versions" aria-label="Bible versions included">
               <li><b>KJV</b> King James</li>
@@ -153,7 +181,7 @@ Praising my Savior all the day long.</p>
 
         <div class="feature">
           <div class="feature-text">
-            <h2>Record the message</h2>
+            <h2 id="recording">Record the message</h2>
             <p>Record the sermon from any microphone while you run the slides. A red REC with the time stays in view on every tab, so you always know it's running.</p>
             <ul>
               <li>Check the level before the service starts</li>
@@ -194,8 +222,19 @@ Praising my Savior all the day long.</p>
           <div><dt>Saves itself</dt><dd>The service order is saved after every change, so a power cut won't lose it.</dd></div>
           <div><dt>Works offline</dt><dd>Songs, Bibles and pictures live on your computer. No account and no internet needed.</dd></div>
           <div><dt>Clicker friendly</dt><dd>Page Up and Page Down move the slides, so most presentation remotes just work.</dd></div>
-          <div><dt>Free</dt><dd>No subscription and no watermark. The code is open on GitHub.</dd></div>
+          <div><dt>Free</dt><dd>No subscription, no watermark and no account to create.</dd></div>
         </dl>
+      </div>
+    </section>
+
+    <section class="verse-band">
+      <img class="verse-window left" src="assets/img/window.svg" alt="" width="256" height="576" loading="lazy" aria-hidden="true">
+      <img class="verse-window right" src="assets/img/window.svg" alt="" width="256" height="576" loading="lazy" aria-hidden="true">
+      <div class="wrap">
+        <blockquote>
+          <p>Let the word of Christ dwell in you richly in all wisdom; teaching and admonishing one another in psalms and hymns and spiritual songs, singing with grace in your hearts to the Lord.</p>
+          <cite>Colossians 3:16</cite>
+        </blockquote>
       </div>
     </section>
 
@@ -221,7 +260,7 @@ Praising my Savior all the day long.</p>
         <div class="faq">
           <details>
             <summary>Is Churchie really free?</summary>
-            <p>Yes. There's no subscription, no watermark and no account to create. The source code is public on <a href="https://github.com/Rioland/churchie">GitHub</a>.</p>
+            <p>Yes. There's no subscription, no watermark and no account to create.</p>
           </details>
           <details>
             <summary>Which computers does it run on?</summary>
@@ -268,16 +307,17 @@ Praising my Savior all the day long.</p>
         </ul>
       </div>
       <div>
-        <h3>Project</h3>
+        <h3>Get in touch</h3>
         <ul>
-          <li><a href="https://github.com/Rioland/churchie">Source code on GitHub</a></li>
-                    <li><a href="https://github.com/Rioland/churchie/blob/main/THIRD-PARTY-NOTICES.md">Credits and licences</a></li>
+          <li><a href="https://wa.me/2348149916721">WhatsApp: +234 814 991 6721</a></li>
+          <li><a href="mailto:riotech2222@gmail.com">riotech2222@gmail.com</a></li>
         </ul>
       </div>
-      <p class="credits">Bible text on this page: King James Version (public domain); Open Yoruba Contemporary Bible™ copyright © 2009, 2017 by Biblica, Inc., original work available for free at www.biblica.com and open.bible, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Hymns shown are in the public domain. Churchie is built with .NET and Avalonia.</p>
+      <p class="footer-verse">“O sing unto the LORD a new song: sing unto the LORD, all the earth.” <span>Psalm 96:1</span></p>
+      <p class="credits">Bible text on this page: King James Version (public domain); Open Yoruba Contemporary Bible™ copyright © 2009, 2017 by Biblica, Inc., original work available for free at www.biblica.com and open.bible, licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">CC BY-SA 4.0</a>. Hymns shown are in the public domain.</p>
     </div>
   </footer>
 
-  <script src="assets/site.js?v=8" defer></script>
+  <script src="assets/site.js?v=9" defer></script>
 </body>
 </html>

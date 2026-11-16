@@ -2,8 +2,7 @@
 (function () {
   "use strict";
 
-  // Every download link is /get/<file name>. netlify.toml sends that on to wherever the
-  // files are kept, so the website never has to know (or change) where that is.
+  // Every download link starts with this.
   var DOWNLOADS = "/get/";
   var FILES = {
     windows: { file: "Churchie-Setup-win-x64.exe", label: "Download for Windows" },
@@ -12,6 +11,44 @@
     linux: { file: "Churchie-linux-x64.tar.gz", label: "Download for Linux" },
   };
   var reduceMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  // ---------- Gentle movement ----------
+  // Sections fade up as they scroll into view. Skipped for people who prefer less motion,
+  // and on old browsers, where everything simply shows straight away.
+  if (!reduceMotion && "IntersectionObserver" in window) {
+    var watcher = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add("in");
+        watcher.unobserve(entry.target);
+      });
+    }, { rootMargin: "0px 0px -8% 0px", threshold: 0.08 });
+
+    var groups = [".section-intro", ".pillar", ".flow > *", ".feature > *", ".also > div", ".verse-band blockquote",
+                  ".band .wrap > *", ".faq details", ".platform", ".whatsnew", ".reqs > div", ".form-card", ".way", ".docs-main > section"];
+    document.querySelectorAll(groups.join(",")).forEach(function (el) {
+      // Items that sit side by side arrive one after another.
+      var index = Array.prototype.indexOf.call(el.parentNode.children, el);
+      el.style.setProperty("--delay", Math.min(index, 4) * 0.09 + "s");
+      el.classList.add("reveal");
+      watcher.observe(el);
+    });
+
+    // Leaving for another page of this site: fade the content out first. Browsers with
+    // their own page cross-fade (set up in site.css) don't need this, so they skip it.
+    var crossFade = window.CSS && CSS.supports && CSS.supports("selector(::view-transition-old(root))");
+    document.addEventListener("click", function (e) {
+      var a = e.target.closest ? e.target.closest("a[href]") : null;
+      if (!a || crossFade || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || a.target) return;
+      var href = a.getAttribute("href");
+      if (!/^[a-z0-9-]+\.html(#.*)?$/i.test(href) || a.pathname === location.pathname) return;
+      e.preventDefault();
+      document.body.classList.add("leaving");
+      setTimeout(function () { location.href = a.href; }, 190);
+    });
+    // Coming back with the Back button must not show a faded page.
+    window.addEventListener("pageshow", function () { document.body.classList.remove("leaving"); });
+  }
 
   // ---------- Mobile menu ----------
   var toggle = document.querySelector(".nav-toggle");
