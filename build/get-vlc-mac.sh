@@ -40,13 +40,15 @@ esac
 DMG="vlc-${VLC_VERSION}-${ARCH}.dmg"
 FILE="vlc/${VLC_VERSION}/macosx/${DMG}"
 OFFICIAL="https://download.videolan.org/pub/videolan"
-# VideoLAN's own address hands each download to a mirror "near you", which can be very
-# slow. These large mirrors are tried first; one that gives less than 200 KB/s for 20
-# seconds is dropped for the next (the download carries on where it stopped, -C -).
-# Whichever mirror it comes from, the file is checked against VideoLAN's own checksum.
+# The download comes from VideoLAN's own address (it picks a mirror near you) or from a
+# few large mirrors. A slow or broken connection is expected: whatever has arrived is
+# kept in a ".part" file and the next try carries on from there (-C -). A source that
+# stalls (under 5 KB/s for a minute) is left for the next one. Whichever mirror the file
+# comes from, it is checked against VideoLAN's own checksum before it is used.
 MIRRORS=(
-  "https://ftp.fau.de/videolan"
+  "$OFFICIAL"
   "https://mirror.init7.net/videolan"
+  "https://ftp.fau.de/videolan"
   "https://ftp.osuosl.org/pub/videolan"
 )
 mkdir -p "$CACHE"
@@ -66,20 +68,29 @@ if [ ! -f "$CACHE/$DMG" ]; then
     [ -f "$CACHE/$DMG.part" ] && [ "$(shasum -a 256 "$CACHE/$DMG.part" | cut -d' ' -f1)" = "$expected" ]
   }
 
-  if ! part_is_good; then
-    echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback (about 60 MB, once only)..."
-    downloaded=""
+  finished=""
+  if part_is_good; then finished=yes; fi
+  if [ -z "$finished" ]; then
+    echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback (about 60 MB, once only)."
+    echo "   If this is stopped, running it again carries on from where it stopped."
+  fi
+  # Up to 3 rounds over all the sources; each try picks up where the last one stopped.
+  for round in 1 2 3; do
+    [ -n "$finished" ] && break
     for mirror in "${MIRRORS[@]}"; do
-      if curl -Lsf --retry 2 -C - --speed-limit 200000 --speed-time 20 -o "$CACHE/$DMG.part" "$mirror/$FILE"; then
-        downloaded=yes
+      if curl -Lf -# --retry 3 -C - --speed-limit 5000 --speed-time 60 \
+           -o "$CACHE/$DMG.part" "$mirror/$FILE"; then
+        finished=yes
         break
       fi
-      echo "   (that mirror was slow or unavailable - trying the next one)"
+      echo "   (the download stopped - trying again from another mirror)"
     done
-    # Last resort: VideoLAN's own address, however slow it is.
-    [ -n "$downloaded" ] || curl -Lsf --retry 3 -C - -o "$CACHE/$DMG.part" "$OFFICIAL/$FILE" || true
-  fi
+  done
 
+  if [ -z "$finished" ]; then
+    echo "!! The VLC download didn't finish (slow or no internet). Run this again to carry on." >&2
+    exit 1
+  fi
   if ! part_is_good; then
     echo "!! The VLC download doesn't match VideoLAN's checksum - not using it." >&2
     rm -f "$CACHE/$DMG.part"
