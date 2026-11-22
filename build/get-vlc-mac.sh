@@ -38,7 +38,17 @@ case "$RID" in
 esac
 
 DMG="vlc-${VLC_VERSION}-${ARCH}.dmg"
-URL="https://download.videolan.org/pub/videolan/vlc/${VLC_VERSION}/macosx/${DMG}"
+FILE="vlc/${VLC_VERSION}/macosx/${DMG}"
+OFFICIAL="https://download.videolan.org/pub/videolan"
+# VideoLAN's own address hands each download to a mirror "near you", which can be very
+# slow. These large mirrors are tried first; one that gives less than 200 KB/s for 20
+# seconds is dropped for the next (the download carries on where it stopped, -C -).
+# Whichever mirror it comes from, the file is checked against VideoLAN's own checksum.
+MIRRORS=(
+  "https://ftp.fau.de/videolan"
+  "https://mirror.init7.net/videolan"
+  "https://ftp.osuosl.org/pub/videolan"
+)
 mkdir -p "$CACHE"
 
 # Already downloaded by an earlier build into this project's own folder? Share that copy.
@@ -47,14 +57,31 @@ if [ ! -f "$CACHE/$DMG" ] && [ -f "$LOCAL_CACHE/$DMG" ]; then
 fi
 
 if [ ! -f "$CACHE/$DMG" ]; then
-  echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback (about 60 MB, once only;"
-  echo "   on a slow connection this can take a while)..."
-  # -C - carries on from where an interrupted download stopped.
-  curl -Lsf --retry 3 -C - -o "$CACHE/$DMG.part" "$URL"
-  expected="$(curl -Lsf --retry 3 "$URL.sha256" | cut -d' ' -f1)"
-  actual="$(shasum -a 256 "$CACHE/$DMG.part" | cut -d' ' -f1)"
-  if [ -z "$expected" ] || [ "$expected" != "$actual" ]; then
-    echo "!! The VLC download doesn't match VideoLAN's checksum — not using it." >&2
+  expected="$(curl -Lsf --retry 3 "$OFFICIAL/$FILE.sha256" | cut -d' ' -f1 || true)"
+  if [ -z "$expected" ]; then
+    echo "!! Couldn't get VideoLAN's checksum for $DMG (is the Mac online?)." >&2
+    exit 1
+  fi
+  part_is_good() {
+    [ -f "$CACHE/$DMG.part" ] && [ "$(shasum -a 256 "$CACHE/$DMG.part" | cut -d' ' -f1)" = "$expected" ]
+  }
+
+  if ! part_is_good; then
+    echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback (about 60 MB, once only)..."
+    downloaded=""
+    for mirror in "${MIRRORS[@]}"; do
+      if curl -Lsf --retry 2 -C - --speed-limit 200000 --speed-time 20 -o "$CACHE/$DMG.part" "$mirror/$FILE"; then
+        downloaded=yes
+        break
+      fi
+      echo "   (that mirror was slow or unavailable - trying the next one)"
+    done
+    # Last resort: VideoLAN's own address, however slow it is.
+    [ -n "$downloaded" ] || curl -Lsf --retry 3 -C - -o "$CACHE/$DMG.part" "$OFFICIAL/$FILE" || true
+  fi
+
+  if ! part_is_good; then
+    echo "!! The VLC download doesn't match VideoLAN's checksum - not using it." >&2
     rm -f "$CACHE/$DMG.part"
     exit 1
   fi
