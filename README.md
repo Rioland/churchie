@@ -6,19 +6,20 @@
 
 **Website: [churchie.netlify.app](https://churchie.netlify.app)** · [Download](https://churchie.netlify.app/download.html) · [How to use](https://churchie.netlify.app/docs.html)
 
-Worship presentation software in the spirit of EasyWorship — song lyrics, scripture and pictures on the projector — written in **C#** with **Avalonia**, so the same app runs on **Windows, macOS and Linux**.
+Worship presentation software in the spirit of EasyWorship — song lyrics, scripture, pictures and videos on the projector — written in **C#** with **Avalonia**, so the same app runs on **Windows, macOS and Linux**.
 
 ## What it does (version 0.3)
 
 | Area | Features |
 | --- | --- |
 | **Layout** | Schedule (service order) · Preview · Live, with resource tabs underneath — the familiar EasyWorship arrangement |
+| **Preview** | A large view of the slide you're about to send, and **Next / Prev** buttons (or the arrow keys) that walk through every slide of every item in the schedule — then **Go Live** |
 | **Projector** | Full-screen output on the second screen (or a floating window when you only have one), smooth **cross-fade** between slides (cut / quick / normal / slow), **Black**, **Clear** (hide words, keep background) and **Logo** buttons |
 | **Songs** | Library with search by title, words or author; editor that understands `[Verse 1]`, `[Chorus]`, `Bridge:`, `V2`…; import from `.txt` and OpenLyrics `.xml`; three public-domain hymns to start with |
 | **Scripture** | Seven Bibles built in: KJV, World English Bible, Berean Standard Bible, ASV, Bible in Basic English, Young's Literal and the Yoruba Contemporary Bible. Type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`, `Johanu 3:16`); browse by book and chapter; **Import Bible…** for other versions (Zefania, OpenSong or OSIS XML) |
-| **Media** | Pictures as song or scripture backgrounds, as the logo, or shown full-screen; choose whether a picture fills the screen, shows whole, or stretches |
+| **Media** | Pictures, **animated GIFs** and **videos** (MP4, MOV, AVI, MKV, WebM…) as song or scripture backgrounds, as the logo, or shown full-screen. Video slides play with sound, once or on repeat; video backgrounds play silently and loop. Choose whether a picture or video fills the screen, shows whole, or stretches |
 | **Record** | Record the sermon or a message from any microphone to a `.wav` file: level meter, pause and resume, list of recordings to play or delete. The file stays playable even if the power fails mid-recording |
-| **Themes** | Separate looks for songs and scripture: size, font, colours (with a colour picker), bold/shadow/uppercase, alignment, background picture with darkening — changes appear on screen instantly |
+| **Themes** | Separate looks for songs and scripture: size, font, colours (with a colour picker), bold/shadow/uppercase, alignment, background picture, GIF or video with darkening — changes appear on screen instantly |
 | **Safety** | The schedule autosaves after every change; long text automatically shrinks to fit the screen |
 
 ### Keyboard
@@ -27,6 +28,7 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | --- | --- |
 | Page Down / Page Up | Next / previous slide (works with presentation clickers) |
 | → ← or Space | Next / previous slide when the Live panel has focus |
+| → ← or Space · Enter | Step through the schedule · send it live, when the Preview panel has focus |
 | B · C · L | Black · Clear · Logo |
 | Ctrl+Enter | Send the preview live |
 | Ctrl+S · Ctrl+O · Ctrl+N | Save · open · new schedule |
@@ -41,7 +43,7 @@ Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlif
 | Windows 10/11 | `Churchie-Setup-win-x64.exe` | Installer: Next → Install → Finish, no admin password. Portable `Churchie-win-x64.zip` also available |
 | Mac, Apple Silicon | `Churchie-osx-arm64.pkg` | Installer that puts Churchie.app in Applications (`.zip` of the app also available) |
 | Mac, Intel | `Churchie-osx-x64.pkg` | The same for Intel Macs |
-| Linux | `Churchie-linux-x64.tar.gz` | Extract and run `./Churchie/Churchie` |
+| Linux | `Churchie-linux-x64.tar.gz` | Extract and run `./Churchie/Churchie`. For videos, install VLC: `sudo apt install vlc` |
 
 > Churchie isn't code-signed yet. On Windows click **More info → Run anyway** the first time; on a Mac use **System Settings → Privacy & Security → Open Anyway**.
 

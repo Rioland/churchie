@@ -16,8 +16,11 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 
 ## Phase 2 — Motion and media
 
-- Video and motion backgrounds (LibVLCSharp), looping
-- Play video items in the schedule with transport controls
+- ✅ Video and motion backgrounds (LibVLCSharp), looping — v0.4
+- ✅ Animated GIFs as slides, backgrounds and the logo — v0.4
+- ✅ Video items in the schedule (play once or on repeat) — v0.4
+- ✅ Preview panel: large preview, Next / Prev through the whole schedule — v0.4
+- Transport controls for video items (pause, seek, volume)
 - More transition styles (slide, zoom), per-item transition choice
 - Per-song theme override
 

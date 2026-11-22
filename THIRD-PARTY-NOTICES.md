@@ -69,6 +69,24 @@ Collected from eBible.org; each text keeps its original licence
 - PortAudio (sound recording) — MIT-style licence — https://www.portaudio.com
 - PortAudioSharp2 (.NET wrapper for PortAudio) — Apache 2.0 licence — https://github.com/csukuangfj/PortAudioSharp2
 - CommunityToolkit.Mvvm — MIT licence — https://github.com/CommunityToolkit/dotnet
+- SkiaSharp (unpacks animated GIF frames; comes with Avalonia) — MIT licence — https://github.com/mono/SkiaSharp
+- LibVLCSharp (.NET wrapper for VLC) — LGPL 2.1 or later — https://code.videolan.org/videolan/LibVLCSharp
+- VLC / libvlc (video playback) — LGPL 2.1 or later — https://www.videolan.org/vlc/libvlc.html
+
+### VLC
+
+Churchie plays videos with libvlc, VideoLAN's video engine, used unchanged as separate
+library files that can be replaced:
+
+- Windows: the `libvlc` folder next to `Churchie.exe`, from the official VideoLAN.LibVLC.Windows
+  package (the LGPL edition, without VLC's GPL plugins).
+- macOS: `Churchie.app/Contents/MacOS/libvlc`, copied from the official VLC 3.0.24 app by
+  `build/get-vlc-mac.sh`, leaving out the same GPL plugins.
+- Linux: the VLC installed on the computer (`sudo apt install vlc`); nothing is bundled.
+
+The source code of VLC is available from https://www.videolan.org/vlc/download-sources.html
+and https://code.videolan.org/videolan/vlc. VLC is a trademark of VideoLAN; Churchie is not
+made or endorsed by VideoLAN. The LGPL 2.1 licence text: https://www.gnu.org/licenses/old-licenses/lgpl-2.1.html
 - xUnit (tests only) — Apache 2.0 — https://github.com/xunit/xunit
 
 ## Sample hymns
