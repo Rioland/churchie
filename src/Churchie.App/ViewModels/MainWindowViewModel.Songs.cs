@@ -91,7 +91,19 @@ public partial class MainWindowViewModel
         var files = await Dialogs.PickFilesAsync("Import songs", "Lyrics (.txt) or OpenLyrics (.xml)", new[] { "*.txt", "*.xml" }, true);
         if (files.Count == 0) return;
 
-        var imported = 0;
+        var (songs, failed) = ImportSongFiles(files);
+        var message = $"Imported {songs.Count} song{(songs.Count == 1 ? "" : "s")}.";
+        if (failed.Count > 0) message += "\n\nSkipped:\n" + string.Join("\n", failed);
+        await Dialogs.ShowMessageAsync("Import songs", message);
+    }
+
+    /// <summary>
+    /// Imports lyrics files into the song library. Used by "Import…" and by files dragged in.
+    /// </summary>
+    /// <returns>The songs that were added, and a line for each file that couldn't be read.</returns>
+    private (List<Song> Songs, List<string> Failed) ImportSongFiles(IEnumerable<string> files)
+    {
+        var songs = new List<Song>();
         var failed = new List<string>();
         foreach (var file in files)
         {
@@ -100,7 +112,7 @@ public partial class MainWindowViewModel
                 var song = SongImporter.ImportFile(file);
                 if (song.Sections.Count == 0) { failed.Add($"{Path.GetFileName(file)} (no lyrics found)"); continue; }
                 _songs.Save(song);
-                imported++;
+                songs.Add(song);
             }
             catch (Exception ex)
             {
@@ -109,9 +121,7 @@ public partial class MainWindowViewModel
         }
 
         RefreshSongList();
-        var message = $"Imported {imported} song{(imported == 1 ? "" : "s")}.";
-        if (failed.Count > 0) message += "\n\nSkipped:\n" + string.Join("\n", failed);
-        await Dialogs.ShowMessageAsync("Import songs", message);
+        return (songs, failed);
     }
 
     /// <summary>Opens the editor for a song, saves it to the library and refreshes everything that shows it.</summary>

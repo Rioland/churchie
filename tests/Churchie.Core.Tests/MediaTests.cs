@@ -87,3 +87,17 @@ public class MediaTests
         Assert.Equal(ImageFit.Fill, settings.PictureFit);
     }
 }
+
+public class SongFileTests
+{
+    [Theory]
+    [InlineData("/lyrics/Amazing Grace.txt", true)]
+    [InlineData("/lyrics/How Great Thou Art.XML", true)]
+    [InlineData("/videos/intro.mp4", false)]
+    [InlineData("/lyrics/no-extension", false)]
+    [InlineData(null, false)]
+    public void Only_lyrics_files_are_offered_for_import(string? path, bool expected)
+    {
+        Assert.Equal(expected, SongImporter.CanImport(path));
+    }
+}

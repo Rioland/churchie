@@ -20,6 +20,7 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 - ✅ Animated GIFs as slides, backgrounds and the logo — v0.4
 - ✅ Video items in the schedule (play once or on repeat) — v0.4
 - ✅ Preview panel: large preview, Next / Prev through the whole schedule — v0.4
+- ✅ Drag and drop: reorder the schedule, drag songs/media/passages to the schedule, Preview or Live, drop files from the computer — v0.4
 - Transport controls for video items (pause, seek, volume)
 - More transition styles (slide, zoom), per-item transition choice
 - Per-song theme override

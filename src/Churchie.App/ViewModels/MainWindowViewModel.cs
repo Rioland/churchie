@@ -280,10 +280,12 @@ public partial class MainWindowViewModel : ViewModelBase
         if (!_loading) ScheduleChanged();
     }
 
-    private void AddToSchedule(ScheduleItem item)
+    /// <param name="index">Where to put it (e.g. where it was dropped). Null or out of range = at the end.</param>
+    private void AddToSchedule(ScheduleItem item, int? index = null)
     {
         var entry = new ScheduleEntryViewModel(item);
-        ScheduleEntries.Add(entry);
+        if (index is { } at && at >= 0 && at < ScheduleEntries.Count) ScheduleEntries.Insert(at, entry);
+        else ScheduleEntries.Add(entry);
         SelectedScheduleEntry = entry;
         ScheduleChanged();
         StatusMessage = $"Added \"{item.Title}\" to the schedule";
@@ -610,7 +612,12 @@ public partial class MainWindowViewModel : ViewModelBase
             "C — clear text (keep background)\n" +
             "L — show logo\n" +
             "Ctrl+Enter — send the preview live\n" +
-            "Double-click a schedule item or preview slide — send it live");
+            "Double-click a schedule item or preview slide — send it live\n\n" +
+            "Drag and drop with the mouse:\n" +
+            "• Drag schedule items up or down to change the order\n" +
+            "• Drag songs, pictures, videos or a Bible passage into the schedule, the Preview or the Live panel\n" +
+            "• Drag a preview slide onto the Live panel to send it live\n" +
+            "• Drag files from your computer onto the schedule, the Media tab or the Songs list");
     }
 
     [RelayCommand]

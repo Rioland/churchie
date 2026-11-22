@@ -34,6 +34,17 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | Ctrl+S · Ctrl+O · Ctrl+N | Save · open · new schedule |
 | Esc / F11 (on the projector window) | Close / toggle full screen |
 
+### Drag and drop
+
+| Drag… | …onto | Does |
+| --- | --- | --- |
+| A schedule item | Another place in the schedule | Changes the order |
+| A song, picture, video or Bible passage | The schedule | Adds it at that spot |
+| A schedule item, song, picture, video or passage | Preview · Live | Shows it in the preview · sends it live |
+| A preview slide | Live | Sends it live at that slide |
+| Pictures or videos from your computer | The schedule · the Media tab | Adds them |
+| Lyrics files (`.txt`, OpenLyrics `.xml`) | The Songs list · the schedule | Imports them |
+
 ## Download
 
 Get Churchie from **[churchie.netlify.app/download.html](https://churchie.netlify.app/download.html)**:

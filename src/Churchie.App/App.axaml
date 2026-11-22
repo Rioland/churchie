@@ -95,6 +95,14 @@
       <Setter Property="Margin" Value="0,0,8,0" />
       <Setter Property="VerticalAlignment" Value="Center" />
     </Style>
+    <!-- A panel or list that something is being dragged over (see MainWindow.DragDrop.cs).
+         Last in the list, so it wins over the backgrounds set above. -->
+    <Style Selector="Border.panel.droptarget">
+      <Setter Property="Background" Value="#28304D" />
+    </Style>
+    <Style Selector="ListBox.droptarget">
+      <Setter Property="Background" Value="#28304D" />
+    </Style>
   </Application.Styles>
 
 </Application>

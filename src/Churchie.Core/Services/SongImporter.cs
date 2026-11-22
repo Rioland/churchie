@@ -10,6 +10,13 @@ namespace Churchie.Core.Services;
 /// </summary>
 public static class SongImporter
 {
+    /// <summary>The kinds of file <see cref="ImportFile"/> understands.</summary>
+    public static IReadOnlyList<string> Extensions { get; } = new[] { ".txt", ".xml" };
+
+    /// <summary>True for a file that looks like song lyrics we can import (judged by its extension).</summary>
+    public static bool CanImport(string? path) =>
+        !string.IsNullOrEmpty(path) && Extensions.Contains(Path.GetExtension(path).ToLowerInvariant());
+
     public static Song ImportFile(string path)
     {
         var ext = Path.GetExtension(path).ToLowerInvariant();

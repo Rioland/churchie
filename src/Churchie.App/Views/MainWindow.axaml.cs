@@ -13,6 +13,7 @@ namespace Churchie.App.Views;
 /// Code-behind for the main window. Almost everything lives in the view model;
 /// this file only handles things that need the actual window: keyboard shortcuts,
 /// double-clicks, and opening the projector window on the right monitor.
+/// Drag and drop is in MainWindow.DragDrop.cs (the other half of this "partial" class).
 /// </summary>
 public partial class MainWindow : Window
 {
@@ -25,6 +26,9 @@ public partial class MainWindow : Window
 
         // "Tunnel" means we see key presses before the focused control does.
         AddHandler(KeyDownEvent, OnWindowKeyDown, RoutingStrategies.Tunnel);
+
+        // Dragging things around with the mouse (see MainWindow.DragDrop.cs).
+        SetUpDragAndDrop();
 
         Opened += (_, _) => RefreshScreens();
         Closing += (_, _) =>

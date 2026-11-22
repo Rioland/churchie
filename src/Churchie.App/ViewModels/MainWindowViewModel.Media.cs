@@ -25,19 +25,30 @@ public partial class MainWindowViewModel
     {
         if (Dialogs is null) return;
         var files = await Dialogs.PickFilesAsync("Add pictures, GIFs and videos", "Pictures and videos", MediaFiles.AllPatterns, true);
-        foreach (var file in files)
+        AddMediaFiles(files);
+
+        // "All files" is offered in the dialog too, so mention anything we can't show.
+        var skipped = files.Where(f => MediaFiles.KindOf(f) == MediaKind.None).Select(f => Path.GetFileName(f)).ToList();
+        if (skipped.Count > 0)
+            StatusMessage = "Not a picture or video Churchie can show: " + string.Join(", ", skipped);
+    }
+
+    /// <summary>
+    /// Adds pictures and videos to the Media tab (files already there are kept as they are).
+    /// Used by the "Add" button and by files dragged in from the computer.
+    /// </summary>
+    /// <returns>Every picture or video among <paramref name="files"/>, including ones that were already listed.</returns>
+    private List<string> AddMediaFiles(IEnumerable<string> files)
+    {
+        var media = files.Where(f => MediaFiles.KindOf(f) != MediaKind.None).ToList();
+        foreach (var file in media)
         {
-            // "All files" is offered in the dialog too, so skip anything we can't show.
-            if (MediaFiles.KindOf(file) == MediaKind.None)
-            {
-                StatusMessage = $"\"{Path.GetFileName(file)}\" isn't a picture or video Churchie can show.";
-                continue;
-            }
             if (_settings.MediaFiles.Contains(file, StringComparer.OrdinalIgnoreCase)) continue;
             _settings.MediaFiles.Add(file);
             MediaItems.Add(new MediaItemViewModel(file));
         }
-        SaveSettings();
+        if (media.Count > 0) SaveSettings();
+        return media;
     }
 
     [RelayCommand]

@@ -68,7 +68,8 @@
             </WrapPanel>
 
             <Grid>
-              <ListBox ItemsSource="{Binding ScheduleEntries}"
+              <ListBox x:Name="ScheduleList"
+                       ItemsSource="{Binding ScheduleEntries}"
                        SelectedItem="{Binding SelectedScheduleEntry}"
                        DoubleTapped="OnScheduleDoubleTapped"
                        Background="Transparent">
@@ -84,8 +85,12 @@
                 </ListBox.ItemTemplate>
               </ListBox>
               <TextBlock Classes="hint" Margin="8" VerticalAlignment="Center" HorizontalAlignment="Center" TextAlignment="Center"
-                         IsVisible="{Binding !ScheduleEntries.Count}"
-                         Text="Your service order is empty.&#10;Add songs, scripture and pictures from the tabs below." />
+                         IsVisible="{Binding !ScheduleEntries.Count}" IsHitTestVisible="False"
+                         Text="Your service order is empty.&#10;Add songs, scripture, pictures and videos from the tabs below — or drag them here." />
+              <!-- While something is dragged over the schedule, this line shows where it will land. -->
+              <Canvas x:Name="ScheduleDropLayer" IsHitTestVisible="False">
+                <Border x:Name="ScheduleDropLine" Height="3" CornerRadius="2" Background="#8B7CFF" IsVisible="False" />
+              </Canvas>
             </Grid>
           </DockPanel>
         </Border>
@@ -132,8 +137,8 @@
             </WrapPanel>
 
             <TextBlock Grid.Row="4" Classes="hint" Margin="0,6,0,0" TextWrapping="Wrap"
-                       Text="Next / Prev step through every item in the schedule. Double-click a slide, or press Go Live, to send it live." />
-            <ListBox Grid.Row="3" Classes="slides"
+                       Text="Next / Prev step through every item in the schedule. Double-click a slide, press Go Live, or drag it onto the Live panel to send it live." />
+            <ListBox Grid.Row="3" Classes="slides" x:Name="PreviewList"
                      ItemsSource="{Binding PreviewSlides}"
                      SelectedItem="{Binding SelectedPreviewSlide}"
                      DoubleTapped="OnPreviewSlideDoubleTapped"
@@ -230,7 +235,8 @@
               <DockPanel Grid.Column="0">
                 <TextBox DockPanel.Dock="Top" Text="{Binding SongSearch}" Watermark="Search titles, words or authors…" Margin="0,0,0,6" />
                 <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="{Binding SongCountText}" />
-                <ListBox ItemsSource="{Binding FilteredSongs}"
+                <ListBox x:Name="SongList"
+                         ItemsSource="{Binding FilteredSongs}"
                          SelectedItem="{Binding SelectedSong}"
                          DoubleTapped="OnSongDoubleTapped">
                   <ListBox.ItemTemplate>
@@ -290,7 +296,7 @@
                              TextTrimming="CharacterEllipsis" Text="{Binding SelectedBibleCopyright}"
                              ToolTip.Tip="{Binding SelectedBibleCopyright}" />
                 </DockPanel>
-                <ListBox ItemsSource="{Binding ScriptureVerses}">
+                <ListBox x:Name="VerseList" ItemsSource="{Binding ScriptureVerses}">
                   <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="b:Verse">
                       <Grid ColumnDefinitions="36,*">
@@ -323,8 +329,12 @@
                 <TextBlock Classes="hint" Text="Video slides:" VerticalAlignment="Center" Margin="10,0,6,4" />
                 <ComboBox MinWidth="150" Margin="0,0,6,4" ItemsSource="{Binding VideoLoopChoices}" SelectedIndex="{Binding VideoLoopIndex, Mode=TwoWay}" />
               </WrapPanel>
-              <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="{Binding LogoText}" />
-              <ListBox Classes="slides"
+              <DockPanel DockPanel.Dock="Bottom" Margin="0,6,0,0">
+                <TextBlock DockPanel.Dock="Right" Classes="hint" Margin="12,0,0,0"
+                           Text="Tip: drag pictures and videos here from your computer, or drag them into the schedule." />
+                <TextBlock Classes="hint" Text="{Binding LogoText}" TextTrimming="CharacterEllipsis" />
+              </DockPanel>
+              <ListBox Classes="slides" x:Name="MediaList"
                        ItemsSource="{Binding MediaItems}"
                        SelectedItem="{Binding SelectedMedia}"
                        ScrollViewer.HorizontalScrollBarVisibility="Disabled">
