@@ -44,7 +44,13 @@ public static class VideoEngine
 
             // Finds and loads the VLC libraries (see the class comment for where they are).
             // Written out in full because "Core" alone would mean our own Churchie.Core.
-            LibVLCSharp.Shared.Core.Initialize();
+            // On Windows we name the folder ourselves: Churchie.exe is a single-file program,
+            // and LibVLCSharp can't always work out the program's folder from inside one.
+            var windowsVlc = Path.Combine(AppContext.BaseDirectory, "libvlc", "win-x64");
+            if (OperatingSystem.IsWindows() && Directory.Exists(windowsVlc))
+                LibVLCSharp.Shared.Core.Initialize(windowsVlc);
+            else
+                LibVLCSharp.Shared.Core.Initialize();
 
             // --no-video-title-show: don't print the file name over the video.
             // --no-osd: no on-screen messages ("Volume 80%") on the projector.

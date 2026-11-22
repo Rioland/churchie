@@ -53,6 +53,19 @@
     <VlcWindowsX64ExcludeFiles Include="lua\%2A%2A;plugins\lua\%2A%2A;plugins\visualization\%2A%2A;plugins\services_discovery\%2A%2A;plugins\stream_out\%2A%2A" />
   </ItemGroup>
 
+  <!--
+    The downloads are "single-file" programs: everything is packed into Churchie.exe.
+    VLC can't work from inside that file (it loads hundreds of plugin files from its own
+    folder), so the libvlc folder is kept as real files next to Churchie.exe.
+  -->
+  <Target Name="KeepVlcNextToTheProgram" AfterTargets="ComputeResolvedFilesToPublishList">
+    <ItemGroup>
+      <ResolvedFileToPublish Condition="$([System.String]::Copy('%(ResolvedFileToPublish.RelativePath)').StartsWith('libvlc'))">
+        <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+      </ResolvedFileToPublish>
+    </ItemGroup>
+  </Target>
+
   <ItemGroup>
     <ProjectReference Include="..\Churchie.Core\Churchie.Core.csproj" />
   </ItemGroup>

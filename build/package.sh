@@ -53,6 +53,11 @@ case "$RID" in
   win-*)
     rm -rf "$(dirname "$STAGE")" && mkdir -p "$STAGE"
     cp -R "$PUBLISH"/. "$STAGE/"
+    # Videos need VLC as real files next to Churchie.exe (not packed inside it).
+    if [ ! -f "$STAGE/libvlc/${RID}/libvlc.dll" ] || [ ! -d "$STAGE/libvlc/${RID}/plugins" ]; then
+      echo "!! VLC (libvlc/${RID}/libvlc.dll and plugins) is missing from the Windows build - videos wouldn't play." >&2
+      exit 1
+    fi
     make_zip "$(dirname "$STAGE")" Churchie "$DIST/Churchie-${RID}.zip"
     # The Setup.exe needs NSIS. Without it (e.g. on a Mac) the .zip is still made.
     if command -v makensis >/dev/null 2>&1 || [ -x "/c/Program Files (x86)/NSIS/makensis.exe" ] \
