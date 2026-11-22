@@ -55,13 +55,22 @@ public sealed class VideoPlayer : IDisposable
     private readonly Stopwatch _clock = new();
     private int _frameCount;
 
+    // Show the first picture, then wait for Play (used by the Preview panel).
+    private readonly bool _pauseAtStart;
+
+    // Starting, stopping and freeing VLC happen on background threads; this keeps
+    // two of them from overlapping (e.g. "Restart" while the player is being closed).
+    private readonly object _vlcGate = new();
+
     /// <param name="vlc">The engine from <see cref="VideoEngine"/>.</param>
     /// <param name="muted">True for backgrounds and the logo: no sound.</param>
     /// <param name="loop">Start again from the beginning at the end.</param>
     /// <param name="startSeconds">Where to start; thumbnails start a little in, past any black opening frames.</param>
-    public VideoPlayer(LibVLC vlc, string path, bool muted, bool loop, double startSeconds = 0)
+    /// <param name="pauseAtStart">Show the first picture and then wait, instead of playing straight away.</param>
+    public VideoPlayer(LibVLC vlc, string path, bool muted, bool loop, double startSeconds = 0, bool pauseAtStart = false)
     {
         _name = Path.GetFileName(path);
+        _pauseAtStart = pauseAtStart;
         _media = new Media(vlc, path, FromType.FromPath);
         if (muted) _media.AddOption(":no-audio");
         if (loop) _media.AddOption(":input-repeat=65535"); // VLC's way of saying "repeat (almost) for ever"
@@ -120,19 +129,88 @@ public sealed class VideoPlayer : IDisposable
 
         Task.Run(() =>
         {
-            try
+            lock (_vlcGate)
             {
-                _player.Stop();
-                _player.Dispose();
-                _media.Dispose();
-            }
-            catch
-            {
-                // Nothing useful to do if VLC complains while shutting down.
+                try
+                {
+                    _player.Stop();
+                    _player.Dispose();
+                    _media.Dispose();
+                }
+                catch
+                {
+                    // Nothing useful to do if VLC complains while shutting down.
+                }
             }
             lock (_gate) FreeBuffer();
             VideoLog.Write($"{_name}: stopped after {_frameCount} pictures in {_clock.Elapsed.TotalSeconds:0.0} s");
         });
+    }
+
+    // ------------------------------------------------------------------
+    // Play / Pause / Restart / jump — used by the controls under the
+    // Preview and Live screens (Controls/VideoControls.cs). Window's thread only.
+    // ------------------------------------------------------------------
+
+    /// <summary>True while the video is moving (not paused, not finished).</summary>
+    public bool IsPlaying => !_disposed && _player.IsPlaying;
+
+    /// <summary>True when a "play once" video has reached its end (it stays on its last picture).</summary>
+    public bool HasEnded => !_disposed && _player.State is VLCState.Ended or VLCState.Stopped;
+
+    /// <summary>How far through the video it is: 0 = the start, 1 = the end.</summary>
+    public double Position => _disposed ? 0 : Math.Clamp(_player.Position, 0, 1);
+
+    /// <summary>The time reached so far.</summary>
+    public TimeSpan Time => _disposed ? TimeSpan.Zero : TimeSpan.FromMilliseconds(Math.Max(0, _player.Time));
+
+    /// <summary>How long the whole video is (zero until VLC knows).</summary>
+    public TimeSpan Length => _disposed ? TimeSpan.Zero : TimeSpan.FromMilliseconds(Math.Max(0, _player.Length));
+
+    /// <summary>Pauses a playing video, or carries on with a paused one. A finished video starts again.</summary>
+    public void TogglePause()
+    {
+        if (_disposed) return;
+        if (HasEnded) Restart();
+        else _player.SetPause(_player.IsPlaying); // pause if playing, carry on if paused
+    }
+
+    /// <summary>Back to the beginning, playing.</summary>
+    public void Restart()
+    {
+        if (_disposed) return;
+        if (!HasEnded)
+        {
+            _player.Time = 0;
+            _player.SetPause(false);
+            return;
+        }
+
+        // A finished video has to be stopped and started again. Stopping waits for
+        // VLC's threads, so it happens in the background.
+        Task.Run(() =>
+        {
+            lock (_vlcGate)
+            {
+                if (_disposed) return;
+                try
+                {
+                    _player.Stop();
+                    _player.Play();
+                }
+                catch
+                {
+                    // If VLC can't start it again, the last picture simply stays.
+                }
+            }
+        });
+    }
+
+    /// <summary>Jumps to a point in the video: 0 = the start, 1 = the end.</summary>
+    public void Seek(double position)
+    {
+        if (_disposed || HasEnded) return;
+        _player.Position = (float)Math.Clamp(position, 0, 0.999);
     }
 
     // ------------------------------------------------------------------
@@ -214,6 +292,11 @@ public sealed class VideoPlayer : IDisposable
             VideoLog.Write($"{_name}: picture {count} after {_clock.Elapsed.TotalSeconds:0.00} s");
 
         _firstFrame.TrySetResult(true);
+
+        // The Preview panel shows the first picture and then waits for Play.
+        // (Never call VLC from inside its own callback — ask the window's thread to do it.)
+        if (count == 1 && _pauseAtStart)
+            Dispatcher.UIThread.Post(() => { if (!_disposed) _player.SetPause(true); });
 
         if (Interlocked.Exchange(ref _redrawPending, 1) == 0)
             Dispatcher.UIThread.Post(RaiseFrameChanged, DispatcherPriority.Render);

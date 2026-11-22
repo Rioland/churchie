@@ -4,42 +4,65 @@ using LibVLCSharp.Shared;
 
 namespace Churchie.App.Playback;
 
+/// <summary>What a video is doing on a slide: it is the slide itself, or the theme background behind the words.</summary>
+public enum VideoRole
+{
+    Slide,
+    Background,
+}
+
 /// <summary>
 /// Shares playing videos between everything that shows them, and makes still
 /// thumbnails ("posters") of videos.
 ///
 /// The Live panel and the projector show the same slide, so they share one player:
 /// the video is decoded once, both screens show the same picture at the same moment,
-/// and its sound plays once instead of twice slightly out of step.
+/// and its sound plays once instead of twice slightly out of step. The Preview panel
+/// is a different "channel", so pausing the preview never pauses what's live.
 ///
 /// Every <see cref="Acquire"/> must be matched by one <see cref="Release"/>. When the
 /// last screen lets go, the video stops. Only use this from the window's thread.
 /// </summary>
 public static class VideoLibrary
 {
-    /// <summary>Players are shared only when they play the same file in the same way.</summary>
-    private sealed record Key(string Path, bool Muted, bool Loop);
+    /// <summary>The Live panel and projector.</summary>
+    public const string LiveChannel = "live";
+
+    /// <summary>The big screen on the Preview panel.</summary>
+    public const string PreviewChannel = "preview";
+
+    /// <summary>Players are shared only when they play the same file in the same way on the same channel.</summary>
+    private sealed record Key(string Path, bool Muted, bool Loop, string Channel);
 
     private sealed class Entry
     {
-        public Entry(VideoPlayer player) => Player = player;
+        public Entry(VideoPlayer player, VideoRole role) { Player = player; Role = role; }
         public VideoPlayer Player { get; }
+        public VideoRole Role { get; }
         public int Users { get; set; }
+        public long LastUsed { get; set; } // bigger = asked for more recently
     }
 
     private static readonly Dictionary<Key, Entry> Playing = new();
+    private static long _useCounter;
 
-    /// <summary>Starts the video, or joins it if another screen is already playing it.</summary>
-    public static VideoPlayer Acquire(LibVLC vlc, string path, bool muted, bool loop)
+    /// <summary>Raised (with the channel's name) when a video starts or stops on that channel.</summary>
+    public static event Action<string>? Changed;
+
+    /// <summary>Starts the video, or joins it if another screen on the same channel is already playing it.</summary>
+    /// <param name="pauseAtStart">Show the first picture and wait for Play (the Preview panel does this).</param>
+    public static VideoPlayer Acquire(LibVLC vlc, string path, bool muted, bool loop, string channel, VideoRole role, bool pauseAtStart)
     {
-        var key = new Key(path, muted, loop);
+        var key = new Key(path, muted, loop, channel);
         if (!Playing.TryGetValue(key, out var entry))
         {
-            entry = new Entry(new VideoPlayer(vlc, path, muted, loop));
+            entry = new Entry(new VideoPlayer(vlc, path, muted, loop, pauseAtStart: pauseAtStart), role);
             Playing[key] = entry;
             entry.Player.Play();
         }
         entry.Users++;
+        entry.LastUsed = ++_useCounter;
+        Changed?.Invoke(channel);
         return entry.Player;
     }
 
@@ -56,9 +79,22 @@ public static class VideoLibrary
                 Playing.Remove(key);
                 player.Dispose();
             }
+            Changed?.Invoke(key.Channel);
             return;
         }
     }
+
+    /// <summary>
+    /// The video that the Play/Pause controls under a screen work on: the newest video slide
+    /// on that channel, or else its newest background video. Null when no video is showing.
+    /// </summary>
+    public static VideoPlayer? Current(string channel) =>
+        Playing
+            .Where(pair => pair.Key.Channel == channel)
+            .Select(pair => pair.Value)
+            .OrderByDescending(entry => entry.Role == VideoRole.Slide)
+            .ThenByDescending(entry => entry.LastUsed)
+            .FirstOrDefault()?.Player;
 
     // ------------------------------------------------------------------
     // Posters: a still picture of a video, for thumbnails

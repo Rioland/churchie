@@ -20,7 +20,7 @@ namespace Churchie.App.Controls;
 public sealed class MediaView : Grid
 {
     /// <summary>What to show and how. A record, so "same as before?" is a simple comparison.</summary>
-    private sealed record Request(string Path, bool Play, bool Muted, bool Loop);
+    private sealed record Request(string Path, bool Play, bool Muted, bool Loop, string Channel, VideoRole Role, bool StartPaused);
 
     private readonly Image _image = new() { Stretch = Stretch.Uniform };
     private readonly TextBlock _message = new()
@@ -67,9 +67,13 @@ public sealed class MediaView : Grid
     /// <param name="play">Make GIFs move and videos play. False shows a still picture.</param>
     /// <param name="muted">For a video: no sound.</param>
     /// <param name="loop">For a video: start again at the end.</param>
-    public void Show(string? path, bool play, bool muted = true, bool loop = true)
+    /// <param name="channel">Which screen this is (<see cref="VideoLibrary.LiveChannel"/> or the preview); screens on the same channel share one player.</param>
+    /// <param name="role">Whether the video is the slide itself or the background (the Play/Pause controls prefer the slide).</param>
+    /// <param name="startPaused">For a video: show the first picture and wait for Play.</param>
+    public void Show(string? path, bool play, bool muted = true, bool loop = true,
+        string channel = VideoLibrary.LiveChannel, VideoRole role = VideoRole.Slide, bool startPaused = false)
     {
-        var request = string.IsNullOrEmpty(path) ? null : new Request(path, play, muted, loop);
+        var request = string.IsNullOrEmpty(path) ? null : new Request(path, play, muted, loop, channel, role, startPaused);
         if (request == _request) return;
         _request = request;
         Restart();
@@ -150,7 +154,7 @@ public sealed class MediaView : Grid
                 return;
             }
 
-            _video = VideoLibrary.Acquire(vlc, request.Path, request.Muted, request.Loop);
+            _video = VideoLibrary.Acquire(vlc, request.Path, request.Muted, request.Loop, request.Channel, request.Role, request.StartPaused);
             _video.FrameChanged += OnVideoFrame;
             OnVideoFrame(); // another screen may already be playing it: show its picture now
         }

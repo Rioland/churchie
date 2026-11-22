@@ -101,3 +101,18 @@ public class SongFileTests
         Assert.Equal(expected, SongImporter.CanImport(path));
     }
 }
+
+public class MediaTimeTests
+{
+    [Theory]
+    [InlineData(0, "0:00")]
+    [InlineData(5.4, "0:05")]
+    [InlineData(90, "1:30")]
+    [InlineData(750, "12:30")]
+    [InlineData(3723, "1:02:03")]
+    [InlineData(-3, "0:00")]
+    public void Times_look_like_a_media_player(double seconds, string expected)
+    {
+        Assert.Equal(expected, MediaTime.Format(TimeSpan.FromSeconds(seconds)));
+    }
+}

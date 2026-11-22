@@ -2,6 +2,7 @@ using System.Globalization;
 using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Media;
+using Churchie.App.Playback;
 using Churchie.Core.Models;
 using HAlign = Avalonia.Layout.HorizontalAlignment;
 using VAlign = Avalonia.Layout.VerticalAlignment;
@@ -30,6 +31,12 @@ public sealed class SlideView : UserControl
     public static readonly StyledProperty<bool> PlayProperty =
         AvaloniaProperty.Register<SlideView, bool>(nameof(Play));
 
+    public static readonly StyledProperty<string> ChannelProperty =
+        AvaloniaProperty.Register<SlideView, string>(nameof(Channel), VideoLibrary.LiveChannel);
+
+    public static readonly StyledProperty<bool> StartPausedProperty =
+        AvaloniaProperty.Register<SlideView, bool>(nameof(StartPaused));
+
     /// <summary>What to show. Null shows just the background.</summary>
     public Slide? Slide
     {
@@ -49,6 +56,23 @@ public sealed class SlideView : UserControl
     {
         get => GetValue(PlayProperty);
         set => SetValue(PlayProperty, value);
+    }
+
+    /// <summary>
+    /// Which screen this is, for videos: "live" (the Live panel and projector, which share
+    /// one player) or "preview". Each channel has its own Play/Pause controls.
+    /// </summary>
+    public string Channel
+    {
+        get => GetValue(ChannelProperty);
+        set => SetValue(ChannelProperty, value);
+    }
+
+    /// <summary>Videos show their first picture and wait for Play (the Preview panel).</summary>
+    public bool StartPaused
+    {
+        get => GetValue(StartPausedProperty);
+        set => SetValue(StartPausedProperty, value);
     }
 
     private const double CanvasWidth = 1920;
@@ -128,7 +152,8 @@ public sealed class SlideView : UserControl
     protected override void OnPropertyChanged(AvaloniaPropertyChangedEventArgs change)
     {
         base.OnPropertyChanged(change);
-        if (change.Property == SlideProperty || change.Property == AppearanceProperty || change.Property == PlayProperty)
+        if (change.Property == SlideProperty || change.Property == AppearanceProperty || change.Property == PlayProperty
+            || change.Property == ChannelProperty || change.Property == StartPausedProperty)
             Refresh();
     }
 
@@ -148,7 +173,10 @@ public sealed class SlideView : UserControl
             _backgroundMedia.IsVisible = false;
             _dim.IsVisible = false;
             _slideMedia.Stretch = ToStretch(slide.ImageFit);
-            _slideMedia.Show(media, Play, muted: slide.Muted, loop: slide.Loop);
+            // Only the live screens make sound: the preview is for the operator's eyes only.
+            var silent = slide.Muted || Channel != VideoLibrary.LiveChannel;
+            _slideMedia.Show(media, Play, muted: silent, loop: slide.Loop,
+                channel: Channel, role: VideoRole.Slide, startPaused: StartPaused);
             _slideMedia.IsVisible = true;
             _videoBadge.IsVisible = slide.Kind == SlideKind.Video && !Play;
             _textFit.IsVisible = false;
@@ -164,7 +192,8 @@ public sealed class SlideView : UserControl
         _background.Background = new SolidColorBrush(ParseColor(theme.BackgroundColor, Colors.Black));
         var hasBackground = MediaView.CanShow(theme.BackgroundImage);
         _backgroundMedia.Stretch = ToStretch(theme.BackgroundFit);
-        _backgroundMedia.Show(hasBackground ? theme.BackgroundImage : null, Play, muted: true, loop: true);
+        _backgroundMedia.Show(hasBackground ? theme.BackgroundImage : null, Play, muted: true, loop: true,
+            channel: Channel, role: VideoRole.Background, startPaused: StartPaused);
         _backgroundMedia.IsVisible = hasBackground;
         _dim.IsVisible = hasBackground && theme.BackgroundDim > 0;
         _dim.Opacity = Math.Clamp(theme.BackgroundDim, 0, 1);
