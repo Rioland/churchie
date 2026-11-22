@@ -94,8 +94,17 @@
 
         <!-- Preview -->
         <Border Grid.Column="2" Classes="panel" x:Name="PreviewPanel" Focusable="True">
-          <DockPanel>
-            <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
+          <!-- Rows: title, big preview, buttons, thumbnails, hint. The preview shares the height
+               with the thumbnails (3:2), so on a small screen both stay visible. -->
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="3*" MaxHeight="440" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="2*" MinHeight="130" />
+              <RowDefinition Height="Auto" />
+            </Grid.RowDefinitions>
+            <DockPanel Grid.Row="0" Margin="0,0,0,8">
               <Button DockPanel.Dock="Right" Classes="live" Content="Go Live  ▶" Command="{Binding GoLiveCommand}" />
               <StackPanel Orientation="Horizontal" Spacing="10">
                 <TextBlock Classes="header" Text="PREVIEW" />
@@ -104,14 +113,14 @@
             </DockPanel>
 
             <!-- The slide "Go Live" will send. Videos and GIFs show a still here; they play once live. -->
-            <c:AspectRatioBox DockPanel.Dock="Top" MaxHeight="440">
+            <c:AspectRatioBox Grid.Row="1" VerticalAlignment="Bottom">
               <Border Classes="screen">
                 <c:SlideView Slide="{Binding SelectedPreviewSlide.Slide}" Appearance="{Binding SelectedPreviewSlide.Appearance}" />
               </Border>
             </c:AspectRatioBox>
 
             <!-- Walk through the whole schedule: Next carries on into the next item. -->
-            <WrapPanel DockPanel.Dock="Top" Margin="0,8,0,8">
+            <WrapPanel Grid.Row="2" Margin="0,8,0,8">
               <Button Content="«  Item" Command="{Binding PreviewPreviousItemCommand}" Margin="0,0,4,4"
                       ToolTip.Tip="Previous item in the schedule" />
               <Button Content="◀  Prev" Command="{Binding PreviewPreviousCommand}" Margin="0,0,4,4"
@@ -122,9 +131,9 @@
                       ToolTip.Tip="Next item in the schedule" />
             </WrapPanel>
 
-            <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" TextWrapping="Wrap"
+            <TextBlock Grid.Row="4" Classes="hint" Margin="0,6,0,0" TextWrapping="Wrap"
                        Text="Next / Prev step through every item in the schedule. Double-click a slide, or press Go Live, to send it live." />
-            <ListBox Classes="slides"
+            <ListBox Grid.Row="3" Classes="slides"
                      ItemsSource="{Binding PreviewSlides}"
                      SelectedItem="{Binding SelectedPreviewSlide}"
                      DoubleTapped="OnPreviewSlideDoubleTapped"
@@ -145,15 +154,22 @@
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
-          </DockPanel>
+          </Grid>
         </Border>
 
         <GridSplitter Grid.Column="3" Background="Transparent" ResizeDirection="Columns" />
 
         <!-- Live -->
         <Border Grid.Column="4" Classes="panel" x:Name="LivePanel" Focusable="True">
-          <DockPanel>
-            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
+          <!-- Same arrangement as the Preview panel: the screen and the thumbnails share the height. -->
+          <Grid>
+            <Grid.RowDefinitions>
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="3*" MaxHeight="440" />
+              <RowDefinition Height="Auto" />
+              <RowDefinition Height="2*" MinHeight="110" />
+            </Grid.RowDefinitions>
+            <StackPanel Grid.Row="0" Orientation="Horizontal" Spacing="10" Margin="0,0,0,8">
               <Border Background="#E5484D" CornerRadius="4" Padding="6,1" VerticalAlignment="Center">
                 <TextBlock Text="LIVE" FontSize="11" FontWeight="Bold" Foreground="White" />
               </Border>
@@ -161,13 +177,13 @@
             </StackPanel>
 
             <!-- Exactly what the congregation sees -->
-            <c:AspectRatioBox DockPanel.Dock="Top" MaxHeight="440">
+            <c:AspectRatioBox Grid.Row="1" VerticalAlignment="Bottom">
               <Border Classes="screen">
                 <c:LiveSlideView Frame="{Binding OutputFrame}" TransitionDuration="{Binding TransitionDuration}" />
               </Border>
             </c:AspectRatioBox>
 
-            <WrapPanel DockPanel.Dock="Top" Margin="0,8,0,8">
+            <WrapPanel Grid.Row="2" Margin="0,8,0,8">
               <Button Content="◀  Prev" Command="{Binding PreviousSlideCommand}" Margin="0,0,4,4" />
               <Button Content="Next  ▶" Command="{Binding NextSlideCommand}" Margin="0,0,12,4" />
               <ToggleButton Classes="danger" Content="Black (B)" IsChecked="{Binding IsBlack}" Margin="0,0,4,4" />
@@ -178,7 +194,7 @@
                         MinWidth="120" Margin="0,0,4,4" ToolTip.Tip="Transition between live slides" />
             </WrapPanel>
 
-            <ListBox Classes="slides"
+            <ListBox Grid.Row="3" Classes="slides"
                      ItemsSource="{Binding LiveSlides}"
                      SelectedItem="{Binding SelectedLiveSlide}"
                      ScrollViewer.HorizontalScrollBarVisibility="Disabled">
@@ -198,7 +214,7 @@
                 </DataTemplate>
               </ListBox.ItemTemplate>
             </ListBox>
-          </DockPanel>
+          </Grid>
         </Border>
       </Grid>
 
