@@ -48,11 +48,17 @@ public static class VideoEngine
 
             // --no-video-title-show: don't print the file name over the video.
             // --no-osd: no on-screen messages ("Volume 80%") on the projector.
-            // --quiet: keep VLC's own chatter out of the console.
-            return new LibVLC("--no-video-title-show", "--no-osd", "--quiet");
+            // --quiet: keep VLC's own chatter out of the console (unless we're logging it, see VideoLog).
+            var vlc = VideoLog.IsOn
+                ? new LibVLC("--no-video-title-show", "--no-osd")
+                : new LibVLC("--no-video-title-show", "--no-osd", "--quiet");
+            if (VideoLog.IsOn) vlc.SetLogFile(Path.Combine(VideoLog.Folder!, "vlc-log.txt"));
+            VideoLog.Write($"VLC {vlc.Version} started");
+            return vlc;
         }
         catch (Exception ex)
         {
+            VideoLog.Write("VLC didn't start: " + ex);
             Problem = OperatingSystem.IsLinux()
                 ? "Videos need VLC. Install it with: sudo apt install vlc"
                 : "Videos can't play: the video engine (VLC) didn't start. " + ex.Message;

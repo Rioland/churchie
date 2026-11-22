@@ -2,6 +2,7 @@ using Avalonia;
 using Avalonia.Controls;
 using Avalonia.Controls.ApplicationLifetimes;
 using Avalonia.Markup.Xaml;
+using Churchie.App.Playback;
 using Churchie.App.Services;
 using Churchie.App.ViewModels;
 using Churchie.App.Views;
@@ -17,7 +18,10 @@ public partial class App : Application
     {
         if (ApplicationLifetime is IClassicDesktopStyleApplicationLifetime desktop)
         {
-            var viewModel = new MainWindowViewModel(new AppPaths());
+            var paths = new AppPaths();
+            paths.EnsureCreated();
+            VideoLog.Start(paths.Root); // only writes anything when CHURCHIE_VIDEO_LOG is set
+            var viewModel = new MainWindowViewModel(paths);
             var window = new MainWindow();
             viewModel.Dialogs = new DialogService(window);
             window.DataContext = viewModel;

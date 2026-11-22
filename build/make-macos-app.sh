@@ -48,6 +48,9 @@ cat > "$APP/Contents/Info.plist" <<PLIST
   <key>LSMinimumSystemVersion</key><string>12.0</string>
   <key>NSHighResolutionCapable</key><true/>
   <key>NSMicrophoneUsageDescription</key><string>Churchie uses the microphone to record sermons and messages on the Record tab.</string>
+  <!-- No "App Nap": macOS slows down apps whose windows are covered, which makes videos
+       stutter and fades jump. A presentation app must keep perfect time during a service. -->
+  <key>NSAppSleepDisabled</key><true/>
 </dict>
 </plist>
 PLIST

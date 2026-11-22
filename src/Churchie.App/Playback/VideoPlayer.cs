@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Globalization;
 using System.Runtime.InteropServices;
 using System.Text;
@@ -49,12 +50,18 @@ public sealed class VideoPlayer : IDisposable
     private readonly TaskCompletionSource<bool> _firstFrame =
         new(TaskCreationOptions.RunContinuationsAsynchronously);
 
+    // For VideoLog only: how many pictures have been shown, and since when.
+    private readonly string _name;
+    private readonly Stopwatch _clock = new();
+    private int _frameCount;
+
     /// <param name="vlc">The engine from <see cref="VideoEngine"/>.</param>
     /// <param name="muted">True for backgrounds and the logo: no sound.</param>
     /// <param name="loop">Start again from the beginning at the end.</param>
     /// <param name="startSeconds">Where to start; thumbnails start a little in, past any black opening frames.</param>
     public VideoPlayer(LibVLC vlc, string path, bool muted, bool loop, double startSeconds = 0)
     {
+        _name = Path.GetFileName(path);
         _media = new Media(vlc, path, FromType.FromPath);
         if (muted) _media.AddOption(":no-audio");
         if (loop) _media.AddOption(":input-repeat=65535"); // VLC's way of saying "repeat (almost) for ever"
@@ -66,8 +73,16 @@ public sealed class VideoPlayer : IDisposable
         _player.SetVideoCallbacks(OnLock, null, OnDisplay);
 
         // If the video ends or fails before showing anything, nobody should wait for a first picture.
-        _player.EndReached += (_, _) => _firstFrame.TrySetResult(false);
-        _player.EncounteredError += (_, _) => _firstFrame.TrySetResult(false);
+        _player.EndReached += (_, _) =>
+        {
+            VideoLog.Write($"{_name}: reached the end after {_frameCount} pictures");
+            _firstFrame.TrySetResult(false);
+        };
+        _player.EncounteredError += (_, _) =>
+        {
+            VideoLog.Write($"{_name}: VLC reported an error");
+            _firstFrame.TrySetResult(false);
+        };
     }
 
     /// <summary>The newest picture from the video, or null until the first one arrives.</summary>
@@ -82,7 +97,12 @@ public sealed class VideoPlayer : IDisposable
     /// <summary>Finishes with true once the first picture has arrived, or false if the video ended or failed first.</summary>
     public Task<bool> FirstFrame => _firstFrame.Task;
 
-    public void Play() => _player.Play();
+    public void Play()
+    {
+        VideoLog.Write($"{_name}: play");
+        _clock.Start();
+        _player.Play();
+    }
 
     /// <summary>
     /// Stops the video and frees VLC's resources. Stopping waits for VLC's threads to
@@ -111,6 +131,7 @@ public sealed class VideoPlayer : IDisposable
                 // Nothing useful to do if VLC complains while shutting down.
             }
             lock (_gate) FreeBuffer();
+            VideoLog.Write($"{_name}: stopped after {_frameCount} pictures in {_clock.Elapsed.TotalSeconds:0.0} s");
         });
     }
 
@@ -149,14 +170,16 @@ public sealed class VideoPlayer : IDisposable
 
             // "RV32" = 4 bytes per pixel: blue, green, red, unused — what Avalonia calls Bgra8888.
             Marshal.Copy(Encoding.ASCII.GetBytes("RV32"), 0, chroma, 4);
+            VideoLog.Write($"{_name}: video is {width}x{height}, shown at {w}x{h}");
             width = (uint)w;
             height = (uint)h;
             pitches = (uint)pitch;
             lines = (uint)rows;
             return 1; // the number of picture buffers we set up
         }
-        catch
+        catch (Exception ex)
         {
+            VideoLog.Write($"{_name}: couldn't set up pictures: {ex.Message}");
             return 0;
         }
     }
@@ -179,10 +202,16 @@ public sealed class VideoPlayer : IDisposable
                 CopyRows(_buffer, _pitch, target.Address, target.RowBytes, _width * 4, _height);
             }
         }
-        catch
+        catch (Exception ex)
         {
+            VideoLog.Write($"{_name}: skipped a picture: {ex.Message}");
             return; // skip this picture rather than close the app (see OnFormat)
         }
+
+        // Every 100 pictures, note how fast they arrive (a 30 fps video should show about 30 a second).
+        var count = Interlocked.Increment(ref _frameCount);
+        if (VideoLog.IsOn && (count == 1 || count % 100 == 0))
+            VideoLog.Write($"{_name}: picture {count} after {_clock.Elapsed.TotalSeconds:0.00} s");
 
         _firstFrame.TrySetResult(true);
 
