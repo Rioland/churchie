@@ -14,14 +14,22 @@
 # Plugins under the GPL licence are left out, as in VideoLAN's LGPL package.
 #
 #   usage: get-vlc-mac.sh <path to Churchie.app> <rid: osx-arm64 | osx-x64>
-# Downloads are kept in .cache/vlc so building again doesn't download again.
+# Downloads are kept in ~/Library/Caches/Churchie/vlc, shared by every copy of the
+# project on this Mac (the test build and the download packages use different
+# folders), so each VLC file is only downloaded once.
 set -euo pipefail
 
 APP="${1:?usage: get-vlc-mac.sh <Churchie.app> <rid>}"
 RID="${2:?usage: get-vlc-mac.sh <Churchie.app> <rid>}"
 VLC_VERSION="3.0.24"
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-CACHE="$ROOT/.cache/vlc"
+LOCAL_CACHE="$ROOT/.cache/vlc"   # where earlier versions of this script kept the downloads
+SHARED_CACHE="${CHURCHIE_CACHE:-$HOME/Library/Caches/Churchie}/vlc"
+if mkdir -p "$SHARED_CACHE" 2>/dev/null && [ -w "$SHARED_CACHE" ]; then
+  CACHE="$SHARED_CACHE"
+else
+  CACHE="$LOCAL_CACHE"           # fall back to this project's own folder
+fi
 
 case "$RID" in
   osx-arm64) ARCH=arm64 ;;
@@ -33,9 +41,16 @@ DMG="vlc-${VLC_VERSION}-${ARCH}.dmg"
 URL="https://download.videolan.org/pub/videolan/vlc/${VLC_VERSION}/macosx/${DMG}"
 mkdir -p "$CACHE"
 
+# Already downloaded by an earlier build into this project's own folder? Share that copy.
+if [ ! -f "$CACHE/$DMG" ] && [ -f "$LOCAL_CACHE/$DMG" ]; then
+  cp "$LOCAL_CACHE/$DMG" "$CACHE/$DMG"
+fi
+
 if [ ! -f "$CACHE/$DMG" ]; then
-  echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback..."
-  curl -Lsf --retry 3 -o "$CACHE/$DMG.part" "$URL"
+  echo "== Downloading VLC ${VLC_VERSION} (${ARCH}) for video playback (about 60 MB, once only;"
+  echo "   on a slow connection this can take a while)..."
+  # -C - carries on from where an interrupted download stopped.
+  curl -Lsf --retry 3 -C - -o "$CACHE/$DMG.part" "$URL"
   expected="$(curl -Lsf --retry 3 "$URL.sha256" | cut -d' ' -f1)"
   actual="$(shasum -a 256 "$CACHE/$DMG.part" | cut -d' ' -f1)"
   if [ -z "$expected" ] || [ "$expected" != "$actual" ]; then
