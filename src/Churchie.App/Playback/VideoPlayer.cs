@@ -123,33 +123,42 @@ public sealed class VideoPlayer : IDisposable
     {
         if (width == 0 || height == 0) return 0; // 0 tells VLC "can't do this"
 
-        // Shrink big videos, keeping their shape. Even sizes keep VLC's converters happy.
-        var scale = Math.Min(1.0, Math.Min(MaxWidth / width, MaxHeight / height));
-        var w = Math.Max(2, (int)(width * scale) & ~1);
-        var h = Math.Max(2, (int)(height * scale) & ~1);
-        width = (uint)w;
-        height = (uint)h;
-
-        // "RV32" = 4 bytes per pixel: blue, green, red, unused — what Avalonia calls Bgra8888.
-        Marshal.Copy(Encoding.ASCII.GetBytes("RV32"), 0, chroma, 4);
-
-        // VLC works fastest when rows and row counts are multiples of 32, so round up.
-        var pitch = (w * 4 + 31) & ~31;
-        var rows = (h + 31) & ~31;
-        pitches = (uint)pitch;
-        lines = (uint)rows;
-
-        lock (_gate)
+        // An error escaping from a callback would close the whole app (VLC can't
+        // pass .NET errors on), so anything unexpected just means "no picture".
+        try
         {
-            FreeBuffer();
-            _buffer = Marshal.AllocHGlobal(pitch * rows);
-            _width = w;
-            _height = h;
-            _pitch = pitch;
-            // Opaque: the "unused" fourth byte is ignored instead of being read as transparency.
-            _frame = new WriteableBitmap(new PixelSize(w, h), new Vector(96, 96), PixelFormat.Bgra8888, AlphaFormat.Opaque);
+            // Shrink big videos, keeping their shape. Even sizes keep VLC's converters happy.
+            var scale = Math.Min(1.0, Math.Min(MaxWidth / width, MaxHeight / height));
+            var w = Math.Max(2, (int)(width * scale) & ~1);
+            var h = Math.Max(2, (int)(height * scale) & ~1);
+
+            // VLC works fastest when rows and row counts are multiples of 32, so round up.
+            var pitch = (w * 4 + 31) & ~31;
+            var rows = (h + 31) & ~31;
+
+            lock (_gate)
+            {
+                FreeBuffer();
+                _buffer = Marshal.AllocHGlobal(pitch * rows);
+                _width = w;
+                _height = h;
+                _pitch = pitch;
+                // Opaque: the "unused" fourth byte is ignored instead of being read as transparency.
+                _frame = new WriteableBitmap(new PixelSize(w, h), new Vector(96, 96), PixelFormat.Bgra8888, AlphaFormat.Opaque);
+            }
+
+            // "RV32" = 4 bytes per pixel: blue, green, red, unused — what Avalonia calls Bgra8888.
+            Marshal.Copy(Encoding.ASCII.GetBytes("RV32"), 0, chroma, 4);
+            width = (uint)w;
+            height = (uint)h;
+            pitches = (uint)pitch;
+            lines = (uint)rows;
+            return 1; // the number of picture buffers we set up
         }
-        return 1; // the number of picture buffers we set up
+        catch
+        {
+            return 0;
+        }
     }
 
     private IntPtr OnLock(IntPtr opaque, IntPtr planes)
@@ -161,11 +170,18 @@ public sealed class VideoPlayer : IDisposable
 
     private void OnDisplay(IntPtr opaque, IntPtr picture)
     {
-        lock (_gate)
+        try
         {
-            if (_disposed || _frame is null || _buffer == IntPtr.Zero) return;
-            using var target = _frame.Lock();
-            CopyRows(_buffer, _pitch, target.Address, target.RowBytes, _width * 4, _height);
+            lock (_gate)
+            {
+                if (_disposed || _frame is null || _buffer == IntPtr.Zero) return;
+                using var target = _frame.Lock();
+                CopyRows(_buffer, _pitch, target.Address, target.RowBytes, _width * 4, _height);
+            }
+        }
+        catch
+        {
+            return; // skip this picture rather than close the app (see OnFormat)
         }
 
         _firstFrame.TrySetResult(true);
