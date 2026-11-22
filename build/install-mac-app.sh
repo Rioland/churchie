@@ -5,7 +5,9 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
-VERSION="${1:-0.1.0}"
+# Same version as the downloads (from Directory.Build.props), so About shows the right number.
+DEFAULT_VERSION="$(sed -n 's:.*<Version>\(.*\)</Version>.*:\1:p' "$ROOT/Directory.Build.props" | head -1)"
+VERSION="${1:-${DEFAULT_VERSION:-0.0.0}}"
 case "$(uname -m)" in
   arm64) RID=osx-arm64 ;;
   *)     RID=osx-x64 ;;
