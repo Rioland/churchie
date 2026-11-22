@@ -6,7 +6,7 @@ name: Build
 
 on:
   push:
-    branches: [main, video-gif-preview] # TEMPORARY: build this branch too (remove before merging)
+    branches: [main]
     tags: ['v*']
   pull_request:
   workflow_dispatch:
