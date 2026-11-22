@@ -10,9 +10,13 @@ public sealed class SlideTheme
 
     // Background
     public string BackgroundColor { get; set; } = "#101828";
+    /// <summary>
+    /// A picture, animated GIF or video behind the words. Videos play silently and loop.
+    /// (Still called "image" so settings saved by older versions keep working.)
+    /// </summary>
     public string? BackgroundImage { get; set; }
 
-    /// <summary>How the background picture is sized to the screen. Fill = cover the screen.</summary>
+    /// <summary>How the background picture or video is sized to the screen. Fill = cover the screen.</summary>
     public ImageFit BackgroundFit { get; set; } = ImageFit.Fill;
 
     /// <summary>0 = image fully visible, 0.8 = image darkened a lot so text stands out.</summary>

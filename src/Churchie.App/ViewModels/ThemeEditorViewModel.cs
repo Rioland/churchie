@@ -82,7 +82,7 @@ public partial class ThemeEditorViewModel : ViewModelBase
     }
 
     // Read-only helpers for the UI
-    public string BackgroundImageName => string.IsNullOrEmpty(BackgroundImage) ? "No image" : Path.GetFileName(BackgroundImage);
+    public string BackgroundImageName => string.IsNullOrEmpty(BackgroundImage) ? "None" : Path.GetFileName(BackgroundImage);
     public string FontSizeText => $"{FontSize:0} px";
     public string FooterFontSizeText => $"{FooterFontSize:0} px";
     public string BackgroundDimText => $"{BackgroundDim * 100:0}%";

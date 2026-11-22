@@ -18,6 +18,9 @@ mkdir -p "$APP/Contents/MacOS" "$APP/Contents/Resources"
 cp -R "$PUBLISH_DIR"/. "$APP/Contents/MacOS/"
 chmod +x "$APP/Contents/MacOS/Churchie"
 
+# The video engine (VLC), taken from the official VLC app — see get-vlc-mac.sh.
+bash "$ROOT/build/get-vlc-mac.sh" "$APP" "$RID"
+
 # App icon (.icns) from the 1024px PNG
 ICONSET="$OUT/churchie.iconset"
 rm -rf "$ICONSET" && mkdir -p "$ICONSET"

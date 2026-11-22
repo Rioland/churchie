@@ -85,6 +85,69 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedPreviewSlide = PreviewSlides.FirstOrDefault();
     }
 
+    // Next / Previous under the preview walk through every slide of every schedule item,
+    // so the operator can line up what's coming one press at a time. The Live panel is
+    // not touched until they press Go Live.
+
+    [RelayCommand]
+    private void PreviewNext() => StepPreview(+1, wholeItem: false);
+
+    [RelayCommand]
+    private void PreviewPrevious() => StepPreview(-1, wholeItem: false);
+
+    [RelayCommand]
+    private void PreviewNextItem() => StepPreview(+1, wholeItem: true);
+
+    [RelayCommand]
+    private void PreviewPreviousItem() => StepPreview(-1, wholeItem: true);
+
+    private void StepPreview(int step, bool wholeItem)
+    {
+        var itemIndex = PreviewScheduleIndex();
+        var slideIndex = SelectedPreviewSlide is null ? 0 : Math.Max(0, PreviewSlides.IndexOf(SelectedPreviewSlide));
+
+        // Something from the library that isn't in the schedule: step through its own slides only.
+        if (_previewItem is not null && itemIndex < 0 && !wholeItem)
+        {
+            var own = ScheduleStepper.Step(new[] { PreviewSlides.Count }, new SchedulePosition(0, slideIndex), step);
+            if (own is { } ownPosition) SelectedPreviewSlide = PreviewSlides[ownPosition.Slide];
+            return;
+        }
+
+        // How many slides each schedule item has (the previewed one is already built).
+        var counts = ScheduleEntries
+            .Select(e => ReferenceEquals(e.Item, _previewItem) ? PreviewSlides.Count : _slideFactory.Build(e.Item, _settings).Count)
+            .ToList();
+
+        var target = wholeItem
+            ? ScheduleStepper.StepItem(counts, itemIndex, step)
+            : ScheduleStepper.Step(counts, new SchedulePosition(itemIndex, slideIndex), step);
+        if (target is not { } position) return; // already at the start or end of the schedule
+
+        if (position.Item != itemIndex)
+        {
+            var entry = ScheduleEntries[position.Item];
+            if (SelectedScheduleEntry == entry) ShowInPreview(entry.Item);
+            else SelectedScheduleEntry = entry; // this shows it in the preview
+        }
+
+        if (position.Slide < PreviewSlides.Count)
+            SelectedPreviewSlide = PreviewSlides[position.Slide];
+    }
+
+    /// <summary>Where the previewed item sits in the schedule, or -1 if it isn't in it.</summary>
+    private int PreviewScheduleIndex()
+    {
+        if (_previewItem is null) return -1;
+        if (SelectedScheduleEntry is { } selected && ReferenceEquals(selected.Item, _previewItem))
+            return ScheduleEntries.IndexOf(selected);
+        for (var i = 0; i < ScheduleEntries.Count; i++)
+        {
+            if (ReferenceEquals(ScheduleEntries[i].Item, _previewItem)) return i;
+        }
+        return -1;
+    }
+
     private void FillSlides(ObservableCollection<SlideItemViewModel> target, ScheduleItem item)
     {
         target.Clear();
@@ -130,12 +193,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (IsLogo)
         {
-            var logo = string.IsNullOrEmpty(_settings.LogoPath) ? null : SlideBuilder.FromImage(_settings.LogoPath);
+            // A video logo loops silently, like a moving picture.
+            var logo = string.IsNullOrEmpty(_settings.LogoPath)
+                ? null
+                : SlideBuilder.FromMedia(_settings.LogoPath, ImageFit.Fit, loopVideo: true, muteVideo: true);
             return new LiveFrame(logo, SlideTheme.Black());
         }
 
         var current = SelectedLiveSlide?.Slide;
-        if (current is not null && IsCleared && current.ImagePath is null)
+        // "Clear" hides words. Picture and video slides have none, so they stay as they are.
+        if (current is not null && IsCleared && current.MediaPath is null)
             current = current with { Text = "", Footer = null };
 
         return new LiveFrame(current, SlideFactory.ThemeFor(_liveItem!.Kind, _settings).Clone());
@@ -328,7 +395,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            StatusMessage = "Scripture and pictures can't be edited — remove and add them again.";
+            StatusMessage = "Scripture, pictures and videos can't be edited — remove and add them again.";
             return;
         }
 
@@ -495,14 +562,13 @@ public partial class MainWindowViewModel : ViewModelBase
         }
     }
 
+    /// <summary>Asks for a background for the theme editors: a picture, an animated GIF or a video.</summary>
     private async Task<string?> PickImageAsync()
     {
         if (Dialogs is null) return null;
-        var files = await Dialogs.PickFilesAsync("Choose a picture", "Images", ImagePatterns, false);
+        var files = await Dialogs.PickFilesAsync("Choose a background picture or video", "Pictures and videos", MediaFiles.AllPatterns, false);
         return files.Count > 0 ? files[0] : null;
     }
-
-    private static readonly string[] ImagePatterns = { "*.png", "*.jpg", "*.jpeg", "*.bmp", "*.gif", "*.webp" };
 
     private static string SafeFileName(string name)
     {
@@ -538,6 +604,8 @@ public partial class MainWindowViewModel : ViewModelBase
         await Dialogs.ShowMessageAsync("Keyboard shortcuts",
             "Page Down / Page Up — next / previous slide (works with presentation clickers)\n" +
             "→ / ← or Space — next / previous slide (when the Live panel is focused)\n" +
+            "→ / ← or Space — step through the schedule in the preview (when the Preview panel is focused)\n" +
+            "Enter — send the previewed slide live (when the Preview panel is focused)\n" +
             "B — black screen\n" +
             "C — clear text (keep background)\n" +
             "L — show logo\n" +
@@ -549,8 +617,10 @@ public partial class MainWindowViewModel : ViewModelBase
     private async Task ShowAboutAsync()
     {
         if (Dialogs is null) return;
+        // The version comes from Directory.Build.props, so it is always up to date.
+        var version = typeof(MainWindowViewModel).Assembly.GetName().Version ?? new Version(0, 0, 0);
         await Dialogs.ShowMessageAsync("About Churchie",
-            "Churchie 0.3 — worship lyrics and scripture presentation.\n\n" +
+            $"Churchie {version.Major}.{version.Minor}.{version.Build} — worship lyrics, scripture, pictures and videos.\n\n" +
             "Built with C# and Avalonia; runs on Windows, macOS and Linux.\n" +
             $"Your songs and settings are stored in:\n{_paths.Root}");
     }

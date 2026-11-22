@@ -11,6 +11,8 @@
     <ApplicationIcon>Assets\churchie.ico</ApplicationIcon>
     <BuiltInComInteropSupport>true</BuiltInComInteropSupport>
     <AvaloniaUseCompiledBindingsByDefault>true</AvaloniaUseCompiledBindingsByDefault>
+    <!-- Lets Playback/VideoPlayer.cs copy video pictures with raw memory addresses (fast). -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
 
   <ItemGroup>
@@ -28,6 +30,27 @@
     <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
     <!-- PortAudio: records from the microphone on Windows, macOS and Linux (Record tab). -->
     <PackageReference Include="PortAudioSharp2" Version="1.0.6" />
+    <!-- LibVLCSharp: plays videos (Media tab, backgrounds, logo) with VLC's free video engine. -->
+    <PackageReference Include="LibVLCSharp" Version="3.10.2" />
+  </ItemGroup>
+
+  <!--
+    The VLC engine itself (native code, not C#), which LibVLCSharp needs:
+      Windows: from the official VideoLAN package below, 64-bit only. A few parts a
+               presentation app never uses are left out to keep the download smaller.
+      macOS:   build/get-vlc-mac.sh copies it from the official VLC app into Churchie.app
+               (the NuGet package for Mac has no Apple Silicon version).
+      Linux:   the system's VLC ("sudo apt install vlc").
+  -->
+  <ItemGroup Condition="'$(RuntimeIdentifier)' == 'win-x64' Or ('$(RuntimeIdentifier)' == '' And $([MSBuild]::IsOSPlatform('Windows')))">
+    <PackageReference Include="VideoLAN.LibVLC.Windows" Version="3.0.24" />
+  </ItemGroup>
+  <PropertyGroup>
+    <VlcWindowsX86Enabled>false</VlcWindowsX86Enabled>
+    <VlcWindowsArm64Enabled>false</VlcWindowsArm64Enabled>
+  </PropertyGroup>
+  <ItemGroup>
+    <VlcWindowsX64ExcludeFiles Include="lua\%2A%2A;plugins\lua\%2A%2A;plugins\visualization\%2A%2A;plugins\services_discovery\%2A%2A;plugins\stream_out\%2A%2A" />
   </ItemGroup>
 
   <ItemGroup>

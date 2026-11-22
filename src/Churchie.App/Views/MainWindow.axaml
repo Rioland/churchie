@@ -93,7 +93,7 @@
         <GridSplitter Grid.Column="1" Background="Transparent" ResizeDirection="Columns" />
 
         <!-- Preview -->
-        <Border Grid.Column="2" Classes="panel">
+        <Border Grid.Column="2" Classes="panel" x:Name="PreviewPanel" Focusable="True">
           <DockPanel>
             <DockPanel DockPanel.Dock="Top" Margin="0,0,0,8">
               <Button DockPanel.Dock="Right" Classes="live" Content="Go Live  ▶" Command="{Binding GoLiveCommand}" />
@@ -102,7 +102,28 @@
                 <TextBlock Classes="subtitle" Text="{Binding PreviewTitle}" MaxWidth="420" />
               </StackPanel>
             </DockPanel>
-            <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="Double-click a slide to send it live." />
+
+            <!-- The slide "Go Live" will send. Videos and GIFs show a still here; they play once live. -->
+            <c:AspectRatioBox DockPanel.Dock="Top" MaxHeight="440">
+              <Border Classes="screen">
+                <c:SlideView Slide="{Binding SelectedPreviewSlide.Slide}" Appearance="{Binding SelectedPreviewSlide.Appearance}" />
+              </Border>
+            </c:AspectRatioBox>
+
+            <!-- Walk through the whole schedule: Next carries on into the next item. -->
+            <WrapPanel DockPanel.Dock="Top" Margin="0,8,0,8">
+              <Button Content="«  Item" Command="{Binding PreviewPreviousItemCommand}" Margin="0,0,4,4"
+                      ToolTip.Tip="Previous item in the schedule" />
+              <Button Content="◀  Prev" Command="{Binding PreviewPreviousCommand}" Margin="0,0,4,4"
+                      ToolTip.Tip="Previous slide (goes back into the item before)" />
+              <Button Content="Next  ▶" Command="{Binding PreviewNextCommand}" Margin="0,0,4,4"
+                      ToolTip.Tip="Next slide (carries on into the next item)" />
+              <Button Content="Item  »" Command="{Binding PreviewNextItemCommand}" Margin="0,0,4,4"
+                      ToolTip.Tip="Next item in the schedule" />
+            </WrapPanel>
+
+            <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" TextWrapping="Wrap"
+                       Text="Next / Prev step through every item in the schedule. Double-click a slide, or press Go Live, to send it live." />
             <ListBox Classes="slides"
                      ItemsSource="{Binding PreviewSlides}"
                      SelectedItem="{Binding SelectedPreviewSlide}"
@@ -271,7 +292,8 @@
           <TabItem Header="Media">
             <DockPanel>
               <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
-                <Button Classes="accent" Content="Add pictures…" Command="{Binding AddMediaCommand}" Margin="0,0,6,4" />
+                <Button Classes="accent" Content="Add pictures &amp; videos…" Command="{Binding AddMediaCommand}" Margin="0,0,6,4"
+                        ToolTip.Tip="Pictures, animated GIFs and videos (MP4, MOV, AVI, MKV, WebM…)" />
                 <Button Content="Remove" Command="{Binding RemoveMediaCommand}" Margin="0,0,16,4" />
                 <Button Content="Use as song background" Command="{Binding UseAsSongBackgroundCommand}" Margin="0,0,6,4" />
                 <Button Content="Use as scripture background" Command="{Binding UseAsScriptureBackgroundCommand}" Margin="0,0,6,4" />
@@ -281,6 +303,9 @@
                 <!-- How picture slides are sized when they aren't the same shape as the screen. -->
                 <TextBlock Classes="hint" Text="Picture slides:" VerticalAlignment="Center" Margin="10,0,6,4" />
                 <ComboBox MinWidth="220" Margin="0,0,6,4" ItemsSource="{Binding PictureFitChoices}" SelectedIndex="{Binding PictureFitIndex, Mode=TwoWay}" />
+                <!-- Whether video slides stop at the end or start again. -->
+                <TextBlock Classes="hint" Text="Video slides:" VerticalAlignment="Center" Margin="10,0,6,4" />
+                <ComboBox MinWidth="150" Margin="0,0,6,4" ItemsSource="{Binding VideoLoopChoices}" SelectedIndex="{Binding VideoLoopIndex, Mode=TwoWay}" />
               </WrapPanel>
               <TextBlock DockPanel.Dock="Bottom" Classes="hint" Margin="0,6,0,0" Text="{Binding LogoText}" />
               <ListBox Classes="slides"
@@ -296,7 +321,14 @@
                   <DataTemplate x:DataType="vm:MediaItemViewModel">
                     <StackPanel Width="160" Spacing="4">
                       <Border Height="90" CornerRadius="4" ClipToBounds="True" Background="Black">
-                        <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                        <Grid>
+                          <Image Source="{Binding Thumbnail}" Stretch="UniformToFill" />
+                          <!-- "VIDEO" or "GIF", so they can be told apart from still pictures -->
+                          <Border IsVisible="{Binding HasBadge}" Background="#CC000000" CornerRadius="3" Padding="5,1"
+                                  Margin="4" HorizontalAlignment="Left" VerticalAlignment="Top">
+                            <TextBlock Text="{Binding Badge}" FontSize="10" FontWeight="Bold" Foreground="White" />
+                          </Border>
+                        </Grid>
                       </Border>
                       <TextBlock Text="{Binding Name}" FontSize="11" TextTrimming="CharacterEllipsis" />
                     </StackPanel>

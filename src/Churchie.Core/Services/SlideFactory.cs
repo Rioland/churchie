@@ -35,7 +35,7 @@ public sealed class SlideFactory
                 return SlideBuilder.FromText(item.Text);
 
             case ScheduleItemKind.Media when !string.IsNullOrEmpty(item.MediaPath):
-                return new[] { SlideBuilder.FromImage(item.MediaPath, settings.PictureFit) };
+                return new[] { SlideBuilder.FromMedia(item.MediaPath, settings.PictureFit, settings.LoopVideos) };
 
             default:
                 return Array.Empty<Slide>();

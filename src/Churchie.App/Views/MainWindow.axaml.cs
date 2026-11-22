@@ -160,6 +160,30 @@ public partial class MainWindow : Window
             case Key.L: vm.IsLogo = !vm.IsLogo; e.Handled = true; return;
         }
 
+        // In the Preview panel, arrows and Space step through the schedule and Enter
+        // sends the previewed slide live. (Enter on a button still presses that button.)
+        var inPreviewPanel = focused is Visual previewVisual &&
+                             (previewVisual == PreviewPanel || PreviewPanel.IsVisualAncestorOf(previewVisual));
+        if (inPreviewPanel)
+        {
+            switch (e.Key)
+            {
+                case Key.Right or Key.Down or Key.Space:
+                    vm.PreviewNextCommand.Execute(null);
+                    e.Handled = true;
+                    break;
+                case Key.Left or Key.Up:
+                    vm.PreviewPreviousCommand.Execute(null);
+                    e.Handled = true;
+                    break;
+                case Key.Enter when focused is not Button:
+                    vm.GoLiveCommand.Execute(null);
+                    e.Handled = true;
+                    break;
+            }
+            return;
+        }
+
         // Arrows and Space drive the live slides when the Live panel has focus
         // (or nothing does), and keep their normal meaning everywhere else.
         var inLivePanel = focused is null || focused == this ||

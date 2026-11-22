@@ -3,7 +3,7 @@ using Churchie.Core.Models;
 
 namespace Churchie.Core.Services;
 
-/// <summary>Turns songs, passages, text and images into slides.</summary>
+/// <summary>Turns songs, passages, text, pictures and videos into slides.</summary>
 public static class SlideBuilder
 {
     /// <param name="maxLinesPerSlide">Split long sections into several slides. 0 = never split.</param>
@@ -56,9 +56,20 @@ public static class SlideBuilder
         return blocks.Select((b, i) => new Slide(SlideKind.Text, $"Slide {i + 1}", b)).ToList();
     }
 
-    /// <param name="fit">How the picture is sized to the screen. The default shows the whole picture.</param>
-    public static Slide FromImage(string path, ImageFit fit = ImageFit.Fit) =>
-        new(SlideKind.Image, Path.GetFileNameWithoutExtension(path), "", null, path, fit);
+    /// <summary>
+    /// A slide that shows one media file. Videos get <see cref="SlideKind.Video"/> so the
+    /// app knows to play them; pictures (animated GIFs included) get <see cref="SlideKind.Image"/>.
+    /// </summary>
+    /// <param name="fit">How the picture or video is sized to the screen. The default shows all of it.</param>
+    /// <param name="loopVideo">For a video: play it again and again instead of once.</param>
+    /// <param name="muteVideo">For a video: play it without sound.</param>
+    public static Slide FromMedia(string path, ImageFit fit = ImageFit.Fit, bool loopVideo = false, bool muteVideo = false)
+    {
+        var label = Path.GetFileNameWithoutExtension(path);
+        return MediaFiles.IsVideo(path)
+            ? new Slide(SlideKind.Video, label, "", null, path, fit, loopVideo, muteVideo)
+            : new Slide(SlideKind.Image, label, "", null, path, fit);
+    }
 
     private static List<T[]> Chunk<T>(IReadOnlyList<T> items, int size)
     {

@@ -6,6 +6,7 @@ public enum SlideKind
     Scripture,
     Text,
     Image,
+    Video,
 }
 
 /// <summary>
@@ -16,15 +17,22 @@ public enum SlideKind
 /// <param name="Label">Short name shown on thumbnails, e.g. "Chorus" or "John 3:16".</param>
 /// <param name="Text">The words shown on screen.</param>
 /// <param name="Footer">Small text at the bottom, e.g. the scripture reference.</param>
-/// <param name="ImagePath">When set, this image is shown instead of text (used for media slides and the logo).</param>
-/// <param name="ImageFit">How that image is sized to the screen.</param>
+/// <param name="MediaPath">
+/// When set, this picture, animated GIF or video is shown instead of text
+/// (used for media slides and the logo).
+/// </param>
+/// <param name="ImageFit">How that picture or video is sized to the screen.</param>
+/// <param name="Loop">For a video: start again from the beginning when it ends. Otherwise it stops on its last frame.</param>
+/// <param name="Muted">For a video: play it without sound (used for a video logo).</param>
 public sealed record Slide(
     SlideKind Kind,
     string Label,
     string Text,
     string? Footer = null,
-    string? ImagePath = null,
-    ImageFit ImageFit = ImageFit.Fit)
+    string? MediaPath = null,
+    ImageFit ImageFit = ImageFit.Fit,
+    bool Loop = false,
+    bool Muted = false)
 {
     /// <summary>A slide with nothing on it — shows only the background.</summary>
     public static Slide Empty { get; } = new(SlideKind.Text, "", "");

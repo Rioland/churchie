@@ -30,6 +30,11 @@ public partial class MainWindowViewModel
     /// <summary>How picture slides are sized to the screen (position in <see cref="PictureFitChoices"/>).</summary>
     [ObservableProperty] private int _pictureFitIndex;
 
+    public string[] VideoLoopChoices { get; } = { "Play once", "Play on repeat" };
+
+    /// <summary>0 = video slides play once, 1 = they repeat (position in <see cref="VideoLoopChoices"/>).</summary>
+    [ObservableProperty] private int _videoLoopIndex;
+
     /// <summary>Names of the connected monitors, filled in by the main window.</summary>
     public ObservableCollection<string> ScreenNames { get; } = new();
 
@@ -56,6 +61,7 @@ public partial class MainWindowViewModel
         TransitionIndex = ClosestTransition(_settings.TransitionSeconds);
         SelectedTabIndex = Math.Max(0, _settings.SelectedTab);
         PictureFitIndex = Math.Clamp((int)_settings.PictureFit, 0, PictureFitChoices.Length - 1);
+        VideoLoopIndex = _settings.LoopVideos ? 1 : 0;
     }
 
     /// <summary>The menu choice nearest to a saved number of seconds.</summary>
@@ -90,6 +96,15 @@ public partial class MainWindowViewModel
         SaveSettings();
         RebuildSlides(); // picture slides remember their size, so make them again
         StatusMessage = "Picture slides: " + PictureFitChoices[value].ToLowerInvariant();
+    }
+
+    partial void OnVideoLoopIndexChanged(int value)
+    {
+        if (_loading || value < 0) return;
+        _settings.LoopVideos = value == 1;
+        SaveSettings();
+        RebuildSlides(); // video slides remember whether they repeat, so make them again
+        StatusMessage = "Video slides: " + VideoLoopChoices[value].ToLowerInvariant();
     }
 
     partial void OnLinesPerSlideIndexChanged(int value)

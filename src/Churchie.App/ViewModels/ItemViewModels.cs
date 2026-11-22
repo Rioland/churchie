@@ -1,7 +1,9 @@
 using Avalonia.Media;
 using Avalonia.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
+using Churchie.App.Playback;
 using Churchie.Core.Models;
+using Churchie.Core.Services;
 
 namespace Churchie.App.ViewModels;
 
@@ -38,12 +40,14 @@ public sealed class ScheduleEntryViewModel : ViewModelBase
 
     public string Title => Item.Title;
 
+    private bool IsVideo => Item.Kind == ScheduleItemKind.Media && MediaFiles.IsVideo(Item.MediaPath);
+
     public string KindLabel => Item.Kind switch
     {
         ScheduleItemKind.Song => "SONG",
         ScheduleItemKind.Scripture => "BIBLE",
         ScheduleItemKind.Text => "TEXT",
-        _ => "IMAGE",
+        _ => IsVideo ? "VIDEO" : "IMAGE",
     };
 
     public IBrush KindBrush => Item.Kind switch
@@ -51,31 +55,59 @@ public sealed class ScheduleEntryViewModel : ViewModelBase
         ScheduleItemKind.Song => new SolidColorBrush(Color.Parse("#5B4BDB")),
         ScheduleItemKind.Scripture => new SolidColorBrush(Color.Parse("#B7791F")),
         ScheduleItemKind.Text => new SolidColorBrush(Color.Parse("#2F855A")),
-        _ => new SolidColorBrush(Color.Parse("#2B6CB0")),
+        _ => new SolidColorBrush(Color.Parse(IsVideo ? "#2C7A7B" : "#2B6CB0")),
     };
 
     /// <summary>Call after changing <see cref="Item"/> so the list redraws.</summary>
     public void Refresh() => OnPropertyChanged(nameof(Title));
 }
 
-/// <summary>A picture in the Media tab.</summary>
-public sealed class MediaItemViewModel : ViewModelBase
+/// <summary>A picture, animated GIF or video in the Media tab.</summary>
+public sealed partial class MediaItemViewModel : ViewModelBase
 {
     public MediaItemViewModel(string filePath)
     {
         FilePath = filePath;
-        try
-        {
-            using var stream = File.OpenRead(filePath);
-            Thumbnail = Bitmap.DecodeToWidth(stream, 240);
-        }
-        catch
-        {
-            Thumbnail = null; // unreadable image — still listed, just without a preview
-        }
+        IsVideo = MediaFiles.IsVideo(filePath);
+
+        if (IsVideo) _ = LoadPosterAsync(); // takes a moment, so the thumbnail appears when ready
+        else Thumbnail = LoadPicture(filePath);
     }
 
     public string FilePath { get; }
     public string Name => Path.GetFileName(FilePath);
-    public Bitmap? Thumbnail { get; }
+    public bool IsVideo { get; }
+
+    /// <summary>A small label on the thumbnail ("VIDEO" or "GIF"), or "" for an ordinary picture.</summary>
+    public string Badge =>
+        IsVideo ? "VIDEO" : string.Equals(Path.GetExtension(FilePath), ".gif", StringComparison.OrdinalIgnoreCase) ? "GIF" : "";
+
+    public bool HasBadge => Badge.Length > 0;
+
+    [ObservableProperty] private Bitmap? _thumbnail;
+
+    private static Bitmap? LoadPicture(string filePath)
+    {
+        try
+        {
+            using var stream = File.OpenRead(filePath);
+            return Bitmap.DecodeToWidth(stream, 240);
+        }
+        catch
+        {
+            return null; // unreadable image — still listed, just without a preview
+        }
+    }
+
+    private async Task LoadPosterAsync()
+    {
+        try
+        {
+            Thumbnail = await VideoLibrary.GetPosterAsync(FilePath);
+        }
+        catch
+        {
+            // No poster (e.g. VLC missing): the "VIDEO" label still shows what it is.
+        }
+    }
 }

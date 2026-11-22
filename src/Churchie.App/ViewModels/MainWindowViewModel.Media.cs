@@ -2,17 +2,18 @@ using System.Collections.ObjectModel;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Churchie.Core.Models;
+using Churchie.Core.Services;
 
 namespace Churchie.App.ViewModels;
 
-// The Media tab (pictures for backgrounds, announcements and the logo).
+// The Media tab: pictures, animated GIFs and videos for slides, backgrounds and the logo.
 public partial class MainWindowViewModel
 {
     public ObservableCollection<MediaItemViewModel> MediaItems { get; } = new();
 
     [ObservableProperty] private MediaItemViewModel? _selectedMedia;
 
-    public string LogoText => string.IsNullOrEmpty(_settings.LogoPath) ? "Logo: none (choose a picture and press \"Use as logo\")" : "Logo: " + Path.GetFileName(_settings.LogoPath);
+    public string LogoText => string.IsNullOrEmpty(_settings.LogoPath) ? "Logo: none (choose a picture or video and press \"Use as logo\")" : "Logo: " + Path.GetFileName(_settings.LogoPath);
 
     partial void OnSelectedMediaChanged(MediaItemViewModel? value)
     {
@@ -23,9 +24,15 @@ public partial class MainWindowViewModel
     private async Task AddMediaAsync()
     {
         if (Dialogs is null) return;
-        var files = await Dialogs.PickFilesAsync("Add pictures", "Images", ImagePatterns, true);
+        var files = await Dialogs.PickFilesAsync("Add pictures, GIFs and videos", "Pictures and videos", MediaFiles.AllPatterns, true);
         foreach (var file in files)
         {
+            // "All files" is offered in the dialog too, so skip anything we can't show.
+            if (MediaFiles.KindOf(file) == MediaKind.None)
+            {
+                StatusMessage = $"\"{Path.GetFileName(file)}\" isn't a picture or video Churchie can show.";
+                continue;
+            }
             if (_settings.MediaFiles.Contains(file, StringComparer.OrdinalIgnoreCase)) continue;
             _settings.MediaFiles.Add(file);
             MediaItems.Add(new MediaItemViewModel(file));

@@ -6,6 +6,9 @@ dist/
 artifacts/
 TestResults/
 
+# Downloads kept between builds (e.g. VLC for the Mac app, see build/get-vlc-mac.sh)
+.cache/
+
 # IDEs
 .vs/
 .idea/

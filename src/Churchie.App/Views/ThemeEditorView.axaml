@@ -47,7 +47,8 @@
       </Grid>
 
       <Grid ColumnDefinitions="110,*,Auto,Auto">
-        <TextBlock Classes="hint" Text="Picture" VerticalAlignment="Center" />
+        <TextBlock Classes="hint" Text="Picture/video" VerticalAlignment="Center"
+                   ToolTip.Tip="A picture, animated GIF or video behind the words. Videos play silently and repeat." />
         <TextBlock Grid.Column="1" Text="{Binding BackgroundImageName}" VerticalAlignment="Center" TextTrimming="CharacterEllipsis" />
         <Button Grid.Column="2" Content="Choose…" Command="{Binding ChooseImageCommand}" Margin="6,0,0,0" />
         <Button Grid.Column="3" Content="Clear" Command="{Binding ClearImageCommand}" Margin="6,0,0,0" />

@@ -13,7 +13,7 @@ public class ImageFitTests
         // Backgrounds have always covered the screen; picture slides have always shown the whole picture.
         Assert.Equal(ImageFit.Fill, new SlideTheme().BackgroundFit);
         Assert.Equal(ImageFit.Fit, new AppSettings().PictureFit);
-        Assert.Equal(ImageFit.Fit, SlideBuilder.FromImage("/pictures/logo.png").ImageFit);
+        Assert.Equal(ImageFit.Fit, SlideBuilder.FromMedia("/pictures/logo.png").ImageFit);
     }
 
     [Fact]

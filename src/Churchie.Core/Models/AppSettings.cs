@@ -25,6 +25,12 @@ public sealed class AppSettings
     /// <summary>How picture slides (Media tab) are sized to the screen. Fit = show the whole picture.</summary>
     public ImageFit PictureFit { get; set; } = ImageFit.Fit;
 
+    /// <summary>
+    /// Video slides (Media tab) start again when they end. Off = play once and stay on the last frame.
+    /// Background videos and a video logo always loop, because they have no natural end.
+    /// </summary>
+    public bool LoopVideos { get; set; }
+
     /// <summary>Which bottom tab was open last time (0 = Songs), so the app reopens where you left it.</summary>
     public int SelectedTab { get; set; }
 

@@ -16,6 +16,9 @@ namespace Churchie.App.Controls;
 /// to the front and faded in over the old one. Because the old slide stays fully
 /// visible underneath until the new one covers it, the background never dips
 /// darker halfway through (which happens if you fade one out while the other fades in).
+///
+/// Both layers play videos and GIFs. When a fade is over, the hidden layer is emptied,
+/// so a video that has gone off screen stops (and so does its sound).
 /// </summary>
 public sealed class LiveSlideView : UserControl
 {
@@ -39,7 +42,7 @@ public sealed class LiveSlideView : UserControl
         set => SetValue(TransitionDurationProperty, value);
     }
 
-    private readonly SlideView[] _layers = { new SlideView(), new SlideView { Opacity = 0 } };
+    private readonly SlideView[] _layers = { new SlideView { Play = true }, new SlideView { Play = true, Opacity = 0 } };
     private int _front;            // which of the two layers is currently in front
     private int _fadeNumber;       // lets a finished fade know whether a newer one has started
     private IDisposable? _cleanup; // timer that hides the old layer after a fade
@@ -82,6 +85,7 @@ public sealed class LiveSlideView : UserControl
             Place(front, next, opacity: 1);
             back.Transitions = null;
             back.Opacity = 0;
+            Empty(back);
             return;
         }
 
@@ -107,12 +111,22 @@ public sealed class LiveSlideView : UserControl
         back.Opacity = 1;
         _front = 1 - _front;
 
-        // 4. When the fade is done, hide the old layer so it isn't drawn for nothing.
+        // 4. When the fade is done, hide and empty the old layer, so it isn't drawn for
+        //    nothing and any video on it stops.
         var thisFade = ++_fadeNumber;
         _cleanup = DispatcherTimer.RunOnce(() =>
         {
-            if (thisFade == _fadeNumber) front.Opacity = 0;
+            if (thisFade != _fadeNumber) return;
+            front.Opacity = 0;
+            Empty(front);
         }, duration + TimeSpan.FromMilliseconds(50));
+    }
+
+    /// <summary>Clears a hidden layer, which also stops any video or GIF it was playing.</summary>
+    private static void Empty(SlideView layer)
+    {
+        layer.Slide = null;
+        layer.Appearance = null;
     }
 
     /// <summary>Shows a frame on a layer immediately (no animation).</summary>
