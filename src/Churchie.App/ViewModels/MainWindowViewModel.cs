@@ -53,7 +53,7 @@ public partial class MainWindowViewModel : ViewModelBase
         LoadSettingsIntoUi();
         RefreshSongList();
         foreach (var file in _settings.MediaFiles.Where(File.Exists))
-            MediaItems.Add(new MediaItemViewModel(file));
+            MediaItems.Add(new MediaItemViewModel(file, MediaFiles.DisplayName(file, _settings.MediaNames)));
         RestoreAutosavedSchedule();
 
         _loading = false;
@@ -397,7 +397,16 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         else
         {
-            StatusMessage = "Scripture, pictures and videos can't be edited — remove and add them again.";
+            // Scripture, pictures and videos: their words or picture come from elsewhere,
+            // but the name shown in the schedule can be changed.
+            var typed = await Dialogs.AskTextAsync("Rename", "New name for this schedule item:", item.Title);
+            if (typed is null || Naming.Clean(typed) is not { } name) return;
+            item.Title = name;
+            entry.Refresh();
+            ScheduleChanged();
+            if (ReferenceEquals(_previewItem, item)) PreviewTitle = name;
+            if (ReferenceEquals(_liveItem, item)) LiveTitle = name;
+            StatusMessage = $"Renamed to \"{name}\"";
             return;
         }
 
@@ -608,6 +617,7 @@ public partial class MainWindowViewModel : ViewModelBase
             "→ / ← or Space — next / previous slide (when the Live panel is focused)\n" +
             "→ / ← or Space — step through the schedule in the preview (when the Preview panel is focused)\n" +
             "Enter — send the previewed slide live (when the Preview panel is focused)\n" +
+            "F2 — rename the selected schedule item, picture/video or recording\n" +
             "B — black screen\n" +
             "C — clear text (keep background)\n" +
             "L — show logo\n" +

@@ -31,6 +31,12 @@ public sealed class AppSettings
     /// </summary>
     public bool LoopVideos { get; set; }
 
+    /// <summary>
+    /// Names the user gave to media files ("Rename" on the Media tab), by file path.
+    /// Only the name shown in Churchie changes; the file itself keeps its name.
+    /// </summary>
+    public Dictionary<string, string> MediaNames { get; set; } = new();
+
     /// <summary>Which bottom tab was open last time (0 = Songs), so the app reopens where you left it.</summary>
     public int SelectedTab { get; set; }
 

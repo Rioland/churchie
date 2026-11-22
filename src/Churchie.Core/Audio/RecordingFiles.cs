@@ -26,6 +26,29 @@ public static class RecordingFiles
         return path;
     }
 
+    /// <summary>
+    /// Renames a recording, keeping it in the same folder and keeping its ".wav" ending.
+    /// </summary>
+    /// <param name="newName">The new name without ".wav", e.g. "Sunday sermon".</param>
+    /// <returns>The recording's new path.</returns>
+    /// <exception cref="ArgumentException">The name is empty or only has characters files can't use.</exception>
+    /// <exception cref="IOException">Another recording already has that name.</exception>
+    public static string Rename(string path, string newName)
+    {
+        var safe = Services.Naming.SafeFileName(newName)
+                   ?? throw new ArgumentException("Please type a name (letters and numbers work best).");
+        var folder = System.IO.Path.GetDirectoryName(path) ?? "";
+        var target = System.IO.Path.Combine(folder, safe + Extension);
+
+        if (string.Equals(target, path, StringComparison.Ordinal)) return path; // nothing to do
+        // Same name with different capitals (e.g. "sermon" → "Sermon") is fine; anything else that exists is not.
+        if (File.Exists(target) && !string.Equals(target, path, StringComparison.OrdinalIgnoreCase))
+            throw new IOException($"There is already a recording called \"{safe}\".");
+
+        File.Move(path, target);
+        return target;
+    }
+
     /// <summary>The recordings in a folder, newest first.</summary>
     public static List<RecordingFile> List(string folder)
     {

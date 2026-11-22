@@ -118,6 +118,10 @@ public partial class MainWindow : Window
     // Keyboard
     // ---------------------------------------------------------------
 
+    /// <summary>True when <paramref name="visual"/> is <paramref name="container"/> or somewhere inside it.</summary>
+    private static bool IsInside(Visual visual, Visual container) =>
+        visual == container || container.IsVisualAncestorOf(visual);
+
     private void OnWindowKeyDown(object? sender, KeyEventArgs e)
     {
         if (_viewModel is not { } vm) return;
@@ -156,6 +160,16 @@ public partial class MainWindow : Window
 
         // Don't steal letters or arrows while someone is typing or picking from a list
         if (focused is TextBox or ComboBox) return;
+
+        // F2 renames (or edits) whatever is selected in the list that has focus — as in Finder and Explorer.
+        if (e.Key == Key.F2 && focused is Visual f2Target)
+        {
+            if (IsInside(f2Target, ScheduleList)) vm.EditScheduleEntryCommand.Execute(null);
+            else if (IsInside(f2Target, MediaList)) vm.RenameMediaCommand.Execute(null);
+            else if (IsInside(f2Target, RecordingList)) vm.RenameRecordingCommand.Execute(null);
+            e.Handled = true;
+            return;
+        }
 
         switch (e.Key)
         {

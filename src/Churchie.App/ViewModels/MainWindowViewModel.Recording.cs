@@ -69,7 +69,7 @@ public partial class MainWindowViewModel
     [ObservableProperty] private string _recordingStatus = "Looking for microphones…";
 
     [ObservableProperty]
-    [NotifyCanExecuteChangedFor(nameof(PlayRecordingCommand), nameof(DeleteRecordingCommand))]
+    [NotifyCanExecuteChangedFor(nameof(PlayRecordingCommand), nameof(DeleteRecordingCommand), nameof(RenameRecordingCommand))]
     private RecordingItemViewModel? _selectedRecording;
 
     public bool CanChooseMicrophone => !IsRecording && !IsCheckingLevel;
@@ -316,6 +316,32 @@ public partial class MainWindowViewModel
         catch (Exception ex)
         {
             RecordingStatus = "Couldn't open the recording: " + ex.Message;
+        }
+    }
+
+    /// <summary>Renames the recording's file (it stays in the recordings folder).</summary>
+    [RelayCommand(CanExecute = nameof(HasSelectedRecording))]
+    private async Task RenameRecordingAsync()
+    {
+        if (SelectedRecording is not { } recording || Dialogs is null) return;
+        if (IsRecording && recording.FilePath == _recorder.FilePath)
+        {
+            RecordingStatus = "Stop the recording before renaming it.";
+            return;
+        }
+
+        var typed = await Dialogs.AskTextAsync("Rename recording", "New name for this recording:", recording.Name);
+        if (typed is null) return;
+
+        try
+        {
+            var renamed = RecordingFiles.Rename(recording.FilePath, typed);
+            RefreshRecordings(select: renamed);
+            RecordingStatus = $"Renamed to {Path.GetFileNameWithoutExtension(renamed)}.";
+        }
+        catch (Exception ex)
+        {
+            RecordingStatus = "Couldn't rename it: " + ex.Message;
         }
     }
 

@@ -25,7 +25,7 @@ public partial class MainWindowViewModel
     {
         ScheduleEntryViewModel entry => entry.Item,
         Song song => ScheduleItem.ForSong(song),
-        MediaItemViewModel media => ScheduleItem.ForMedia(media.FilePath),
+        MediaItemViewModel media => MediaItem(media.FilePath),
         Verse => _passage is null ? null : ScheduleItem.ForScripture(_passage.Bible.Abbreviation, _passage.Title),
         _ => null,
     };
@@ -96,7 +96,7 @@ public partial class MainWindowViewModel
 
         // Pictures and videos also join the Media tab, so they can be used again later.
         foreach (var file in AddMediaFiles(paths))
-            AddToSchedule(ScheduleItem.ForMedia(file), position++);
+            AddToSchedule(MediaItem(file), position++);
 
         // Lyrics files become songs in the library and in the schedule.
         var lyrics = paths.Where(SongImporter.CanImport).ToList();

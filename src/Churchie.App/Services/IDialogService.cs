@@ -19,4 +19,7 @@ public interface IDialogService
     Task<bool> ConfirmAsync(string title, string message, string yes = "Yes");
 
     Task ShowMessageAsync(string title, string message);
+
+    /// <summary>Asks for a line of text (e.g. a new name). Returns null if the user cancels.</summary>
+    Task<string?> AskTextAsync(string title, string message, string initialText, string okText = "Rename");
 }

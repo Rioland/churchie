@@ -65,9 +65,11 @@ public sealed class ScheduleEntryViewModel : ViewModelBase
 /// <summary>A picture, animated GIF or video in the Media tab.</summary>
 public sealed partial class MediaItemViewModel : ViewModelBase
 {
-    public MediaItemViewModel(string filePath)
+    /// <param name="name">The name to show (the user's own name for it, or the file name).</param>
+    public MediaItemViewModel(string filePath, string? name = null)
     {
         FilePath = filePath;
+        _name = name ?? Path.GetFileName(filePath);
         IsVideo = MediaFiles.IsVideo(filePath);
 
         if (IsVideo) _ = LoadPosterAsync(); // takes a moment, so the thumbnail appears when ready
@@ -75,8 +77,10 @@ public sealed partial class MediaItemViewModel : ViewModelBase
     }
 
     public string FilePath { get; }
-    public string Name => Path.GetFileName(FilePath);
     public bool IsVideo { get; }
+
+    /// <summary>The name shown under the thumbnail; "Rename" changes it.</summary>
+    [ObservableProperty] private string _name;
 
     /// <summary>A small label on the thumbnail ("VIDEO" or "GIF"), or "" for an ordinary picture.</summary>
     public string Badge =>

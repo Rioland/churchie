@@ -8,7 +8,7 @@
 
 Worship presentation software in the spirit of EasyWorship — song lyrics, scripture, pictures and videos on the projector — written in **C#** with **Avalonia**, so the same app runs on **Windows, macOS and Linux**.
 
-## What it does (version 0.3)
+## What it does (version 0.4)
 
 | Area | Features |
 | --- | --- |
@@ -17,8 +17,8 @@ Worship presentation software in the spirit of EasyWorship — song lyrics, scri
 | **Projector** | Full-screen output on the second screen (or a floating window when you only have one), smooth **cross-fade** between slides (cut / quick / normal / slow), **Black**, **Clear** (hide words, keep background) and **Logo** buttons |
 | **Songs** | Library with search by title, words or author; editor that understands `[Verse 1]`, `[Chorus]`, `Bridge:`, `V2`…; import from `.txt` and OpenLyrics `.xml`; three public-domain hymns to start with |
 | **Scripture** | Seven Bibles built in: KJV, World English Bible, Berean Standard Bible, ASV, Bible in Basic English, Young's Literal and the Yoruba Contemporary Bible. Type references the way people say them (`John 3:16-18`, `jn 3 16`, `1 Cor 13:4-7`, `Ps 23`, `Johanu 3:16`); browse by book and chapter; **Import Bible…** for other versions (Zefania, OpenSong or OSIS XML) |
-| **Media** | Pictures, **animated GIFs** and **videos** (MP4, MOV, AVI, MKV, WebM…) as song or scripture backgrounds, as the logo, or shown full-screen. Video slides play with sound, once or on repeat; video backgrounds play silently and loop. **Play / Pause**, **Restart** and a position bar appear under the Preview and Live screens whenever a video is showing. Choose whether a picture or video fills the screen, shows whole, or stretches |
-| **Record** | Record the sermon or a message from any microphone to a `.wav` file: level meter, pause and resume, list of recordings to play or delete. The file stays playable even if the power fails mid-recording |
+| **Media** | Pictures, **animated GIFs** and **videos** (MP4, MOV, AVI, MKV, WebM…) as song or scripture backgrounds, as the logo, or shown full-screen. Video slides play with sound, once or on repeat; video backgrounds play silently and loop. **Play / Pause**, **Restart** and a position bar appear under the Preview and Live screens whenever a video is showing. **Rename** gives pictures and videos clearer names (the files keep theirs) Choose whether a picture or video fills the screen, shows whole, or stretches |
+| **Record** | Record the sermon or a message from any microphone to a `.wav` file: level meter, pause and resume, list of recordings to play, rename or delete. The file stays playable even if the power fails mid-recording |
 | **Themes** | Separate looks for songs and scripture: size, font, colours (with a colour picker), bold/shadow/uppercase, alignment, background picture, GIF or video with darkening — changes appear on screen instantly |
 | **Safety** | The schedule autosaves after every change; long text automatically shrinks to fit the screen |
 

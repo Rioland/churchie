@@ -53,6 +53,15 @@ public static class MediaFiles
     /// </summary>
     public static bool MayBeAnimated(string? path) => ExtensionOf(path) is ".gif" or ".webp";
 
+    /// <summary>
+    /// The name shown for a media file: the name the user gave it (see AppSettings.MediaNames),
+    /// or else its file name, e.g. "Sunrise.jpg".
+    /// </summary>
+    public static string DisplayName(string path, IReadOnlyDictionary<string, string>? names) =>
+        names is not null && names.TryGetValue(path, out var name) && !string.IsNullOrWhiteSpace(name)
+            ? name
+            : Path.GetFileName(path);
+
     /// <summary>The extension in lower case ("Photo.JPG" gives ".jpg"), or "" when there is none.</summary>
     private static string ExtensionOf(string? path) =>
         string.IsNullOrEmpty(path) ? "" : Path.GetExtension(path).ToLowerInvariant();

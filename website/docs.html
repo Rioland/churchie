@@ -56,7 +56,7 @@
         <li><a href="#schedule">Plan a service</a></li>
         <li><a href="#songs">Songs</a></li>
         <li><a href="#scripture">Scripture</a></li>
-        <li><a href="#pictures">Pictures and backgrounds</a></li>
+        <li><a href="#pictures">Pictures, videos and backgrounds</a></li>
         <li><a href="#recording">Recording a message</a></li>
         <li><a href="#going-live">Going live</a></li>
         <li><a href="#projector">The projector screen</a></li>
@@ -78,7 +78,7 @@
           <option value="schedule">Plan a service</option>
           <option value="songs">Songs</option>
           <option value="scripture">Scripture</option>
-          <option value="pictures">Pictures and backgrounds</option>
+          <option value="pictures">Pictures, videos and backgrounds</option>
           <option value="recording">Recording a message</option>
           <option value="going-live">Going live</option>
           <option value="projector">The projector screen</option>
@@ -91,6 +91,14 @@
 
       <section id="whats-new">
         <h2>What's new</h2>
+        <h3>Version 0.4</h3>
+        <ul>
+          <li><strong>Videos and moving GIFs:</strong> add MP4, MOV and other videos, and animated GIFs, on the Media tab. Show them as slides, behind songs and Bible readings, or as the logo. See <a href="#pictures">Pictures, videos and backgrounds</a>.</li>
+          <li><strong>Video controls:</strong> Play/Pause, Restart and a bar to jump through the video, under both Preview and Live. Videos can be checked in Preview without sound before they go live.</li>
+          <li><strong>Step through the service in Preview:</strong> a large preview and Next/Prev buttons that carry on from one item to the next. See <a href="#going-live">Going live</a>.</li>
+          <li><strong>Drag and drop:</strong> drag items to change the schedule order, drag songs, pictures, videos and Bible readings into the schedule or onto Preview or Live, and drop files from your computer. See <a href="#schedule">Plan a service</a>.</li>
+          <li><strong>Rename:</strong> give pictures, videos, schedule items and recordings clearer names (<kbd>F2</kbd>).</li>
+        </ul>
         <h3>Version 0.3</h3>
         <ul>
           <li><strong>Record tab:</strong> record the sermon or a message from a microphone. See <a href="#recording">Recording a message</a>.</li>
@@ -148,17 +156,19 @@
             <tbody>
               <tr><td>A song</td><td>In the <strong>Songs</strong> tab, double-click it, or select it and click <strong>Add to schedule</strong>.</td></tr>
               <tr><td>A Bible reading</td><td>In the <strong>Scripture</strong> tab, type the reference and click <strong>Add to schedule</strong>.</td></tr>
-              <tr><td>A picture</td><td>In the <strong>Media</strong> tab, select it and click <strong>Add to schedule</strong>.</td></tr>
+              <tr><td>A picture or video</td><td>In the <strong>Media</strong> tab, select it and click <strong>Add to schedule</strong>.</td></tr>
+              <tr><td>Anything, with the mouse</td><td>Drag a song, picture, video or Bible verse from the tabs below and drop it in the schedule, exactly where you want it. You can also drop pictures, videos and song files straight from your computer's folders.</td></tr>
               <tr><td>Announcements or other words</td><td>Click <strong>+ Text slide</strong> under the schedule, give it a title and type the text. Leave a blank line between slides.</td></tr>
             </tbody>
           </table>
         </div>
-        <p>Each item has a coloured tag so you can tell them apart at a glance: <strong>SONG</strong>, <strong>BIBLE</strong>, <strong>TEXT</strong> or <strong>IMAGE</strong>.</p>
+        <p>Each item has a coloured tag so you can tell them apart at a glance: <strong>SONG</strong>, <strong>BIBLE</strong>, <strong>TEXT</strong>, <strong>IMAGE</strong> or <strong>VIDEO</strong>.</p>
 
         <h3>Changing the order</h3>
         <ul>
+          <li>Drag an item up or down with the mouse. A purple line shows where it will land.</li>
           <li><strong>Up</strong> and <strong>Down</strong> move the selected item.</li>
-          <li><strong>Edit</strong> opens a song or text slide for changes. Editing a song here also updates it in your library.</li>
+          <li><strong>Edit</strong> opens a song or text slide for changes. Editing a song here also updates it in your library. For a Bible reading, picture or video, <strong>Edit</strong> lets you rename it (<kbd>F2</kbd> does the same).</li>
           <li><strong>Remove</strong> takes the item out of the schedule (the song stays in your library).</li>
         </ul>
         <div class="tip"><p>Click an item to see it in Preview. Double-click it to send it straight to Live.</p></div>
@@ -254,21 +264,32 @@
       </section>
 
       <section id="pictures">
-        <h2>Pictures and backgrounds</h2>
-        <p>The <strong>Media</strong> tab holds pictures you use in services: song backgrounds, your church logo, announcement slides.</p>
+        <h2>Pictures, videos and backgrounds</h2>
+        <p>The <strong>Media</strong> tab holds the pictures and videos you use in services: song backgrounds, your church logo, announcement slides, a countdown or a video clip.</p>
         <figure class="wide">
           <img class="shot" src="assets/img/media-2.webp" width="1226" height="792" loading="lazy"
                alt="The Media tab with three background pictures, buttons for using them as backgrounds or as the logo, and the Picture slides choice set to Show whole picture.">
-          <figcaption>Pictures in the Media tab. Click one to preview it.</figcaption>
+          <figcaption>The Media tab. Click a picture or video to preview it.</figcaption>
         </figure>
         <ul>
-          <li><strong>Add pictures…</strong> adds PNG, JPG, BMP, GIF or WebP images. Pictures 1920×1080 pixels or larger look best.</li>
-          <li><strong>Use as song background</strong> and <strong>Use as scripture background</strong> put the picture behind your lyrics or Bible verses.</li>
-          <li><strong>Use as logo</strong> makes it the picture shown when you press <strong>Logo</strong>. The line at the bottom shows the current logo.</li>
-          <li><strong>Show live</strong> puts the picture on the projector straight away. <strong>Add to schedule</strong> saves it for its place in the service.</li>
-          <li><strong>Picture slides</strong> chooses how pictures shown as their own slide are sized: show the whole picture (the usual choice), fill the screen, or stretch to it. The logo always shows whole.</li>
+          <li><strong>Add pictures &amp; videos…</strong> adds pictures (PNG, JPG, BMP, GIF, WebP) and videos (MP4, MOV, M4V, AVI, MKV, WebM, WMV, MPG). You can also drag files from your computer onto the list. Pictures and videos 1920×1080 pixels or larger look best.</li>
+          <li><strong>Use as song background</strong> and <strong>Use as scripture background</strong> put the picture or video behind your lyrics or Bible verses. A background video plays silently and repeats.</li>
+          <li><strong>Use as logo</strong> makes it the picture (or silent, repeating video) shown when you press <strong>Logo</strong>. The line at the bottom shows the current logo.</li>
+          <li><strong>Show live</strong> puts it on the projector straight away. <strong>Add to schedule</strong> saves it for its place in the service.</li>
+          <li><strong>Rename</strong> (<kbd>F2</kbd>) changes the name shown in Churchie. The file on your computer keeps its own name.</li>
+          <li><strong>Picture slides</strong> chooses how pictures and videos shown as their own slide are sized: show the whole picture (the usual choice), fill the screen, or stretch to it. The logo always shows whole.</li>
+          <li><strong>Video slides</strong> chooses whether a video slide plays once and stops on its last picture, or plays on repeat.</li>
           <li><strong>Remove</strong> takes it out of the list. The file on your computer isn't deleted.</li>
         </ul>
+        <p>Thumbnails of videos show a still picture with a <strong>▶ VIDEO</strong> label; animated GIFs show a <strong>GIF</strong> label. They move once they're in Preview or Live.</p>
+
+        <h3>Playing a video</h3>
+        <ul>
+          <li>Under the Preview picture, <strong>▶ Play</strong> plays the video so you can check it. The preview is always silent, so the room doesn't hear it.</li>
+          <li>When a video slide goes live it plays from the start with its sound. Under the Live picture you get <strong>❚❚ Pause</strong> / <strong>▶ Play</strong>, <strong>↺ Restart</strong>, and a bar you can drag to jump forwards or back. The projector follows.</li>
+          <li>If a song's background is a video, the same controls pause or restart the background.</li>
+        </ul>
+        <div class="tip"><p>Churchie remembers where each picture and video is on your computer. If you move or delete the file, it disappears from Churchie too, so keep your service media in one folder that stays put.</p></div>
       </section>
 
       <section id="recording">
@@ -285,17 +306,25 @@
           <li>Press <strong>Record</strong>. The first time, your computer asks whether Churchie may use the microphone: choose <strong>Allow</strong>.</li>
           <li><strong>Pause</strong> and <strong>Resume</strong> carry on in the same file. Press <strong>Stop</strong> when you're finished.</li>
         </ol>
-        <p>While recording, a red <strong>REC</strong> with the time shows at the bottom of the window on every tab, so you can keep running the service. Finished recordings appear in the list on the right, where you can <strong>Play</strong> or <strong>Delete</strong> them, or press <strong>Open folder</strong> to copy the files somewhere else.</p>
+        <p>While recording, a red <strong>REC</strong> with the time shows at the bottom of the window on every tab, so you can keep running the service. Finished recordings appear in the list on the right, where you can <strong>Play</strong>, <strong>Rename</strong> (for example to "Sunday sermon, 22 November") or <strong>Delete</strong> them, or press <strong>Open folder</strong> to copy the files somewhere else.</p>
         <p class="note">Recordings are saved as .wav files, which every player opens. They are large, about 300 MB for an hour, so convert to MP3 before sending one on WhatsApp. If the power fails while recording, everything up to the last few seconds is still saved.</p>
       </section>
 
       <section id="going-live">
         <h2>Going live</h2>
+        <h3>Checking what's next in Preview</h3>
+        <p>Preview shows a large copy of the selected slide. The buttons under it walk through your whole service without touching what's live:</p>
+        <ul>
+          <li><strong>Next ▶</strong> and <strong>◀ Prev</strong> move one slide at a time. After the last slide of an item they carry on into the next item in the schedule.</li>
+          <li><strong>Item »</strong> and <strong>« Item</strong> jump to the first slide of the next or previous item.</li>
+          <li>After clicking in the Preview area, the arrow keys and <kbd>Space</kbd> do the same, and <kbd>Enter</kbd> sends the slide live.</li>
+        </ul>
+
         <h3>Putting something on screen</h3>
         <ul>
-          <li>Double-click a slide in Preview to show it.</li>
+          <li>Double-click a slide in Preview to show it, or drag it onto the Live area.</li>
           <li>Or select a slide in Preview and click <strong>Go Live</strong> (<kbd>Ctrl</kbd>+<kbd>Enter</kbd>, or <kbd>⌘</kbd>+<kbd>Enter</kbd> on a Mac).</li>
-          <li>Double-click an item in the schedule to show its first slide.</li>
+          <li>Double-click an item in the schedule to show its first slide, or drag it onto the Live area.</li>
         </ul>
         <p>Once something is live, its slides are listed under the Live picture. Click any of them to jump straight there, for example back to the chorus.</p>
 
@@ -409,6 +438,7 @@
             </tbody>
           </table>
         </div>
+        <p>Installing a new version of Churchie never touches this folder, so your songs, schedules, settings, recordings and the names you gave your media are all still there after an update. Uninstalling leaves it in place too.</p>
         <div class="tip"><p><strong>To back up</strong>, copy that whole folder to a USB stick or cloud drive. To move to a new computer, install Churchie there and copy the folder into the same place.</p></div>
       </section>
 
@@ -421,6 +451,8 @@
             <tbody>
               <tr><td><kbd>Page Down</kbd> / <kbd>Page Up</kbd></td><td>Next / previous slide (also works with clickers)</td></tr>
               <tr><td><kbd>→</kbd> <kbd>←</kbd> or <kbd>Space</kbd></td><td>Next / previous slide, after clicking in the Live area</td></tr>
+              <tr><td><kbd>→</kbd> <kbd>←</kbd> or <kbd>Space</kbd> · <kbd>Enter</kbd></td><td>Step through the service · send it live, after clicking in the Preview area</td></tr>
+              <tr><td><kbd>F2</kbd></td><td>Rename the selected schedule item, picture, video or recording</td></tr>
               <tr><td><kbd>B</kbd></td><td>Black screen on or off</td></tr>
               <tr><td><kbd>C</kbd></td><td>Clear the words on or off</td></tr>
               <tr><td><kbd>L</kbd></td><td>Logo on or off</td></tr>
@@ -447,6 +479,9 @@
 
         <h3>Churchie won't start on Linux</h3>
         <p>Make sure it's allowed to run with <code>chmod +x Churchie/Churchie</code>. On Debian or Ubuntu, install <code>libice6</code>, <code>libsm6</code> and <code>libfontconfig1</code>.</p>
+
+        <h3>A video doesn't play</h3>
+        <p>On Linux, Churchie plays videos with VLC, which you install once: <code>sudo apt install vlc</code> (Debian, Ubuntu, Mint), then restart Churchie. On Windows and Mac everything needed is built in; if a particular video won't play, it may be damaged or in an unusual format. MP4 videos made by phones and cameras work best.</p>
 
         <h3>The projector shows my whole desktop, or the same as my laptop</h3>
         <p>The screens are mirrored. Set the projector to <strong>extend</strong> the desktop (see <a href="#projector">The projector screen</a>), then choose it under <strong>Projector screen</strong> in Themes &amp; Settings and open Projector output again.</p>

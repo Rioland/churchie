@@ -78,6 +78,27 @@ public sealed class DialogService : IDialogService
         await dialog.ShowDialog(_owner);
     }
 
+    public async Task<string?> AskTextAsync(string title, string message, string initialText, string okText = "Rename")
+    {
+        var dialog = SimpleDialog(title, message);
+        var box = new TextBox { Text = initialText };
+        ((StackPanel)dialog.Content!).Children.Add(box);
+
+        var ok = new Button { Content = okText, IsDefault = true, MinWidth = 90, HorizontalContentAlignment = HorizontalAlignment.Center };
+        var cancel = new Button { Content = "Cancel", IsCancel = true, MinWidth = 90, HorizontalContentAlignment = HorizontalAlignment.Center };
+        ok.Click += (_, _) => dialog.Close(box.Text);
+        cancel.Click += (_, _) => dialog.Close(null);
+        AddButtons(dialog, cancel, ok);
+
+        // Put the cursor in the box with the old name selected, so typing replaces it.
+        dialog.Opened += (_, _) =>
+        {
+            box.Focus();
+            box.SelectAll();
+        };
+        return await dialog.ShowDialog<string?>(_owner);
+    }
+
     private static Window SimpleDialog(string title, string message) => new()
     {
         Title = title,

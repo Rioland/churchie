@@ -22,6 +22,7 @@ Churchie is built in stages so each one is usable and reviewable on its own.
 - ✅ Preview panel: large preview, Next / Prev through the whole schedule — v0.4
 - ✅ Drag and drop: reorder the schedule, drag songs/media/passages to the schedule, Preview or Live, drop files from the computer — v0.4
 - ✅ Video controls under Preview and Live: Play/Pause, Restart, position bar; silent video preview — v0.4
+- ✅ Rename pictures/videos, schedule items and recordings (F2) — v0.4
 - Video volume control
 - More transition styles (slide, zoom), per-item transition choice
 - Per-song theme override

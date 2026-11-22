@@ -62,7 +62,8 @@
             <WrapPanel DockPanel.Dock="Bottom" Margin="0,8,0,0">
               <Button Content="Up" Command="{Binding MoveUpCommand}" Margin="0,0,4,4" />
               <Button Content="Down" Command="{Binding MoveDownCommand}" Margin="0,0,4,4" />
-              <Button Content="Edit" Command="{Binding EditScheduleEntryCommand}" Margin="0,0,4,4" />
+              <Button Content="Edit" Command="{Binding EditScheduleEntryCommand}" Margin="0,0,4,4"
+                      ToolTip.Tip="Edit a song or text slides, or rename a Bible passage, picture or video (F2)" />
               <Button Content="Remove" Command="{Binding RemoveFromScheduleCommand}" Margin="0,0,4,4" />
               <Button Content="+ Text slide" Command="{Binding AddTextItemCommand}" Margin="0,0,4,4" />
             </WrapPanel>
@@ -325,6 +326,8 @@
               <WrapPanel DockPanel.Dock="Top" Margin="0,0,0,8">
                 <Button Classes="accent" Content="Add pictures &amp; videos…" Command="{Binding AddMediaCommand}" Margin="0,0,6,4"
                         ToolTip.Tip="Pictures, animated GIFs and videos (MP4, MOV, AVI, MKV, WebM…)" />
+                <Button Content="Rename" Command="{Binding RenameMediaCommand}" Margin="0,0,6,4"
+                        ToolTip.Tip="Change the name shown in Churchie (the file itself keeps its name)" />
                 <Button Content="Remove" Command="{Binding RemoveMediaCommand}" Margin="0,0,16,4" />
                 <Button Content="Use as song background" Command="{Binding UseAsSongBackgroundCommand}" Margin="0,0,6,4" />
                 <Button Content="Use as scripture background" Command="{Binding UseAsScriptureBackgroundCommand}" Margin="0,0,6,4" />
@@ -405,12 +408,13 @@
                 <DockPanel DockPanel.Dock="Top" Margin="0,0,0,6">
                   <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6">
                     <Button Content="Play" Command="{Binding PlayRecordingCommand}" />
+                    <Button Content="Rename" Command="{Binding RenameRecordingCommand}" />
                     <Button Content="Delete" Command="{Binding DeleteRecordingCommand}" />
                     <Button Content="Open folder" Command="{Binding OpenRecordingsFolderCommand}" />
                   </StackPanel>
                   <TextBlock Classes="header" Text="RECORDINGS" />
                 </DockPanel>
-                <ListBox ItemsSource="{Binding Recordings}" SelectedItem="{Binding SelectedRecording}">
+                <ListBox x:Name="RecordingList" ItemsSource="{Binding Recordings}" SelectedItem="{Binding SelectedRecording}">
                   <ListBox.ItemTemplate>
                     <DataTemplate x:DataType="vm:RecordingItemViewModel">
                       <StackPanel Spacing="2">
