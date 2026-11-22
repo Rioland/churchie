@@ -89,7 +89,15 @@ public partial class MainWindowViewModel
             renamedInSchedule = true;
         }
         if (renamedInSchedule) ScheduleChanged();
-        if (_previewItem is { Kind: ScheduleItemKind.Media } preview && preview.MediaPath == media.FilePath) PreviewTitle = newName;
+
+        // If this picture is in the Preview, show the new name there too. (A schedule item
+        // the user had already given its own name keeps that name.)
+        if (_previewItem is { Kind: ScheduleItemKind.Media } preview && preview.MediaPath == media.FilePath)
+        {
+            if (preview.Title == oldName) preview.Title = newName; // the Preview copy from the Media tab
+            PreviewTitle = preview.Title;
+            RebuildPreviewSlides();
+        }
 
         StatusMessage = $"Renamed to \"{newName}\"";
     }

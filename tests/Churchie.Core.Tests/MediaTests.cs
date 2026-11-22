@@ -54,6 +54,17 @@ public class MediaTests
     }
 
     [Fact]
+    public void A_renamed_picture_shows_its_new_name_under_the_thumbnail()
+    {
+        var factory = new SlideFactory(new BibleLibrary(), _ => null);
+        var item = ScheduleItem.ForMedia("/pictures/IMG_2041.jpg");
+        Assert.Equal("IMG_2041", Assert.Single(factory.Build(item, new AppSettings())).Label);
+
+        item.Title = "Welcome banner";
+        Assert.Equal("Welcome banner", Assert.Single(factory.Build(item, new AppSettings())).Label);
+    }
+
+    [Fact]
     public void A_gif_is_a_picture_slide_and_never_loops_as_a_video()
     {
         // GIFs repeat by themselves; the Loop flag is only for videos.

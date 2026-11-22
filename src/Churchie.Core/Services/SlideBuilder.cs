@@ -63,9 +63,13 @@ public static class SlideBuilder
     /// <param name="fit">How the picture or video is sized to the screen. The default shows all of it.</param>
     /// <param name="loopVideo">For a video: play it again and again instead of once.</param>
     /// <param name="muteVideo">For a video: play it without sound.</param>
-    public static Slide FromMedia(string path, ImageFit fit = ImageFit.Fit, bool loopVideo = false, bool muteVideo = false)
+    /// <param name="name">The name shown under the thumbnail, e.g. one the user gave it with Rename.
+    /// Left out (or still the plain file name), the file name without ".mp4"/".jpg" is used.</param>
+    public static Slide FromMedia(string path, ImageFit fit = ImageFit.Fit, bool loopVideo = false, bool muteVideo = false, string? name = null)
     {
-        var label = Path.GetFileNameWithoutExtension(path);
+        var label = string.IsNullOrWhiteSpace(name) || name == Path.GetFileName(path)
+            ? Path.GetFileNameWithoutExtension(path)
+            : name;
         return MediaFiles.IsVideo(path)
             ? new Slide(SlideKind.Video, label, "", null, path, fit, loopVideo, muteVideo)
             : new Slide(SlideKind.Image, label, "", null, path, fit);

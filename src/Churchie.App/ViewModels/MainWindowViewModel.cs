@@ -404,7 +404,13 @@ public partial class MainWindowViewModel : ViewModelBase
             item.Title = name;
             entry.Refresh();
             ScheduleChanged();
-            if (ReferenceEquals(_previewItem, item)) PreviewTitle = name;
+            if (ReferenceEquals(_previewItem, item))
+            {
+                PreviewTitle = name;
+                RebuildPreviewSlides(); // so the thumbnail caption shows the new name too
+            }
+            // The Live slides are left as they are: rebuilding them would restart a playing
+            // video. Their caption catches up the next time the item goes live.
             if (ReferenceEquals(_liveItem, item)) LiveTitle = name;
             StatusMessage = $"Renamed to \"{name}\"";
             return;
@@ -484,12 +490,7 @@ public partial class MainWindowViewModel : ViewModelBase
     /// <summary>Re-creates preview and live slides (e.g. after a song edit or a settings change).</summary>
     private void RebuildSlides()
     {
-        if (_previewItem is not null)
-        {
-            var i = SelectedPreviewSlide is null ? 0 : PreviewSlides.IndexOf(SelectedPreviewSlide);
-            FillSlides(PreviewSlides, _previewItem);
-            SelectedPreviewSlide = PreviewSlides.Count == 0 ? null : PreviewSlides[Math.Clamp(i, 0, PreviewSlides.Count - 1)];
-        }
+        RebuildPreviewSlides();
 
         if (_liveItem is not null)
         {
@@ -502,6 +503,15 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         UpdateOutput();
+    }
+
+    /// <summary>Re-creates only the preview slides, keeping the same slide selected.</summary>
+    private void RebuildPreviewSlides()
+    {
+        if (_previewItem is null) return;
+        var i = SelectedPreviewSlide is null ? 0 : PreviewSlides.IndexOf(SelectedPreviewSlide);
+        FillSlides(PreviewSlides, _previewItem);
+        SelectedPreviewSlide = PreviewSlides.Count == 0 ? null : PreviewSlides[Math.Clamp(i, 0, PreviewSlides.Count - 1)];
     }
 
     /// <param name="select">Abbreviation to select afterwards (e.g. a Bible that was just imported).</param>
