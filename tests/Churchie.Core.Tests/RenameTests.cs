@@ -26,7 +26,8 @@ public class RenameTests
 
     [Theory]
     [InlineData("Sunday: sermon?", "Sunday sermon")]
-    [InlineData("Part 1/2", "Part 12")]
+    [InlineData("Part 1/2", "Part 1 2")]
+    [InlineData("Sunday sermon: Part 1/2", "Sunday sermon Part 1 2")]
     [InlineData("  .hidden.  ", "hidden")]
     [InlineData("\"<>|*", null)]
     [InlineData("Ìwàásù Ọjọ́ Àìkú", "Ìwàásù Ọjọ́ Àìkú")] // Yoruba letters are fine in file names

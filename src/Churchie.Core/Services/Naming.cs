@@ -19,8 +19,9 @@ public static class Naming
 
     /// <summary>
     /// A name that can be used as a file name on Windows, macOS and Linux: the characters
-    /// Windows forbids (\ / : * ? " &lt; &gt; |) and invisible control characters are removed,
-    /// and dots or spaces at the ends are trimmed (Windows drops them silently).
+    /// Windows forbids (\ / : * ? " &lt; &gt; |) and invisible control characters become spaces
+    /// (so "Part 1/2" stays readable as "Part 1 2" instead of "Part 12"), double spaces are
+    /// squeezed to one, and dots or spaces at the ends are trimmed (Windows drops them silently).
     /// Null when nothing usable is left.
     /// </summary>
     public static string? SafeFileName(string? name)
@@ -28,8 +29,9 @@ public static class Naming
         var cleaned = Clean(name);
         if (cleaned is null) return null;
 
-        var kept = new string(cleaned.Where(c => !char.IsControl(c) && !"\\/:*?\"<>|".Contains(c)).ToArray());
-        var safe = kept.Trim().Trim('.').Trim();
+        var replaced = new string(cleaned.Select(c => char.IsControl(c) || "\\/:*?\"<>|".Contains(c) ? ' ' : c).ToArray());
+        while (replaced.Contains("  ")) replaced = replaced.Replace("  ", " ");
+        var safe = replaced.Trim().Trim('.').Trim();
         return safe.Length == 0 ? null : safe;
     }
 }
