@@ -38,6 +38,8 @@ public sealed class VideoControls : UserControl
     {
         Minimum = 0,
         Maximum = 1,
+        SmallChange = 0.01, // arrow keys move 1% of the video
+        LargeChange = 0.1,  // Page Up/Down move 10%
         VerticalAlignment = VerticalAlignment.Center,
     };
     private readonly TextBlock _time = new()

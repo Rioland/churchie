@@ -141,7 +141,7 @@ public static class VideoLibrary
                 player.Dispose();
 
                 if (gotPicture && frame is not null)
-                    return await Task.Run(() => Shrink(frame));
+                    return Shrink(frame); // drawing happens on the window's thread
             }
             return null;
         }
@@ -155,12 +155,23 @@ public static class VideoLibrary
         }
     }
 
-    /// <summary>A smaller copy, so dozens of thumbnails don't each hold a full-size picture.</summary>
+    /// <summary>
+    /// A smaller copy, so dozens of thumbnails don't each hold a full-size picture.
+    /// The frame is drawn onto a fresh picture rather than simply resized: VLC leaves the
+    /// fourth byte of every pixel at 0, and a plain resize reads that as "fully transparent",
+    /// which made every poster come out black. Drawing it respects that the frame is opaque.
+    /// </summary>
     private static Bitmap Shrink(Bitmap frame)
     {
         var size = frame.PixelSize;
-        if (size.Width <= PosterWidth) return frame;
-        var height = Math.Max(1, size.Height * PosterWidth / size.Width);
-        return frame.CreateScaledBitmap(new PixelSize(PosterWidth, height), BitmapInterpolationMode.HighQuality);
+        var width = Math.Min(PosterWidth, size.Width);
+        var height = Math.Max(1, size.Height * width / size.Width);
+
+        var poster = new RenderTargetBitmap(new PixelSize(width, height));
+        using (var context = poster.CreateDrawingContext())
+        {
+            context.DrawImage(frame, new Rect(0, 0, size.Width, size.Height), new Rect(0, 0, width, height));
+        }
+        return poster;
     }
 }

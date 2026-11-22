@@ -125,8 +125,10 @@ public sealed class LiveSlideView : UserControl
     /// <summary>Clears a hidden layer, which also stops any video or GIF it was playing.</summary>
     private static void Empty(SlideView layer)
     {
-        layer.Slide = null;
+        // Look first, then slide: the other way round, the layer would briefly show the
+        // theme's background on its own, starting a background video only to stop it again.
         layer.Appearance = null;
+        layer.Slide = null;
     }
 
     /// <summary>Shows a frame on a layer immediately (no animation).</summary>
